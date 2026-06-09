@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>MTS Connect - Mobile Companion</title>
+  <!-- PWA Standalone configuration -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MTS Connect">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1A2E55">
+  <link rel="manifest" href="manifest.json">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,12 +199,17 @@
         display: none;
       }
       .status-bar {
-        padding-top: env(safe-area-inset-top, 0px);
-        height: calc(44px + env(safe-area-inset-top, 0px));
+        display: none !important;
       }
       .home-indicator-bar {
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-        height: calc(30px + env(safe-area-inset-bottom, 0px));
+        display: none !important;
+      }
+      .app-header {
+        padding-top: env(safe-area-inset-top, 12px);
+        height: calc(56px + env(safe-area-inset-top, 12px));
+      }
+      #login .screen-content {
+        padding-top: calc(24px + env(safe-area-inset-top, 12px));
       }
       .desktop-title, .desktop-info-floating {
         display: none !important;
