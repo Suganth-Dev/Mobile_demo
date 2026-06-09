@@ -1,0 +1,3491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>MTS Connect - Mobile Companion</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────
+       1. CSS CUSTOM VARIABLES & DESIGN TOKENS
+       ────────────────────────────────────────────────────────────────── */
+    :root {
+      --primary: #1A2E55;
+      --primary-light: #2C4372;
+      --accent: #00AECB;
+      --accent-light: #E0F7FA;
+      --bg: #F5F7FA;
+      --surface: #FFFFFF;
+      --success: #2ECC71;
+      --success-light: #E8F8F0;
+      --warning: #F39C12;
+      --warning-light: #FEF5E7;
+      --danger: #E74C3C;
+      --danger-light: #FDEDEC;
+      --info: #3498DB;
+      --info-light: #EBF5FB;
+      --text: #1A1A2E;
+      --text-muted: #6B7280;
+      --border: #E5E7EB;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --font-english: 'Inter', sans-serif;
+      --font-tamil: 'Noto Sans Tamil', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      
+      /* Slide speeds */
+      --transition-speed: 0.35s;
+    }
+
+    /* Reset and General Mobile Configurations */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-english);
+      background-color: #0B0E17;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Bilingual Toggle Support via Body Class */
+    body.lang-tamil .lang-en { display: none !important; }
+    body:not(.lang-tamil) .lang-ta { display: none !important; }
+    body.lang-tamil { font-family: var(--font-tamil), var(--font-english); }
+
+    /* ──────────────────────────────────────────────────────────────────
+       2. DEVICE MOCKUP FRAME RULES (DESKTOP INTERFACE)
+       ────────────────────────────────────────────────────────────────── */
+    .desktop-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .phone-mockup {
+      width: 390px;
+      height: 844px;
+      background-color: #000000;
+      border: 12px solid #1F2330;
+      border-radius: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Phone Bezel Button Simulation */
+    .phone-mockup::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 60px;
+      background: #333644;
+      left: -14px;
+      top: 140px;
+      border-radius: 4px 0 0 4px;
+      box-shadow: 0 80px 0 #333644; /* volume keys */
+    }
+    .phone-mockup::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 80px;
+      background: #333644;
+      right: -14px;
+      top: 200px;
+      border-radius: 0 4px 4px 0; /* power button */
+    }
+
+    /* Dynamic Time Header Status Simulation */
+    .status-bar {
+      height: 44px;
+      background-color: var(--surface);
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 100;
+      position: relative;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    }
+    .status-bar .notch {
+      width: 110px;
+      height: 30px;
+      background-color: #000000;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+    }
+    .status-bar .left-indicators {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-bar .right-indicators {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Home Indicator bar at the bottom of smartphone */
+    .home-indicator-bar {
+      height: 30px;
+      background-color: var(--surface);
+      position: relative;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .home-indicator-bar::after {
+      content: '';
+      width: 140px;
+      height: 5px;
+      background-color: #9CA3AF;
+      border-radius: 999px;
+    }
+
+    /* ── Hide bezel on real mobile viewports ── */
+    @media (max-width: 500px) {
+      body {
+        background-color: var(--bg);
+      }
+      .desktop-container {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .phone-mockup {
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .phone-mockup::before, .phone-mockup::after {
+        display: none;
+      }
+      .status-bar {
+        padding-top: env(safe-area-inset-top, 0px);
+        height: calc(44px + env(safe-area-inset-top, 0px));
+      }
+      .home-indicator-bar {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        height: calc(30px + env(safe-area-inset-bottom, 0px));
+      }
+      .desktop-title, .desktop-info-floating {
+        display: none !important;
+      }
+    }
+
+    .desktop-title {
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .desktop-title span {
+      color: var(--accent);
+    }
+    .desktop-info-floating {
+      color: #94A3B8;
+      font-size: 13px;
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.4;
+    }
+
+    /* ──────────────────────────────────────────────────────────────────
+       3. VIEWPORT DECK & SLIDE TRANSITION RULES
+       ────────────────────────────────────────────────────────────────── */
+    .screen-deck {
+      flex: 1;
+      position: relative;
+      background-color: var(--bg);
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      background-color: var(--bg);
+      z-index: 10;
+    }
+
+    .screen.active {
+      display: flex;
+      z-index: 20;
+    }
+
+    /* Screen Slide Animations */
+    .slide-in-right {
+      animation: slideInRight var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-out-left {
+      animation: slideOutLeft var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-in-left {
+      animation: slideInLeft var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-out-right {
+      animation: slideOutRight var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes slideOutLeft {
+      from { transform: translateX(0); }
+      to { transform: translateX(-30%); opacity: 0.8; }
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(-30%); opacity: 0.8; }
+      to { transform: translateX(0); }
+    }
+    @keyframes slideOutRight {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+
+    /* ──────────────────────────────────────────────────────────────────
+       4. UI FRAMEWORK LAYOUTS & COMPONENT CLASSES
+       ────────────────────────────────────────────────────────────────── */
+    /* Header layout */
+    .app-header {
+      height: 56px;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .app-header h1 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .header-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    }
+    .header-btn:active {
+      background-color: var(--bg);
+    }
+
+    /* Main scroll content block */
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      position: relative;
+    }
+
+    /* Bottom tab bar navigator */
+    .bottom-nav {
+      height: 64px;
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      display: none;
+      justify-content: space-around;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 90;
+    }
+    .bottom-nav.active {
+      display: flex;
+    }
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      flex: 1;
+      height: 100%;
+      font-size: 10px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-tab.active {
+      color: var(--accent);
+    }
+    .nav-tab i {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2;
+    }
+
+    /* Card Panels */
+    .card {
+      background-color: var(--surface);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Input Elements */
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .form-input {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      background-color: var(--surface);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+    .form-select {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      background-color: var(--surface);
+      color: var(--text);
+    }
+
+    /* Buttons system */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      padding: 0 16px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--surface);
+    }
+    .btn-primary:active {
+      background-color: var(--primary-light);
+    }
+    .btn-accent {
+      background-color: var(--accent);
+      color: var(--surface);
+    }
+    .btn-accent:active {
+      background-color: #008fa7;
+    }
+    .btn-secondary {
+      background-color: var(--surface);
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-secondary:active {
+      background-color: rgba(26, 46, 85, 0.05);
+    }
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--surface);
+    }
+    .btn-danger:active {
+      background-color: #c0392b;
+    }
+
+    /* Custom Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-success { background-color: var(--success-light); color: var(--success); }
+    .badge-warning { background-color: var(--warning-light); color: var(--warning); }
+    .badge-danger { background-color: var(--danger-light); color: var(--danger); }
+    .badge-info { background-color: var(--info-light); color: var(--info); }
+    .badge-muted { background-color: var(--border); color: var(--text-muted); }
+
+    /* Tables list */
+    .list-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .list-table th {
+      text-align: left;
+      padding: 8px;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+    }
+    .list-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    /* ──────────────────────────────────────────────────────────────────
+       5. COMPONENT SPECIFIC LAYOUT STYLES
+       ────────────────────────────────────────────────────────────────── */
+    /* Splash logo spin animation */
+    .splash-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background: radial-gradient(circle, var(--primary-light) 0%, var(--primary) 100%);
+      color: var(--surface);
+      text-align: center;
+    }
+    .splash-logo {
+      width: 90px;
+      height: 90px;
+      background-color: var(--surface);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-tamil);
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+      position: relative;
+      animation: logoPulse 2s infinite ease-in-out;
+    }
+    .splash-logo::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px dashed var(--accent);
+      border-radius: 50%;
+      animation: logoRotate 12s infinite linear;
+    }
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes logoRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Demo Login Credentials Container */
+    .demo-creds {
+      background-color: var(--bg);
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 16px;
+    }
+    .demo-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      margin: 4px;
+      transition: all 0.2s;
+    }
+    .demo-chip:active {
+      background-color: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    /* Login Loading Simulator */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(26, 46, 85, 0.95);
+      z-index: 500;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--surface);
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Child Switcher Banner Pill */
+    .child-switcher {
+      display: flex;
+      gap: 8px;
+      background-color: var(--surface);
+      border-radius: 20px;
+      padding: 4px;
+      margin-bottom: 12px;
+      border: 1.5px solid var(--border);
+    }
+    .child-pill {
+      flex: 1;
+      text-align: center;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 16px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .child-pill.active {
+      background-color: var(--accent);
+      color: var(--surface);
+    }
+
+    /* Donut chart simulation */
+    .attendance-radial-panel {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .radial-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) 0% 90%, var(--border) 90% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .radial-circle::before {
+      content: '90%';
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      background-color: var(--surface);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--primary);
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .calendar-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      padding-bottom: 6px;
+    }
+    .calendar-day {
+      background-color: var(--surface);
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .calendar-day.empty {
+      background-color: transparent;
+      box-shadow: none;
+      cursor: default;
+    }
+    .calendar-day.event::after {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 4px;
+    }
+    .calendar-day.holiday {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+
+    /* Chat Elements */
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: calc(100vh - 194px);
+      overflow-y: auto;
+      padding-bottom: 16px;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .chat-bubble.sent {
+      align-self: flex-end;
+      background-color: var(--primary);
+      color: var(--surface);
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.received {
+      align-self: flex-start;
+      background-color: var(--surface);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+    .chat-time {
+      font-size: 10px;
+      margin-top: 4px;
+      display: block;
+      text-align: right;
+      opacity: 0.7;
+    }
+    .chat-input-bar {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    /* Modals Overlay */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 400;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-sheet {
+      width: 100%;
+      background-color: var(--surface);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(100%);
+      transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-sheet.open {
+      transform: translateY(0);
+    }
+
+    /* KPI grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .kpi-card {
+      background-color: var(--surface);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .kpi-num {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Segment tabs */
+    .segment-bar {
+      display: flex;
+      background-color: var(--border);
+      padding: 3px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .segment-btn.active {
+      background-color: var(--surface);
+      color: var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop Presentation Outer shell container -->
+  <div class="desktop-container">
+    <div class="desktop-title">
+      <i data-lucide="smartphone"></i>
+      MTS Connect <span>Companion Mobile App</span>
+    </div>
+    
+    <!-- Smartphone Bezel Mockup -->
+    <div class="phone-mockup">
+      <!-- ── TOP STATUS BAR ── -->
+      <div class="status-bar">
+        <div class="notch"></div>
+        <div class="left-indicators" id="simulated-clock">9:41 AM</div>
+        <div class="right-indicators">
+          <i data-lucide="signal" style="width:14px;height:14px;stroke-width:2.5;"></i>
+          <i data-lucide="wifi" style="width:14px;height:14px;stroke-width:2.5;"></i>
+          <i data-lucide="battery" style="width:16px;height:16px;stroke-width:2.5;"></i>
+        </div>
+      </div>
+
+      <!-- ── VIEWPORT DECK FOR ALL SCREENS ── -->
+      <div class="screen-deck" id="screen-deck">
+        
+        <!-- ════ SCREEN 1: SPLASH SCREEN ════ -->
+        <div class="screen active" id="splash">
+          <div class="splash-container">
+            <div class="splash-logo">த</div>
+            <h2 style="font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:0.5px;">MTS Connect</h2>
+            <p style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">Marietta Tamil School Digital Campus</p>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 2: LOGIN SCREEN ════ -->
+        <div class="screen" id="login">
+          <div class="loading-overlay" id="login-spinner">
+            <div class="spinner"></div>
+            <p style="font-weight:600;font-size:14px;" class="lang-en">Signing you in securely...</p>
+            <p style="font-weight:600;font-size:14px;" class="lang-ta">பாதுகாப்பாக உள்நுழைகிறது...</p>
+          </div>
+          <div class="screen-content" style="padding: 24px;">
+            <div style="text-align:center;margin-top:40px;margin-bottom:30px;">
+              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:16px;font-size:36px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-tamil);box-shadow:var(--shadow);">த</div>
+              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:24px;color:var(--primary);margin-top:12px;">Welcome Back</h2>
+              <p style="font-size:13px;color:var(--text-muted);" class="lang-en">Sign in to Marietta Tamil School platform</p>
+              <p style="font-size:13px;color:var(--text-muted);" class="lang-ta">மரியேட்டா தமிழ் பள்ளி தளத்தில் உள்நுழையவும்</p>
+            </div>
+            
+            <form id="login-form" onsubmit="event.preventDefault();">
+              <div class="form-group">
+                <span class="form-label lang-en">Email Address</span>
+                <span class="form-label lang-ta">மின்னஞ்சல் முகவரி</span>
+                <input type="email" id="login-email" class="form-input" placeholder="name@mts.edu">
+              </div>
+              <div class="form-group">
+                <span class="form-label lang-en">Password</span>
+                <span class="form-label lang-ta">கடவுச்சொல்</span>
+                <div style="position:relative;">
+                  <input type="password" id="login-password" class="form-input" placeholder="••••••••">
+                  <button type="button" onclick="togglePasswordInput()" style="position:absolute;right:12px;top:10px;border:none;background:none;color:var(--text-muted);cursor:pointer;">
+                    <i data-lucide="eye" id="eye-icon" style="width:20px;height:20px;"></i>
+                  </button>
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="processLogin()" style="margin-top:10px;">
+                <span class="lang-en">Sign In</span>
+                <span class="lang-ta">உள்நுழை</span>
+              </button>
+            </form>
+
+            <div class="demo-creds">
+              <p style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;" class="lang-en">Demo Quick Login</p>
+              <p style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;" class="lang-ta">டெமோ விரைவு உள்நுழைவு</p>
+              <div class="demo-chip" onclick="fillCreds('parent')">👨‍👩‍👦 Parent</div>
+              <div class="demo-chip" onclick="fillCreds('teacher')">👩‍🏫 Teacher</div>
+              <div class="demo-chip" onclick="fillCreds('admin')">🔑 Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 3: PARENT HOME SCREEN ════ -->
+        <div class="screen" id="parent-home">
+          <div class="app-header">
+            <h1 class="lang-en">Parent Portal</h1>
+            <h1 class="lang-ta">பெற்றோர் தளம்</h1>
+            <button class="header-btn" onclick="toggleLanguage()"><i data-lucide="globe"></i></button>
+          </div>
+          <div class="screen-content">
+            <!-- Active Child Selector pill -->
+            <div class="child-switcher" id="parent-child-toggle">
+              <div class="child-pill active" onclick="switchChild('Anika Kumar')">Anika</div>
+              <div class="child-pill" onclick="switchChild('Rohan Kumar')">Rohan</div>
+            </div>
+
+            <!-- Todays Word Card -->
+            <div class="card" style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);color:var(--surface);">
+              <span class="badge badge-success" style="margin-bottom:8px;">Word of the Day / இன்றைய சொல்</span>
+              <h2 style="font-size:20px;font-weight:700;font-family:var(--font-tamil);">வணக்கம் (Vanakkam)</h2>
+              <p style="font-size:13px;opacity:0.9;margin-top:4px;" class="lang-en">Greeting meaning "Hello" or "Welcome" in Tamil.</p>
+              <p style="font-size:13px;opacity:0.9;margin-top:4px;" class="lang-ta">தமிழில் "ஹலோ" அல்லது "வரவேற்பு" என்று பொருள்படும் வாழ்த்துச் சொல்.</p>
+            </div>
+
+            <!-- Student Summary Row Grid -->
+            <div class="kpi-grid">
+              <div class="kpi-card" onclick="showScreen('parent-attendance')">
+                <div class="kpi-num" id="parent-kpi-att">90%</div>
+                <div class="kpi-label lang-en">Attendance</div>
+                <div class="kpi-label lang-ta">வருகைப்பதிவு</div>
+              </div>
+              <div class="kpi-card" onclick="showScreen('parent-homework')">
+                <div class="kpi-num" id="parent-kpi-hw">1 / 2</div>
+                <div class="kpi-label lang-en">Homework Done</div>
+                <div class="kpi-label lang-ta">வீட்டுப்பாடம்</div>
+              </div>
+            </div>
+
+            <!-- Attendance Donut widget -->
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Attendance Overview</span>
+                <span class="lang-ta">வருகை கண்ணோட்டம்</span>
+              </div>
+              <div class="attendance-radial-panel">
+                <div class="radial-circle" id="parent-radial-chart"></div>
+                <div>
+                  <h4 style="font-size:14px;color:var(--primary);" id="parent-attendance-class">Grade 3-A</h4>
+                  <p style="font-size:12px;color:var(--text-muted);margin-top:4px;" class="lang-en">Consistently present. Goal is 95%.</p>
+                  <p style="font-size:12px;color:var(--text-muted);margin-top:4px;" class="lang-ta">தொடர்ந்து வருகை தந்துள்ளார். இலக்கு 95%.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Broadcast announcements panel -->
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Latest Broadcasts</span>
+                <span class="lang-ta">சமீபத்திய அறிவிப்புகள்</span>
+                <button style="border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;" onclick="showScreen('parent-announcements')">See All</button>
+              </div>
+              <div id="parent-home-announcements-list">
+                <!-- Seeding dynamic announcements list -->
+              </div>
+            </div>
+            
+            <!-- Quick PT meeting banner info -->
+            <div class="card" style="border-left:4px solid var(--accent);" onclick="showScreen('parent-calendar')">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="background-color:var(--accent-light);color:var(--accent);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="handshake" style="width:20px;height:20px;"></i>
+                </div>
+                <div>
+                  <h4 style="font-size:13px;color:var(--primary);" class="lang-en">PT Meeting Slot Open</h4>
+                  <h4 style="font-size:13px;color:var(--primary);" class="lang-ta">பெற்றோர்-ஆசிரியர் கூட்டம்</h4>
+                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;" class="lang-en">Book slots for June 21 now</p>
+                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;" class="lang-ta">ஜூன் 21 க்கான நேரத்தை பதிவு செய்யவும்</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 4: PARENT CHILDREN SCREEN ════ -->
+        <div class="screen" id="parent-children">
+          <div class="app-header">
+            <h1 class="lang-en">My Children</h1>
+            <h1 class="lang-ta">எனது குழந்தைகள்</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="parent-children-cards-deck">
+              <!-- Render child cards dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 5: PARENT ATTENDANCE SCREEN ════ -->
+        <div class="screen" id="parent-attendance">
+          <div class="app-header">
+            <h1 class="lang-en">Attendance Record</h1>
+            <h1 class="lang-ta">வருகைப்பதிவு விவரங்கள்</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Request Leave / Report Absence</span>
+                <span class="lang-ta">விடுப்பு விண்ணப்பம்</span>
+              </div>
+              <form id="absence-form" onsubmit="event.preventDefault(); submitAbsence();">
+                <div class="form-group">
+                  <span class="form-label lang-en">Select Child</span>
+                  <span class="form-label lang-ta">குழந்தையைத் தேர்ந்தெடுக்கவும்</span>
+                  <select id="absence-child" class="form-select">
+                    <option value="Anika Kumar">Anika Kumar</option>
+                    <option value="Rohan Kumar">Rohan Kumar</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <span class="form-label lang-en">Date</span>
+                  <span class="form-label lang-ta">தேதி</span>
+                  <input type="date" id="absence-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <span class="form-label lang-en">Reason for Absence</span>
+                  <span class="form-label lang-ta">விடுப்புக்கான காரணம்</span>
+                  <input type="text" id="absence-reason" class="form-input" placeholder="e.g. Fever, dentist appointment" required>
+                </div>
+                <button type="submit" class="btn btn-accent">
+                  <span class="lang-en">Submit Request</span>
+                  <span class="lang-ta">விண்ணப்பிக்கவும்</span>
+                </button>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Absence History Logs</span>
+                <span class="lang-ta">விடுப்பு பதிவுகள்</span>
+              </div>
+              <div id="parent-absence-logs-deck">
+                <!-- Seeding dynamic absence logs -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 6: PARENT HOMEWORK SCREEN ════ -->
+        <div class="screen" id="parent-homework">
+          <div class="app-header">
+            <h1 class="lang-en">Homework Center</h1>
+            <h1 class="lang-ta">வீட்டுப்பாட மையம்</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="parent-homework-list-deck">
+              <!-- Render homework files dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 7: PARENT HOMEWORK DETAIL SCREEN ════ -->
+        <div class="screen" id="parent-homework-detail">
+          <div class="app-header">
+            <h1 class="lang-en">Homework Detail</h1>
+            <h1 class="lang-ta">வீட்டுப்பாட விவரம்</h1>
+            <button class="header-btn" onclick="showScreen('parent-homework', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" id="parent-homework-detail-content">
+            <!-- Dynamic Homework details loaded from JS -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 8: PARENT ANNOUNCEMENTS SCREEN ════ -->
+        <div class="screen" id="parent-announcements">
+          <div class="app-header">
+            <h1 class="lang-en">Announcements</h1>
+            <h1 class="lang-ta">அறிவிப்புகள்</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="parent-all-announcements-list">
+              <!-- Dynamic announcements rendering -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 9: PARENT ANNOUNCEMENT DETAIL SCREEN ════ -->
+        <div class="screen" id="parent-announcement-detail">
+          <div class="app-header">
+            <h1 class="lang-en">Announcement</h1>
+            <h1 class="lang-ta">அறிவிப்பு விவரம்</h1>
+            <button class="header-btn" onclick="showScreen('parent-announcements', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" id="parent-announcement-detail-content">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 10: PARENT CALENDAR SCREEN ════ -->
+        <div class="screen" id="parent-calendar">
+          <div class="app-header">
+            <h1 class="lang-en">School Calendar</h1>
+            <h1 class="lang-ta">பள்ளி நாட்காட்டி</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <h3 style="text-align:center;color:var(--primary);font-weight:700;" class="lang-en">June 2025</h3>
+              <h3 style="text-align:center;color:var(--primary);font-weight:700;" class="lang-ta">ஜூன் 2025</h3>
+              <div class="calendar-grid" id="parent-calendar-dates">
+                <!-- Seeding Calendar calendar grid -->
+              </div>
+            </div>
+
+            <!-- Booking Section -->
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">PT Meeting Slots (June 21)</span>
+                <span class="lang-ta">ஆசிரியர் சந்திப்பு நேரங்கள் (ஜூன் 21)</span>
+              </div>
+              <div id="parent-pt-slots-deck">
+                <!-- Dynamic Meeting slot booking list -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 11: PARENT MESSAGES SCREEN ════ -->
+        <div class="screen" id="parent-messages">
+          <div class="app-header">
+            <h1 class="lang-en">Messages Inbox</h1>
+            <h1 class="lang-ta">செய்திப் பெட்டி</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" onclick="openChatScreen('parent', 'teacher')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
+              <div style="width:44px;height:44px;background-color:var(--primary-light);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">LR</div>
+              <div style="flex:1;">
+                <h4 style="font-size:14px;color:var(--primary);">Mrs. Lakshmi Rajendran</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="parent-msg-preview">No new message thread</p>
+              </div>
+              <i data-lucide="chevron-right" style="color:var(--text-muted);width:20px;height:20px;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 12: PARENT CHAT SCREEN ════ -->
+        <div class="screen" id="parent-chat">
+          <div class="app-header">
+            <h1 style="font-size:15px;" id="parent-chat-title">Mrs. Lakshmi R.</h1>
+            <button class="header-btn" onclick="showScreen('parent-messages', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" style="background-color:#EFEFEF;">
+            <div class="chat-box" id="parent-chat-bubbles">
+              <!-- Dynamic chats load -->
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="parent-chat-input" class="form-input" style="flex:1;" placeholder="Type a message...">
+            <button class="header-btn" onclick="sendChatMessage('parent')" style="background-color:var(--accent);color:var(--surface);"><i data-lucide="send"></i></button>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 13: PARENT ACCOUNT SCREEN ════ -->
+        <div class="screen" id="parent-account">
+          <div class="app-header">
+            <h1 class="lang-en">My Account</h1>
+            <h1 class="lang-ta">எனது கணக்கு</h1>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" style="text-align:center;">
+              <div style="width:64px;height:64px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">PK</div>
+              <h3 id="parent-profile-name" style="color:var(--primary);font-weight:700;">Priya Kumar</h3>
+              <p style="font-size:12px;color:var(--text-muted);" id="parent-profile-email">parent@mts.edu</p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Bilingual Preferences</span>
+                <span class="lang-ta">மொழி முன்னுரிமைகள்</span>
+              </div>
+              <button class="btn btn-secondary" onclick="toggleLanguage()">
+                🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+            </div>
+
+            <button class="btn btn-danger" onclick="logoutUser()" style="margin-top:20px;">
+              <i data-lucide="log-out" style="width:18px;height:18px;"></i>
+              <span class="lang-en">Logout</span>
+              <span class="lang-ta">வெளியேறு</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 14: TEACHER HOME SCREEN ════ -->
+        <div class="screen" id="teacher-home">
+          <div class="app-header">
+            <h1 class="lang-en">Teacher Portal</h1>
+            <h1 class="lang-ta">ஆசிரியர் தளம்</h1>
+            <button class="header-btn" onclick="toggleLanguage()"><i data-lucide="globe"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);color:var(--surface);">
+              <h2 id="teacher-profile-welcome" style="font-size:18px;font-weight:700;">Mrs. Lakshmi Rajendran</h2>
+              <p style="font-size:12px;opacity:0.9;margin-top:2px;">Grade 3-A & Grade 4-B Teacher</p>
+            </div>
+
+            <div class="kpi-grid">
+              <div class="kpi-card" onclick="showScreen('teacher-classes')">
+                <div class="kpi-num" id="teacher-kpi-students">33</div>
+                <div class="kpi-label lang-en">Total Students</div>
+                <div class="kpi-label lang-ta">மொத்த மாணவர்கள்</div>
+              </div>
+              <div class="kpi-card" onclick="showScreen('teacher-homework')">
+                <div class="kpi-num" id="teacher-kpi-submissions">1</div>
+                <div class="kpi-label lang-en">Pending Homework</div>
+                <div class="kpi-label lang-ta">மதிப்பீட்டு வீட்டுப்பாடம்</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Quick Actions</span>
+                <span class="lang-ta">விரைவான செயல்கள்</span>
+              </div>
+              <button class="btn btn-secondary" onclick="showScreen('teacher-classes')" style="margin-bottom:8px;">
+                <i data-lucide="clipboard-list" style="width:16px;height:16px;"></i>
+                <span class="lang-en">Take Attendance</span>
+                <span class="lang-ta">வருகைப்பதிவு எடுக்க</span>
+              </button>
+              <button class="btn btn-secondary" onclick="showScreen('teacher-homework')">
+                <i data-lucide="check-square" style="width:16px;height:16px;"></i>
+                <span class="lang-en">Grade Homework</span>
+                <span class="lang-ta">வீட்டுப்பாடம் திருத்த</span>
+              </button>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Today's Class Schedule</span>
+                <span class="lang-ta">இன்றைய வகுப்பு அட்டவணை</span>
+              </div>
+              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:8px;">
+                <li style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:6px;">
+                  <span><strong>Grade 3-A</strong> (10:00 AM)</span>
+                  <span class="badge badge-success">Active</span>
+                </li>
+                <li style="display:flex;justify-content:space-between;">
+                  <span><strong>Grade 4-B</strong> (1:30 PM)</span>
+                  <span class="badge badge-warning">Next</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 15: TEACHER CLASSES SCREEN ════ -->
+        <div class="screen" id="teacher-classes">
+          <div class="app-header">
+            <h1 class="lang-en">My Classes</h1>
+            <h1 class="lang-ta">எனது வகுப்புகள்</h1>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="teacher-classes-list-deck">
+              <!-- Render classes cards dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 16: TEACHER CLASS DETAIL SCREEN ════ -->
+        <div class="screen" id="teacher-class-detail">
+          <div class="app-header">
+            <h1 id="teacher-class-detail-title">Class Detail</h1>
+            <button class="header-btn" onclick="showScreen('teacher-classes', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span class="badge badge-info" id="teacher-class-roster-count">Students: 18</span>
+              <button class="btn btn-accent" onclick="openClassAttendanceMarking()" style="width:auto;height:36px;padding:0 12px;font-size:12px;">
+                <i data-lucide="calendar-check" style="width:14px;height:14px;"></i>
+                <span class="lang-en">Mark Attendance</span>
+                <span class="lang-ta">வருகைப்பதிவு செய்</span>
+              </button>
+            </div>
+            <div id="teacher-class-roster-list">
+              <!-- Roster table dynamic layout -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 17: TEACHER ATTENDANCE SCREEN ════ -->
+        <div class="screen" id="teacher-attendance">
+          <div class="app-header">
+            <h1 class="lang-en">Attendance Roster</h1>
+            <h1 class="lang-ta">வருகை பதிவு</h1>
+            <button class="header-btn" onclick="showScreen('teacher-class-detail', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="form-group">
+                <span class="form-label lang-en">Session Date</span>
+                <span class="form-label lang-ta">அமர்வு தேதி</span>
+                <input type="date" id="teacher-attendance-date" class="form-input" onchange="loadAttendanceRosterForDate()">
+              </div>
+            </div>
+            
+            <div class="card">
+              <div id="teacher-attendance-sheet-deck">
+                <!-- List roster and attendance radio selection options -->
+              </div>
+              <button class="btn btn-primary" onclick="saveClassAttendance()" style="margin-top:16px;">
+                <span class="lang-en">Save Attendance</span>
+                <span class="lang-ta">பதிவைச் சேமி</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 18: TEACHER HOMEWORK SCREEN ════ -->
+        <div class="screen" id="teacher-homework">
+          <div class="app-header">
+            <h1 class="lang-en">Homework Roster</h1>
+            <h1 class="lang-ta">வீட்டுப்பாடம்</h1>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Active Submissions Queue</span>
+                <span class="lang-ta">மதிப்பீடு செய்ய வேண்டியவை</span>
+              </div>
+              <div id="teacher-homework-queue-deck">
+                <!-- Homework pending evaluation submissions queue -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 19: TEACHER HOMEWORK REVIEW SCREEN ════ -->
+        <div class="screen" id="teacher-homework-review">
+          <div class="app-header">
+            <h1 class="lang-en">Homework Evaluation</h1>
+            <h1 class="lang-ta">வீட்டுப்பாட மதிப்பீடு</h1>
+            <button class="header-btn" onclick="showScreen('teacher-homework', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" id="teacher-homework-review-content">
+            <!-- Loaded dynamically from JS -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 20: TEACHER MESSAGES SCREEN ════ -->
+        <div class="screen" id="teacher-messages">
+          <div class="app-header">
+            <h1 class="lang-en">Inbox</h1>
+            <h1 class="lang-ta">செய்திகள்</h1>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" onclick="openChatScreen('teacher', 'parent')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
+              <div style="width:44px;height:44px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">PK</div>
+              <div style="flex:1;">
+                <h4 style="font-size:14px;color:var(--primary);">Priya Kumar (Parent)</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="teacher-msg-preview">No new chat message thread</p>
+              </div>
+              <i data-lucide="chevron-right" style="color:var(--text-muted);width:20px;height:20px;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 21: TEACHER CHAT SCREEN ════ -->
+        <div class="screen" id="teacher-chat">
+          <div class="app-header">
+            <h1 style="font-size:15px;">Priya Kumar (Parent)</h1>
+            <button class="header-btn" onclick="showScreen('teacher-messages', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" style="background-color:#EFEFEF;">
+            <div class="chat-box" id="teacher-chat-bubbles">
+              <!-- Dynamic chats load -->
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="teacher-chat-input" class="form-input" style="flex:1;" placeholder="Type a message...">
+            <button class="header-btn" onclick="sendChatMessage('teacher')" style="background-color:var(--accent);color:var(--surface);"><i data-lucide="send"></i></button>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 22: TEACHER ACCOUNT SCREEN ════ -->
+        <div class="screen" id="teacher-account">
+          <div class="app-header">
+            <h1 class="lang-en">My Account</h1>
+            <h1 class="lang-ta">எனது கணக்கு</h1>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" style="text-align:center;">
+              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">LR</div>
+              <h3 style="color:var(--primary);font-weight:700;">Mrs. Lakshmi Rajendran</h3>
+              <p style="font-size:12px;color:var(--text-muted);">teacher@mts.edu</p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Preferences</span>
+                <span class="lang-ta">விருப்பத்தேர்வுகள்</span>
+              </div>
+              <button class="btn btn-secondary" onclick="toggleLanguage()">
+                🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+            </div>
+
+            <button class="btn btn-danger" onclick="logoutUser()" style="margin-top:20px;">
+              <i data-lucide="log-out" style="width:18px;height:18px;"></i>
+              <span class="lang-en">Logout</span>
+              <span class="lang-ta">வெளியேறு</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 23: ADMIN HOME SCREEN ════ -->
+        <div class="screen" id="admin-home">
+          <div class="app-header">
+            <h1 class="lang-en">Admin Portal</h1>
+            <h1 class="lang-ta">நிர்வாக தளம்</h1>
+            <button class="header-btn" onclick="toggleLanguage()"><i data-lucide="globe"></i></button>
+          </div>
+          <div class="screen-content">
+            <!-- Admin KPI stats metrics -->
+            <div class="kpi-grid">
+              <div class="kpi-card" onclick="showScreen('admin-people')">
+                <div class="kpi-num" id="admin-kpi-students">5</div>
+                <div class="kpi-label lang-en">Students Enrolled</div>
+                <div class="kpi-label lang-ta">மாணவர்கள் சேர்க்கை</div>
+              </div>
+              <div class="kpi-card" onclick="showScreen('admin-approvals')">
+                <div class="kpi-num" id="admin-kpi-approvals">2</div>
+                <div class="kpi-label lang-en">Pending Approvals</div>
+                <div class="kpi-label lang-ta">அனுமதி நிலுவை</div>
+              </div>
+            </div>
+
+            <!-- Pending registrations layout panel -->
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Recent Approvals Queue</span>
+                <span class="lang-ta">அனுமதி கோரிக்கைகள்</span>
+                <button style="border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;" onclick="showScreen('admin-approvals')">See All</button>
+              </div>
+              <div id="admin-home-approvals-deck">
+                <!-- Seeding Dynamic pending approvals -->
+              </div>
+            </div>
+
+            <!-- Quick tools actions matrix -->
+            <div class="card">
+              <div class="card-title">
+                <span class="lang-en">Operational Control</span>
+                <span class="lang-ta">செயல்பாட்டு கட்டுப்பாடுகள்</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+                <button class="btn btn-secondary" onclick="showScreen('admin-compose')" style="height:38px;font-size:12px;padding:0 8px;">
+                  <i data-lucide="megaphone" style="width:14px;height:14px;"></i> Broadcast
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('admin-events')" style="height:38px;font-size:12px;padding:0 8px;">
+                  <i data-lucide="calendar" style="width:14px;height:14px;"></i> Schedule Event
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('admin-import')" style="height:38px;font-size:12px;padding:0 8px;">
+                  <i data-lucide="upload" style="width:14px;height:14px;"></i> CSV Importer
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('admin-audit')" style="height:38px;font-size:12px;padding:0 8px;">
+                  <i data-lucide="shield-alert" style="width:14px;height:14px;"></i> Audit Trail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 24: ADMIN PEOPLE SCREEN ════ -->
+        <div class="screen" id="admin-people">
+          <div class="app-header">
+            <h1 class="lang-en">People Directory</h1>
+            <h1 class="lang-ta">மக்கள் கோப்பகம்</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="segment-bar">
+              <button class="segment-btn active" id="admin-people-tab-students" onclick="togglePeopleRosterTab('students')">Students</button>
+              <button class="segment-btn" id="admin-people-tab-teachers" onclick="togglePeopleRosterTab('teachers')">Teachers</button>
+            </div>
+            <div id="admin-people-list-deck">
+              <!-- Dynamically populated roster list -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 25: ADMIN STUDENT DETAIL SCREEN ════ -->
+        <div class="screen" id="admin-student-detail">
+          <div class="app-header">
+            <h1 class="lang-en">Student Details</h1>
+            <h1 class="lang-ta">மாணவர் விவரம்</h1>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content" id="admin-student-detail-content">
+            <!-- Dynamic student form editor layout loads -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 26: ADMIN APPROVALS SCREEN ════ -->
+        <div class="screen" id="admin-approvals">
+          <div class="app-header">
+            <h1 class="lang-en">Approvals Desk</h1>
+            <h1 class="lang-ta">அனுமதி மேசை</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="admin-all-approvals-deck">
+              <!-- Approvals list containing approve / reject handles -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 27: ADMIN ATTENDANCE REPORT SCREEN ════ -->
+        <div class="screen" id="admin-attendance-report">
+          <div class="app-header">
+            <h1 class="lang-en">Attendance Ratios</h1>
+            <h1 class="lang-ta">வருகை விகிதங்கள்</h1>
+            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">Attendance rates by grade class</div>
+              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+                <li>
+                  <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
+                    <span>Grade 1-A (Enrollment: 14)</span>
+                    <strong>94%</strong>
+                  </div>
+                  <div style="width:100%;height:8px;background-color:var(--border);border-radius:4px;overflow:hidden;">
+                    <div style="width:94%;height:100%;background-color:var(--success);"></div>
+                  </div>
+                </li>
+                <li>
+                  <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
+                    <span>Grade 2-A (Enrollment: 16)</span>
+                    <strong>92%</strong>
+                  </div>
+                  <div style="width:100%;height:8px;background-color:var(--border);border-radius:4px;overflow:hidden;">
+                    <div style="width:92%;height:100%;background-color:var(--success);"></div>
+                  </div>
+                </li>
+                <li>
+                  <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
+                    <span>Grade 3-A (Enrollment: 18)</span>
+                    <strong>90%</strong>
+                  </div>
+                  <div style="width:100%;height:8px;background-color:var(--border);border-radius:4px;overflow:hidden;">
+                    <div style="width:90%;height:100%;background-color:var(--accent);"></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 28: ADMIN HOMEWORK REPORT SCREEN ════ -->
+        <div class="screen" id="admin-homework-report">
+          <div class="app-header">
+            <h1 class="lang-en">Homework Progress</h1>
+            <h1 class="lang-ta">வீட்டுப்பாட நிலவரங்கள்</h1>
+            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">Homework execution rates</div>
+              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+                <li>
+                  <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
+                    <span>Completed Ratios</span>
+                    <strong>85%</strong>
+                  </div>
+                  <div style="width:100%;height:8px;background-color:var(--border);border-radius:4px;overflow:hidden;">
+                    <div style="width:85%;height:100%;background-color:var(--success);"></div>
+                  </div>
+                </li>
+                <li>
+                  <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
+                    <span>Pending review queue</span>
+                    <strong>15%</strong>
+                  </div>
+                  <div style="width:100%;height:8px;background-color:var(--border);border-radius:4px;overflow:hidden;">
+                    <div style="width:15%;height:100%;background-color:var(--warning);"></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 29: ADMIN COMMS SCREEN ════ -->
+        <div class="screen" id="admin-comms">
+          <div class="app-header">
+            <h1 class="lang-en">Sent Broadcasts</h1>
+            <h1 class="lang-ta">அனுப்பிய அறிவிப்புகள்</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <button class="btn btn-accent" onclick="showScreen('admin-compose')" style="margin-bottom:12px;">
+              <i data-lucide="megaphone" style="width:16px;height:16px;"></i>
+              <span class="lang-en">Compose Announcement</span>
+              <span class="lang-ta">அறிவிப்பு எழுதுக</span>
+            </button>
+            <div id="admin-announcements-list-deck">
+              <!-- Dynamic admin communications announcements tracker list -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 30: ADMIN COMPOSE SCREEN ════ -->
+        <div class="screen" id="admin-compose">
+          <div class="app-header">
+            <h1 class="lang-en">New Announcement</h1>
+            <h1 class="lang-ta">புதிய அறிவிப்பு</h1>
+            <button class="header-btn" onclick="showScreen('admin-comms', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <form id="admin-compose-form" onsubmit="event.preventDefault(); submitAdminBroadcast();">
+                <div class="form-group">
+                  <span class="form-label lang-en">Announcement Title</span>
+                  <span class="form-label lang-ta">அறிவிப்பு தலைப்பு</span>
+                  <input type="text" id="admin-broadcast-title" class="form-input" placeholder="e.g. Weather updates" required>
+                </div>
+                <div class="form-group">
+                  <span class="form-label lang-en">Target Audience</span>
+                  <span class="form-label lang-ta">இலக்கு வாசகர்கள்</span>
+                  <select id="admin-broadcast-audience" class="form-select">
+                    <option value="All">All Parents & Teachers</option>
+                    <option value="Grade 3 Parents">Grade 3 Parents Only</option>
+                    <option value="Grade 4 Parents">Grade 4 Parents Only</option>
+                    <option value="Teachers">Teachers Only</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <span class="form-label lang-en">Announcement Body</span>
+                  <span class="form-label lang-ta">விளக்கக் குறிப்புகள்</span>
+                  <textarea id="admin-broadcast-body" class="form-input" style="height:120px;padding:8px;" placeholder="Write message details..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Publish Broadcast</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 31: ADMIN EVENTS SCREEN ════ -->
+        <div class="screen" id="admin-events">
+          <div class="app-header">
+            <h1 class="lang-en">Event Planner</h1>
+            <h1 class="lang-ta">பள்ளி நிகழ்வுகள்</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">Schedule New Event</div>
+              <form id="admin-event-form" onsubmit="event.preventDefault(); submitAdminEvent();">
+                <div class="form-group">
+                  <span class="form-label">Event Title</span>
+                  <input type="text" id="admin-event-title" class="form-input" placeholder="e.g. Tamil Quiz Challenge" required>
+                </div>
+                <div class="form-group">
+                  <span class="form-label">Date (June 2025)</span>
+                  <input type="date" id="admin-event-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <span class="form-label">Location / Room</span>
+                  <input type="text" id="admin-event-location" class="form-input" placeholder="e.g. Building B, Room 102" required>
+                </div>
+                <button type="submit" class="btn btn-accent">Publish Event</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-title">All Scheduled Events</div>
+              <div id="admin-events-list-deck">
+                <!-- Seeding dynamic planned events lists -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 32: ADMIN IMPORT SCREEN ════ -->
+        <div class="screen" id="admin-import">
+          <div class="app-header">
+            <h1 class="lang-en">CSV Importer</h1>
+            <h1 class="lang-ta">தரவு இறக்குமதி</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <div class="card-title">Wizard Step 1: Select Roster File</div>
+              <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Simulate uploading a classroom CSV layout file.</p>
+              
+              <div id="admin-import-file-selector" style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background-color:var(--bg);" onclick="simulateImportFileSelection()">
+                <i data-lucide="file-spread-sheet" style="width:36px;height:36px;color:var(--accent);margin-bottom:8px;"></i>
+                <h4 style="font-size:13px;color:var(--primary);" id="admin-import-file-status">Click to pick 'students_roster_grade3.csv'</h4>
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;">Simulates student roster parsing automatically</p>
+              </div>
+
+              <div id="admin-import-wizard-action" style="display:none;margin-top:16px;">
+                <button class="btn btn-accent" onclick="commitCSVImport()">Import 5 Students to Grade 3-A</button>
+              </div>
+            </div>
+
+            <div class="card" id="admin-import-preview-box" style="display:none;">
+              <div class="card-title">Roster Header Auto-mapping Preview</div>
+              <table class="list-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Grade</th>
+                    <th>ITA ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Arun Govindasamy</td>
+                    <td>3-A</td>
+                    <td>ITA-2311</td>
+                  </tr>
+                  <tr>
+                    <td>Kavya Rajan</td>
+                    <td>3-A</td>
+                    <td>ITA-2312</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 33: ADMIN SETTINGS SCREEN ════ -->
+        <div class="screen" id="admin-settings">
+          <div class="app-header">
+            <h1 class="lang-en">Control Panel</h1>
+            <h1 class="lang-ta">கட்டுப்பாட்டு பலகை</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card" style="text-align:center;">
+              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">SV</div>
+              <h3 style="color:var(--primary);font-weight:700;">Admin Suresh V.</h3>
+              <p style="font-size:12px;color:var(--text-muted);">admin@mts.edu</p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Reports & Metrics</div>
+              <button class="btn btn-secondary" onclick="showScreen('admin-attendance-report')" style="margin-bottom:8px;text-align:left;justify-content:flex-start;">
+                <i data-lucide="bar-chart-2"></i> Attendance Ratio Metrics
+              </button>
+              <button class="btn btn-secondary" onclick="showScreen('admin-homework-report')" style="text-align:left;justify-content:flex-start;">
+                <i data-lucide="trending-up"></i> Homework Submission Rates
+              </button>
+            </div>
+
+            <div class="card">
+              <div class="card-title">System Properties</div>
+              <div class="form-group">
+                <span class="form-label">Marietta School Address Location</span>
+                <input type="text" class="form-input" value="1225 East Cobb Dr, Marietta, GA" readonly>
+              </div>
+              <button class="btn btn-secondary" onclick="toggleLanguage()" style="margin-top:6px;">
+                🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+            </div>
+
+            <button class="btn btn-danger" onclick="logoutUser()" style="margin-top:10px;">
+              <i data-lucide="log-out" style="width:18px;height:18px;"></i>
+              <span class="lang-en">Logout</span>
+              <span class="lang-ta">வெளியேறு</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 34: ADMIN AUDIT SCREEN ════ -->
+        <div class="screen" id="admin-audit">
+          <div class="app-header">
+            <h1 class="lang-en">Audit Logs</h1>
+            <h1 class="lang-ta">ஆடிட் பதிவுகள்</h1>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+          </div>
+          <div class="screen-content">
+            <div id="admin-audit-logs-deck">
+              <!-- Dynamic system logs populated here -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── BOTTOM TAB BAR CONTAINER ── -->
+      <nav class="bottom-nav" id="role-bottom-nav">
+        <!-- Renders role navigation elements dynamically -->
+      </nav>
+
+      <!-- ── PHONE HOME SWIPE INDICATOR BAR ── -->
+      <div class="home-indicator-bar"></div>
+    </div>
+
+    <div class="desktop-info-floating">
+      Bilingual mobile interface wrapper. Fits desktop browser sizes with simulated time indicator. Automatically scales full-screen on standard phone displays.
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────────────
+     6. JAVASCRIPT GLOBAL STATE CONTROLLER & CRUD LAYER
+     ────────────────────────────────────────────────────────────────── -->
+  <script>
+    // Database Seeding Key Version
+    const MOCK_DB_VERSION = "mts_mobile_v1.0.3";
+    const DB_KEY = "mts_mobile_db";
+
+    // Static Seed Data structure
+    const InitialSeedData = {
+      version: MOCK_DB_VERSION,
+      currentUser: null,
+      currentLanguage: "en",
+      activeChild: "Anika Kumar",
+      students: [
+        { id: "MTS-001", name: "Anika Kumar", tamilName: "அனிகா", grade: "3", class: "3-A", ita: "ITA-2301", status: "active", photoConsent: "Approved", medicalForm: "Submitted" },
+        { id: "MTS-002", name: "Rohan Kumar", tamilName: "ரோஹன்", grade: "3", class: "3-A", ita: "ITA-2302", status: "active", photoConsent: "Pending Signature", medicalForm: "Submitted" },
+        { id: "MTS-003", name: "Diya Patel", tamilName: "தியா", grade: "4", class: "4-B", ita: "ITA-2401", status: "active", photoConsent: "Approved", medicalForm: "Pending Attachment" },
+        { id: "MTS-004", name: "Siddharth Nair", tamilName: "சித்தார்த்", grade: "4", class: "4-B", ita: "pending", status: "pending", photoConsent: "Not Selected", medicalForm: "Not Selected" },
+        { id: "MTS-005", name: "Kavya Rajan", tamilName: "காவ்யா", grade: "5", class: "5-A", ita: "ITA-2501", status: "active", photoConsent: "Approved", medicalForm: "Submitted" }
+      ],
+      classes: [
+        { id: "c1", name: "Grade 1-A", teacher: "Mrs. Meena K.", studentCount: 14 },
+        { id: "c2", name: "Grade 2-A", teacher: "Mr. Arun P.", studentCount: 16 },
+        { id: "c3", name: "Grade 3-A", teacher: "Mrs. Lakshmi R.", studentCount: 18 },
+        { id: "c4", name: "Grade 4-B", teacher: "Mrs. Lakshmi R.", studentCount: 15 },
+        { id: "c5", name: "Grade 5-A", teacher: "Unassigned", studentCount: 12 }
+      ],
+      homework: [
+        { id: "hw-01", title: "Tamil Alphabet practice (த, ந)", dueDate: "June 12, 2025", desc: "Write letter patterns 'த' and 'ந' 10 times in your Tamil workbook.", grade: "3-A", status: "Pending", submissions: [
+          { studentName: "Anika Kumar", date: "June 08, 2025", attachment: "anika_alphabet_sheet.pdf", textNotes: "Finished writing all sheets.", status: "Pending Review", evaluation: { grade: "", comment: "" } }
+        ]},
+        { id: "hw-02", title: "Simple Pronoun Vocabulary", dueDate: "June 14, 2025", desc: "Form 5 basic phrases using pronouns 'நான்', 'நீ', 'அவன்'.", grade: "3-A", status: "Pending", submissions: [] },
+        { id: "hw-03", title: "Tamil Poetry Recitation prep", dueDate: "June 10, 2025", desc: "Prepare recitation of the first Tirukkural verse.", grade: "4-B", status: "Active", submissions: [] }
+      ],
+      announcements: [
+        { id: "ann-01", title: "Welcome to MTS Connect App Launch!", audience: "All", date: "June 01, 2025", desc: "Marietta Tamil School is proud to launch its companion mobile prototype for easy school portal operations.", acknowledgedBy: [] },
+        { id: "ann-02", title: "Grade 3 Homework Reminder", audience: "Grade 3 Parents", date: "June 04, 2025", desc: "Please check your homework folder for the pending Tamil Alphabet Practice due this Thursday.", acknowledgedBy: [] }
+      ],
+      events: [
+        { id: "evt-01", title: "Annual Day Practice", date: "2025-06-14", time: "10:00 AM", location: "Building A, Main Hall", rsvpStatus: { "Anika Kumar": "Attending" } },
+        { id: "evt-02", title: "Parent-Teacher Meeting", date: "2025-06-21", time: "Slot bookings open", location: "Building B", rsvpStatus: {} }
+      ],
+      ptSlots: [
+        { id: "slot-01", time: "9:00 AM - 9:15 AM", status: "Available", bookedBy: "" },
+        { id: "slot-02", time: "9:15 AM - 9:30 AM", status: "Booked", bookedBy: "Mrs. Ramesh (Diya)" },
+        { id: "slot-03", time: "9:30 AM - 9:45 AM", status: "Available", bookedBy: "" },
+        { id: "slot-04", time: "9:45 AM - 10:00 AM", status: "Available", bookedBy: "" }
+      ],
+      absenceLogs: [
+        { id: "abs-01", studentName: "Rohan Kumar", date: "2025-06-03", reason: "Mild fever", status: "Excused" }
+      ],
+      approvals: [
+        { id: "ap-01", type: "Student Linkage Request", details: "Priya Kumar request linkage to Siddharth Nair (Grade 4-B)", targetId: "MTS-004", status: "Pending" },
+        { id: "ap-02", type: "Teacher Registration", details: "Mr. Karthik Murugan request assignment to Grade 5-A", targetId: "karthik@mts.edu", status: "Pending" }
+      ],
+      auditLogs: [
+        { id: "aud-01", timestamp: "2026-06-09 10:15", user: "admin@mts.edu", action: "System Initialized database seeding v1.0" }
+      ],
+      chatLogs: [
+        { sender: "Mrs. Lakshmi Rajendran", role: "teacher", receiver: "Priya Kumar", text: "Hello Priya, Anika is doing fantastic in Tamil vocabulary checks. Just make sure she completes recitation exercises.", time: "June 08, 2025, 4:30 PM" },
+        { sender: "Priya Kumar", role: "parent", receiver: "Mrs. Lakshmi Rajendran", text: "Thank you Lakshmi! I will practice with her tonight.", time: "June 08, 2025, 5:10 PM" }
+      ]
+    };
+
+    let DB = {};
+    let screenHistory = [];
+
+    // ──────────────────────────────────────────────────────────────────
+    // DATABASE PERSISTENCE HELPER METHODS
+    // ──────────────────────────────────────────────────────────────────
+    function getDB() {
+      const dataStr = localStorage.getItem(DB_KEY);
+      if (!dataStr) {
+        saveDB(InitialSeedData);
+        return InitialSeedData;
+      }
+      try {
+        const parsed = JSON.parse(dataStr);
+        // Force upgrade/reseed if version mismatch detected
+        if (parsed.version !== MOCK_DB_VERSION) {
+          saveDB(InitialSeedData);
+          return InitialSeedData;
+        }
+        return parsed;
+      } catch (e) {
+        saveDB(InitialSeedData);
+        return InitialSeedData;
+      }
+    }
+
+    function saveDB(data) {
+      localStorage.setItem(DB_KEY, JSON.stringify(data));
+      DB = data;
+    }
+
+    function resetDBToDefault() {
+      saveDB(InitialSeedData);
+      alert("Database reset to static default seeds!");
+      location.reload();
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // SCREEN NAVIGATION ROUTER DECK
+    // ──────────────────────────────────────────────────────────────────
+    function showScreen(screenId, direction = 'forward') {
+      const activeScreen = document.querySelector('.screen.active');
+      const targetScreen = document.getElementById(screenId);
+      
+      if (!targetScreen) {
+        console.error("Screen ID not found in DOM Roster: " + screenId);
+        return;
+      }
+
+      if (activeScreen) {
+        // Remove old transition classes
+        activeScreen.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+        targetScreen.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+
+        // Apply slide animation classes based on navigate direction
+        if (direction === 'forward') {
+          activeScreen.classList.add('slide-out-left');
+          targetScreen.classList.add('slide-in-right');
+          screenHistory.push(activeScreen.id);
+        } else if (direction === 'backward') {
+          activeScreen.classList.add('slide-out-right');
+          targetScreen.classList.add('slide-in-left');
+        }
+
+        activeScreen.classList.remove('active');
+      }
+
+      targetScreen.classList.add('active');
+      
+      // Update Tab highlight indicators
+      updateTabNavigationHighlights(screenId);
+
+      // Perform dynamic rendering bindings per screen ID
+      triggerScreenDataRender(screenId);
+      
+      // Auto-recreate vector icons
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function goBack() {
+      if (screenHistory.length > 0) {
+        const prev = screenHistory.pop();
+        showScreen(prev, 'backward');
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // BILINGUAL LANGUAGE CONTROLLER
+    // ──────────────────────────────────────────────────────────────────
+    function toggleLanguage() {
+      DB = getDB();
+      DB.currentLanguage = DB.currentLanguage === "en" ? "ta" : "en";
+      saveDB(DB);
+      applyLanguagePreference();
+    }
+
+    function applyLanguagePreference() {
+      DB = getDB();
+      if (DB.currentLanguage === "ta") {
+        document.body.classList.add("lang-tamil");
+      } else {
+        document.body.classList.remove("lang-tamil");
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // AUTO-FILL AND SIGN-IN DEMO LOGIC
+    // ──────────────────────────────────────────────────────────────────
+    function fillCreds(role) {
+      const emailInput = document.getElementById("login-email");
+      const passwordInput = document.getElementById("login-password");
+      
+      if (role === 'parent') {
+        emailInput.value = "parent@mts.edu";
+        passwordInput.value = "parent123";
+      } else if (role === 'teacher') {
+        emailInput.value = "teacher@mts.edu";
+        passwordInput.value = "teacher123";
+      } else if (role === 'admin') {
+        emailInput.value = "admin@mts.edu";
+        passwordInput.value = "admin123";
+      }
+    }
+
+    function togglePasswordInput() {
+      const passwordInput = document.getElementById("login-password");
+      const eyeIcon = document.getElementById("eye-icon");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.setAttribute("data-lucide", "eye-off");
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.setAttribute("data-lucide", "eye");
+      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function processLogin() {
+      const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const spinner = document.getElementById("login-spinner");
+
+      if (!email) {
+        alert("Please enter your email credentials first.");
+        return;
+      }
+
+      spinner.style.display = "flex";
+
+      setTimeout(() => {
+        spinner.style.display = "none";
+        DB = getDB();
+
+        if (email.includes("parent")) {
+          DB.currentUser = { email: "parent@mts.edu", name: "Priya Kumar", role: "parent" };
+          saveDB(DB);
+          renderBottomTabNav("parent");
+          showScreen("parent-home");
+        } else if (email.includes("teacher")) {
+          DB.currentUser = { email: "teacher@mts.edu", name: "Mrs. Lakshmi Rajendran", role: "teacher" };
+          saveDB(DB);
+          renderBottomTabNav("teacher");
+          showScreen("teacher-home");
+        } else if (email.includes("admin")) {
+          DB.currentUser = { email: "admin@mts.edu", name: "Admin Suresh V.", role: "admin" };
+          saveDB(DB);
+          renderBottomTabNav("admin");
+          showScreen("admin-home");
+        } else {
+          alert("Invalid Login Credentials. Use parent@mts.edu, teacher@mts.edu, or admin@mts.edu.");
+        }
+      }, 600);
+    }
+
+    function logoutUser() {
+      DB = getDB();
+      DB.currentUser = null;
+      saveDB(DB);
+      
+      const nav = document.getElementById("role-bottom-nav");
+      nav.classList.remove("active");
+      
+      screenHistory = [];
+      showScreen("login");
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // BOTTOM NAVIGATION TAB DECK RENDERER
+    // ──────────────────────────────────────────────────────────────────
+    function renderBottomTabNav(role) {
+      const navContainer = document.getElementById("role-bottom-nav");
+      navContainer.innerHTML = "";
+      navContainer.classList.add("active");
+
+      let html = "";
+      if (role === "parent") {
+        html = `
+          <div class="nav-tab active" id="tab-parent-home" onclick="showScreen('parent-home')">
+            <i data-lucide="home"></i>
+            <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
+          </div>
+          <div class="nav-tab" id="tab-parent-children" onclick="showScreen('parent-children')">
+            <i data-lucide="users"></i>
+            <span class="lang-en">Kids</span><span class="lang-ta">பிள்ளைகள்</span>
+          </div>
+          <div class="nav-tab" id="tab-parent-calendar" onclick="showScreen('parent-calendar')">
+            <i data-lucide="calendar"></i>
+            <span class="lang-en">Calendar</span><span class="lang-ta">நாட்காட்டி</span>
+          </div>
+          <div class="nav-tab" id="tab-parent-messages" onclick="showScreen('parent-messages')">
+            <i data-lucide="message-square"></i>
+            <span class="lang-en">Inbox</span><span class="lang-ta">செய்தி</span>
+          </div>
+          <div class="nav-tab" id="tab-parent-account" onclick="showScreen('parent-account')">
+            <i data-lucide="user"></i>
+            <span class="lang-en">Profile</span><span class="lang-ta">விவரம்</span>
+          </div>
+        `;
+      } else if (role === "teacher") {
+        html = `
+          <div class="nav-tab active" id="tab-teacher-home" onclick="showScreen('teacher-home')">
+            <i data-lucide="home"></i>
+            <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
+          </div>
+          <div class="nav-tab" id="tab-teacher-classes" onclick="showScreen('teacher-classes')">
+            <i data-lucide="book-open"></i>
+            <span class="lang-en">Classes</span><span class="lang-ta">வகுப்புகள்</span>
+          </div>
+          <div class="nav-tab" id="tab-teacher-homework" onclick="showScreen('teacher-homework')">
+            <i data-lucide="edit-3"></i>
+            <span class="lang-en">Tasks</span><span class="lang-ta">பணிகள்</span>
+          </div>
+          <div class="nav-tab" id="tab-teacher-messages" onclick="showScreen('teacher-messages')">
+            <i data-lucide="message-square"></i>
+            <span class="lang-en">Messages</span><span class="lang-ta">செய்திகள்</span>
+          </div>
+          <div class="nav-tab" id="tab-teacher-account" onclick="showScreen('teacher-account')">
+            <i data-lucide="user"></i>
+            <span class="lang-en">Profile</span><span class="lang-ta">விவரம்</span>
+          </div>
+        `;
+      } else if (role === "admin") {
+        html = `
+          <div class="nav-tab active" id="tab-admin-home" onclick="showScreen('admin-home')">
+            <i data-lucide="grid"></i>
+            <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
+          </div>
+          <div class="nav-tab" id="tab-admin-people" onclick="showScreen('admin-people')">
+            <i data-lucide="users"></i>
+            <span class="lang-en">People</span><span class="lang-ta">மக்கள்</span>
+          </div>
+          <div class="nav-tab" id="tab-admin-approvals" onclick="showScreen('admin-approvals')">
+            <i data-lucide="check-circle-2"></i>
+            <span class="lang-en">Approvals</span><span class="lang-ta">ஒப்புதல்கள்</span>
+          </div>
+          <div class="nav-tab" id="tab-admin-comms" onclick="showScreen('admin-comms')">
+            <i data-lucide="megaphone"></i>
+            <span class="lang-en">Comms</span><span class="lang-ta">அறிவிப்பு</span>
+          </div>
+          <div class="nav-tab" id="tab-admin-settings" onclick="showScreen('admin-settings')">
+            <i data-lucide="settings"></i>
+            <span class="lang-en">More</span><span class="lang-ta">மேலும்</span>
+          </div>
+        `;
+      }
+
+      navContainer.innerHTML = html;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function updateTabNavigationHighlights(activeScreenId) {
+      const tabs = document.querySelectorAll(".nav-tab");
+      tabs.forEach(tab => tab.classList.remove("active"));
+      
+      const tabEl = document.getElementById("tab-" + activeScreenId);
+      if (tabEl) {
+        tabEl.classList.add("active");
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // DYNAMIC SCREEN RENDERING BINDINGS & TEMPLATES
+    // ──────────────────────────────────────────────────────────────────
+    function triggerScreenDataRender(screenId) {
+      DB = getDB();
+      
+      switch (screenId) {
+        case 'parent-home':
+          renderParentHomeScreen();
+          break;
+        case 'parent-children':
+          renderParentChildrenScreen();
+          break;
+        case 'parent-attendance':
+          renderParentAttendanceScreen();
+          break;
+        case 'parent-homework':
+          renderParentHomeworkScreen();
+          break;
+        case 'parent-announcements':
+          renderParentAnnouncementsScreen();
+          break;
+        case 'parent-calendar':
+          renderParentCalendarScreen();
+          break;
+        case 'parent-messages':
+          renderParentMessagesScreen();
+          break;
+        case 'parent-chat':
+          renderParentChatBubbles();
+          break;
+        case 'teacher-home':
+          renderTeacherHomeScreen();
+          break;
+        case 'teacher-classes':
+          renderTeacherClassesScreen();
+          break;
+        case 'teacher-homework':
+          renderTeacherHomeworkScreen();
+          break;
+        case 'teacher-messages':
+          renderTeacherMessagesScreen();
+          break;
+        case 'teacher-chat':
+          renderTeacherChatBubbles();
+          break;
+        case 'admin-home':
+          renderAdminHomeScreen();
+          break;
+        case 'admin-people':
+          renderAdminPeopleScreen();
+          break;
+        case 'admin-approvals':
+          renderAdminApprovalsScreen();
+          break;
+        case 'admin-comms':
+          renderAdminCommsScreen();
+          break;
+        case 'admin-events':
+          renderAdminEventsScreen();
+          break;
+        case 'admin-audit':
+          renderAdminAuditLogs();
+          break;
+      }
+    }
+
+    // ── PARENT SCREEN ACTIONS ──
+    function switchChild(name) {
+      DB = getDB();
+      DB.activeChild = name;
+      saveDB(DB);
+      
+      const toggles = document.querySelectorAll("#parent-child-toggle .child-pill");
+      toggles.forEach(t => {
+        if (t.textContent.trim().toLowerCase() === name.split(" ")[0].toLowerCase()) {
+          t.classList.add("active");
+        } else {
+          t.classList.remove("active");
+        }
+      });
+
+      renderParentHomeScreen();
+    }
+
+    function renderParentHomeScreen() {
+      DB = getDB();
+      const currentChild = DB.activeChild;
+      const student = DB.students.find(s => s.name === currentChild) || DB.students[0];
+      
+      // Seed parent metrics dynamically
+      const attKPI = student.name === "Anika Kumar" ? "90%" : "95%";
+      const hwKPI = student.name === "Anika Kumar" ? "1 / 2" : "2 / 2";
+      document.getElementById("parent-kpi-att").textContent = attKPI;
+      document.getElementById("parent-kpi-hw").textContent = hwKPI;
+
+      // Class title assignment
+      document.getElementById("parent-attendance-class").textContent = student.class + " - " + student.ita;
+
+      // Update Attendance radial conic-gradient status
+      const chart = document.getElementById("parent-radial-chart");
+      const percentage = student.name === "Anika Kumar" ? 90 : 95;
+      chart.style.background = `conic-gradient(var(--accent) 0% ${percentage}%, var(--border) ${percentage}% 100%)`;
+      
+      // Inline styles to update radial inner label
+      const styleTagId = "radial-text-dynamic-style";
+      let styleTag = document.getElementById(styleTagId);
+      if (!styleTag) {
+        styleTag = document.createElement("style");
+        styleTag.id = styleTagId;
+        document.head.appendChild(styleTag);
+      }
+      styleTag.innerHTML = `.radial-circle::before { content: '${percentage}%' !important; }`;
+
+      // Home latest broadcasts list
+      const homeAnnContainer = document.getElementById("parent-home-announcements-list");
+      homeAnnContainer.innerHTML = "";
+      
+      DB.announcements.slice(0, 2).forEach(ann => {
+        const item = document.createElement("div");
+        item.style.padding = "10px 0";
+        item.style.borderBottom = "1px solid var(--border)";
+        item.style.cursor = "pointer";
+        item.onclick = () => openAnnouncementDetail(ann.id);
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-weight:600;font-size:13px;color:var(--primary);">${ann.title}</span>
+            <span style="font-size:10px;color:var(--text-muted);">${ann.date}</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
+        `;
+        homeAnnContainer.appendChild(item);
+      });
+    }
+
+    function renderParentChildrenScreen() {
+      DB = getDB();
+      const deck = document.getElementById("parent-children-cards-deck");
+      deck.innerHTML = "";
+
+      const parentKids = DB.students.filter(s => s.name === "Anika Kumar" || s.name === "Rohan Kumar");
+      parentKids.forEach(kid => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+            <div style="width:40px;height:40px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">
+              ${kid.name === "Anika Kumar" ? "AK" : "RK"}
+            </div>
+            <div>
+              <h3 style="font-size:15px;color:var(--primary);font-weight:700;">${kid.name} (${kid.tamilName})</h3>
+              <p style="font-size:11px;color:var(--text-muted);">ITA Roster ID: ${kid.ita}</p>
+            </div>
+          </div>
+          <div style="font-size:13px;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;">
+              <span class="lang-en">Grade Level</span><span class="lang-ta">வகுப்பு நிலை</span>
+              <strong>Grade ${kid.grade} (${kid.class})</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="lang-en">Photo Consent</span><span class="lang-ta">புகைப்பட ஒப்புதல்</span>
+              <span class="badge ${kid.photoConsent === 'Approved' ? 'badge-success' : 'badge-warning'}">${kid.photoConsent}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="lang-en">Medical Form</span><span class="lang-ta">மருத்துவ படிவம்</span>
+              <span class="badge ${kid.medicalForm === 'Submitted' ? 'badge-success' : 'badge-warning'}">${kid.medicalForm}</span>
+            </div>
+          </div>
+        `;
+        deck.appendChild(card);
+      });
+    }
+
+    function renderParentAttendanceScreen() {
+      DB = getDB();
+      const logsDeck = document.getElementById("parent-absence-logs-deck");
+      logsDeck.innerHTML = "";
+
+      if (DB.absenceLogs.length === 0) {
+        logsDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>No absence requests logged yet.</p>";
+        return;
+      }
+
+      DB.absenceLogs.forEach(log => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "8px 0";
+        row.style.borderBottom = "1px solid var(--border)";
+        row.innerHTML = `
+          <div>
+            <h4 style="font-size:13px;color:var(--primary);">${log.studentName}</h4>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Date: ${log.date} - ${log.reason}</p>
+          </div>
+          <span class="badge ${log.status === 'Excused' ? 'badge-success' : 'badge-warning'}">${log.status}</span>
+        `;
+        logsDeck.appendChild(row);
+      });
+    }
+
+    function submitAbsence() {
+      DB = getDB();
+      const child = document.getElementById("absence-child").value;
+      const date = document.getElementById("absence-date").value;
+      const reason = document.getElementById("absence-reason").value.trim();
+
+      if (!date || !reason) {
+        alert("Please fill in both the absence date and reason fields.");
+        return;
+      }
+
+      const newAbsence = {
+        id: "abs-" + (DB.absenceLogs.length + 1),
+        studentName: child,
+        date: date,
+        reason: reason,
+        status: "Pending Review"
+      };
+
+      DB.absenceLogs.push(newAbsence);
+      
+      // Auto register to admin audit log trail
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "parent@mts.edu",
+        action: `Requested student leave for ${child} on ${date}`
+      });
+
+      saveDB(DB);
+      
+      // Reset form controls
+      document.getElementById("absence-date").value = "";
+      document.getElementById("absence-reason").value = "";
+
+      alert("Leave absence report successfully submitted to Mrs. Lakshmi R.!");
+      renderParentAttendanceScreen();
+    }
+
+    function renderParentHomeworkScreen() {
+      DB = getDB();
+      const deck = document.getElementById("parent-homework-list-deck");
+      deck.innerHTML = "";
+
+      const studentName = DB.activeChild;
+
+      DB.homework.forEach(hw => {
+        const submission = hw.submissions.find(s => s.studentName === studentName);
+        let subStatus = "Not Submitted";
+        let badgeClass = "badge-danger";
+
+        if (submission) {
+          subStatus = submission.status;
+          badgeClass = submission.status === "Graded" ? "badge-success" : "badge-info";
+        }
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.cursor = "pointer";
+        card.onclick = () => openHomeworkDetail(hw.id);
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <h4 style="font-size:14px;color:var(--primary);">${hw.title}</h4>
+              <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Due: ${hw.dueDate}</p>
+            </div>
+            <span class="badge ${badgeClass}">${subStatus}</span>
+          </div>
+        `;
+        deck.appendChild(card);
+      });
+    }
+
+    function openHomeworkDetail(hwId) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      const studentName = DB.activeChild;
+      const submission = hw.submissions.find(s => s.studentName === studentName);
+
+      const parentHomeworkDetailContent = document.getElementById("parent-homework-detail-content");
+      parentHomeworkDetailContent.innerHTML = "";
+
+      let submissionArea = "";
+      if (submission) {
+        submissionArea = `
+          <div class="card" style="background-color:var(--success-light);border:1px solid rgba(46, 204, 113, 0.2);margin-top:16px;">
+            <h4 style="color:var(--success);font-size:13px;font-weight:700;">Submission Completed</h4>
+            <p style="font-size:12px;margin-top:4px;"><strong>Attached file:</strong> ${submission.attachment}</p>
+            ${submission.textNotes ? `<p style="font-size:12px;margin-top:4px;"><strong>Your notes:</strong> "${submission.textNotes}"</p>` : ''}
+            <p style="font-size:12px;margin-top:4px;"><strong>Roster Status:</strong> <span class="badge badge-success">${submission.status}</span></p>
+            
+            ${submission.status === "Graded" ? `
+              <div style="border-top:1.5px solid var(--border);margin-top:10px;padding-top:10px;">
+                <h4 style="color:var(--primary);font-size:12px;"><strong>Mrs. Lakshmi's Review:</strong></h4>
+                <p style="font-size:13px;font-weight:700;color:var(--accent);margin-top:2px;">Grade: ${submission.evaluation.grade}</p>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">"${submission.evaluation.comment}"</p>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        submissionArea = `
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title">Upload Homework Submission</div>
+            <form onsubmit="event.preventDefault(); submitParentHomework('${hw.id}');">
+              <div class="form-group">
+                <span class="form-label">Attached Document (Simulated name)</span>
+                <input type="text" id="hw-sub-file" class="form-input" placeholder="e.g. recitation_audio_anika.mp3" required>
+              </div>
+              <div class="form-group">
+                <span class="form-label">Submission notes (Optional)</span>
+                <input type="text" id="hw-sub-notes" class="form-input" placeholder="Note for Mrs. Lakshmi...">
+              </div>
+              <button type="submit" class="btn btn-accent">Submit Attachment</button>
+            </form>
+          </div>
+        `;
+      }
+
+      parentHomeworkDetailContent.innerHTML = `
+        <div class="card">
+          <h2 style="color:var(--primary);font-size:16px;font-weight:800;">${hw.title}</h2>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:4px;"><strong>Target Class Roster:</strong> Grade ${hw.grade}</p>
+          <p style="font-size:11px;color:var(--text-muted);"><strong>Deadline limit:</strong> ${hw.dueDate}</p>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;line-height:1.4;">
+            <p>${hw.desc}</p>
+          </div>
+        </div>
+        ${submissionArea}
+      `;
+
+      showScreen("parent-homework-detail");
+    }
+
+    function submitParentHomework(hwId) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      const studentName = DB.activeChild;
+      const file = document.getElementById("hw-sub-file").value.trim();
+      const notes = document.getElementById("hw-sub-notes").value.trim();
+
+      if (!file) {
+        alert("Please write a simulated attachment filename.");
+        return;
+      }
+
+      const newSubmission = {
+        studentName: studentName,
+        date: new Date().toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' }),
+        attachment: file,
+        textNotes: notes,
+        status: "Pending Review",
+        evaluation: { grade: "", comment: "" }
+      };
+
+      hw.submissions.push(newSubmission);
+      saveDB(DB);
+
+      alert("Homework file submitted successfully to teacher roster!");
+      openHomeworkDetail(hwId);
+    }
+
+    function renderParentAnnouncementsScreen() {
+      DB = getDB();
+      const deck = document.getElementById("parent-all-announcements-list");
+      deck.innerHTML = "";
+
+      DB.announcements.forEach(ann => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.cursor = "pointer";
+        card.onclick = () => openAnnouncementDetail(ann.id);
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="badge badge-info">${ann.audience}</span>
+            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+          </div>
+          <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${ann.title}</h4>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
+        `;
+        deck.appendChild(card);
+      });
+    }
+
+    function openAnnouncementDetail(annId) {
+      DB = getDB();
+      const ann = DB.announcements.find(a => a.id === annId);
+      const parentAnnDetailContent = document.getElementById("parent-announcement-detail-content");
+      
+      const isAcknowledged = ann.acknowledgedBy.includes("Priya Kumar");
+
+      parentAnnDetailContent.innerHTML = `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span class="badge badge-info">${ann.audience}</span>
+            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+          </div>
+          <h2 style="color:var(--primary);font-size:18px;font-weight:800;">${ann.title}</h2>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--text);">
+            <p>${ann.desc}</p>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          ${isAcknowledged ? `
+            <button class="btn btn-secondary" style="border-color:var(--success);color:var(--success);cursor:default;" disabled>
+              <i data-lucide="check" style="width:16px;height:16px;"></i> Acknowledged
+            </button>
+          ` : `
+            <button class="btn btn-primary" onclick="acknowledgeBroadcast('${ann.id}')">
+              Acknowledge Announcement
+            </button>
+          `}
+        </div>
+      `;
+
+      showScreen("parent-announcement-detail");
+    }
+
+    function acknowledgeBroadcast(annId) {
+      DB = getDB();
+      const ann = DB.announcements.find(a => a.id === annId);
+      if (!ann.acknowledgedBy.includes("Priya Kumar")) {
+        ann.acknowledgedBy.push("Priya Kumar");
+      }
+      saveDB(DB);
+      alert("Acknowledge registered successfully!");
+      openAnnouncementDetail(annId);
+    }
+
+    function renderParentCalendarScreen() {
+      DB = getDB();
+      const datesDeck = document.getElementById("parent-calendar-dates");
+      datesDeck.innerHTML = "";
+
+      // Static headers
+      const days = ["S", "M", "T", "W", "T", "F", "S"];
+      days.forEach(d => {
+        const el = document.createElement("div");
+        el.className = "calendar-header";
+        el.textContent = d;
+        datesDeck.appendChild(el);
+      });
+
+      // June 2025 Calendar alignment (Starts on Sunday)
+      for (let i = 1; i <= 30; i++) {
+        const dayEl = document.createElement("div");
+        dayEl.className = "calendar-day";
+        dayEl.textContent = i;
+
+        // Apply special indicators
+        if (i === 14) {
+          dayEl.classList.add("event");
+          dayEl.onclick = () => alert("June 14: Annual Day Practice at Main Hall (10:00 AM)");
+        } else if (i === 21) {
+          dayEl.classList.add("event");
+          dayEl.style.backgroundColor = "var(--accent-light)";
+          dayEl.onclick = () => alert("June 21: Parent-Teacher slot booking open");
+        } else if (i === 4) {
+          dayEl.classList.add("holiday");
+          dayEl.onclick = () => alert("June 4: School Closed (Summer Recess Holiday)");
+        }
+
+        datesDeck.appendChild(dayEl);
+      }
+
+      // Populate booking slots
+      const slotsDeck = document.getElementById("parent-pt-slots-deck");
+      slotsDeck.innerHTML = "";
+
+      DB.ptSlots.forEach(slot => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "10px 0";
+        row.style.borderBottom = "1px solid var(--border)";
+        
+        let actionsHtml = "";
+        if (slot.status === "Available") {
+          actionsHtml = `<button class="btn btn-accent" onclick="bookPTSlot('${slot.id}')" style="width:auto;height:32px;font-size:11px;padding:0 10px;">Book</button>`;
+        } else if (slot.bookedBy === "Priya Kumar") {
+          actionsHtml = `<span class="badge badge-success">Booked by You</span>`;
+        } else {
+          actionsHtml = `<span class="badge badge-muted">Unavailable</span>`;
+        }
+
+        row.innerHTML = `
+          <div>
+            <h4 style="font-size:13px;color:var(--primary);">${slot.time}</h4>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Teacher: Mrs. Lakshmi R.</p>
+          </div>
+          ${actionsHtml}
+        `;
+        slotsDeck.appendChild(row);
+      });
+    }
+
+    function bookPTSlot(slotId) {
+      DB = getDB();
+      const slot = DB.ptSlots.find(s => s.id === slotId);
+      slot.status = "Booked";
+      slot.bookedBy = "Priya Kumar";
+
+      // Register system audit log
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "parent@mts.edu",
+        action: `Booked Parent-Teacher meeting slot at ${slot.time}`
+      });
+
+      saveDB(DB);
+      alert("Parent-Teacher meeting slot confirmed for " + slot.time + "!");
+      renderParentCalendarScreen();
+    }
+
+    function renderParentMessagesScreen() {
+      DB = getDB();
+      const previewEl = document.getElementById("parent-msg-preview");
+      if (DB.chatLogs.length > 0) {
+        const lastMsg = DB.chatLogs[DB.chatLogs.length - 1];
+        previewEl.innerHTML = `<strong>${lastMsg.sender.split(" ")[0]}:</strong> "${lastMsg.text}"`;
+      }
+    }
+
+    function openChatScreen(role, partner) {
+      if (role === "parent") {
+        showScreen("parent-chat");
+      } else {
+        showScreen("teacher-chat");
+      }
+    }
+
+    function renderParentChatBubbles() {
+      DB = getDB();
+      const bubbleDeck = document.getElementById("parent-chat-bubbles");
+      bubbleDeck.innerHTML = "";
+
+      DB.chatLogs.forEach(chat => {
+        const sentByMe = chat.sender === "Priya Kumar";
+        const bubble = document.createElement("div");
+        bubble.className = `chat-bubble ${sentByMe ? 'sent' : 'received'}`;
+        bubble.innerHTML = `
+          <p>${chat.text}</p>
+          <span class="chat-time">${chat.time}</span>
+        `;
+        bubbleDeck.appendChild(bubble);
+      });
+
+      // Scroll bubbles container to bottom
+      setTimeout(() => {
+        bubbleDeck.scrollTop = bubbleDeck.scrollHeight;
+      }, 50);
+    }
+
+    function sendChatMessage(senderRole) {
+      DB = getDB();
+      const inputId = senderRole === "parent" ? "parent-chat-input" : "teacher-chat-input";
+      const inputEl = document.getElementById(inputId);
+      const textVal = inputEl.value.trim();
+
+      if (!textVal) return;
+
+      const dateStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - Today";
+
+      const newMsg = {
+        sender: senderRole === "parent" ? "Priya Kumar" : "Mrs. Lakshmi Rajendran",
+        role: senderRole,
+        receiver: senderRole === "parent" ? "Mrs. Lakshmi Rajendran" : "Priya Kumar",
+        text: textVal,
+        time: dateStr
+      };
+
+      DB.chatLogs.push(newMsg);
+      saveDB(DB);
+      inputEl.value = "";
+
+      if (senderRole === "parent") {
+        renderParentChatBubbles();
+        
+        // Dynamic simulated teacher auto-reply after 1 second
+        setTimeout(() => {
+          DB = getDB();
+          DB.chatLogs.push({
+            sender: "Mrs. Lakshmi Rajendran",
+            role: "teacher",
+            receiver: "Priya Kumar",
+            text: "Hello Priya, I have received your message. I'll evaluate the submissions and update your profile shortly.",
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - Auto"
+          });
+          saveDB(DB);
+          renderParentChatBubbles();
+        }, 1200);
+
+      } else {
+        renderTeacherChatBubbles();
+      }
+    }
+
+    // ── TEACHER SCREEN ACTIONS ──
+    function renderTeacherHomeScreen() {
+      DB = getDB();
+      
+      // Seed KPI numbers
+      document.getElementById("teacher-kpi-students").textContent = DB.students.length;
+      
+      const pendingCount = DB.homework.reduce((total, hw) => {
+        return total + hw.submissions.filter(s => s.status === "Pending Review").length;
+      }, 0);
+      
+      document.getElementById("teacher-kpi-submissions").textContent = pendingCount;
+    }
+
+    function renderTeacherClassesScreen() {
+      DB = getDB();
+      const deck = document.getElementById("teacher-classes-list-deck");
+      deck.innerHTML = "";
+
+      const teacherClasses = DB.classes.filter(c => c.teacher.includes("Lakshmi"));
+      teacherClasses.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.cursor = "pointer";
+        card.onclick = () => openTeacherClassDetail(c.id);
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <h3 style="font-size:15px;color:var(--primary);font-weight:700;">${c.name}</h3>
+              <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Roster count: ${c.studentCount} enrolled</p>
+            </div>
+            <i data-lucide="chevron-right" style="color:var(--text-muted);"></i>
+          </div>
+        `;
+        deck.appendChild(card);
+      });
+    }
+
+    function openTeacherClassDetail(classId) {
+      DB = getDB();
+      const c = DB.classes.find(cls => cls.id === classId);
+      
+      document.getElementById("teacher-class-detail-title").textContent = c.name;
+      document.getElementById("teacher-class-roster-count").textContent = `Roster: ${c.studentCount} Students`;
+
+      // Render class roster roster list
+      const rosterList = document.getElementById("teacher-class-roster-list");
+      rosterList.innerHTML = "";
+
+      const gradeKey = c.name.split(" ")[1].split("-")[0]; // e.g. "3" from "Grade 3-A"
+      const classStudents = DB.students.filter(s => s.grade === gradeKey);
+
+      classStudents.forEach(stud => {
+        const item = document.createElement("div");
+        item.className = "card";
+        item.style.padding = "10px";
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        item.innerHTML = `
+          <div>
+            <h4 style="font-size:13px;color:var(--primary); font-weight:700;">${stud.name} (${stud.tamilName})</h4>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">ITA ID: ${stud.ita}</p>
+          </div>
+          <span class="badge badge-success">Active</span>
+        `;
+        rosterList.appendChild(item);
+      });
+
+      showScreen("teacher-class-detail");
+    }
+
+    function openClassAttendanceMarking() {
+      // Set default input date today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById("teacher-attendance-date").value = today;
+      
+      loadAttendanceRosterForDate();
+      showScreen("teacher-attendance");
+    }
+
+    function loadAttendanceRosterForDate() {
+      DB = getDB();
+      const listContainer = document.getElementById("teacher-attendance-sheet-deck");
+      listContainer.innerHTML = "";
+
+      const gradeStudents = DB.students.filter(s => s.grade === "3");
+
+      gradeStudents.forEach(stud => {
+        const row = document.createElement("div");
+        row.style.padding = "12px 0";
+        row.style.borderBottom = "1px solid var(--border)";
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+
+        row.innerHTML = `
+          <span style="font-size:13px;font-weight:600;color:var(--primary);">${stud.name}</span>
+          <div style="display:flex;gap:12px;">
+            <label style="font-size:12px;display:flex;align-items:center;gap:3px;">
+              <input type="radio" name="att-${stud.id}" value="Present" checked> P
+            </label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:3px;color:var(--danger);">
+              <input type="radio" name="att-${stud.id}" value="Absent"> A
+            </label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:3px;color:var(--warning);">
+              <input type="radio" name="att-${stud.id}" value="Late"> L
+            </label>
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+    }
+
+    function saveClassAttendance() {
+      DB = getDB();
+      const attDate = document.getElementById("teacher-attendance-date").value;
+      if (!attDate) {
+        alert("Please specify session attendance date.");
+        return;
+      }
+
+      const gradeStudents = DB.students.filter(s => s.grade === "3");
+      
+      // Push actions to logs
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "teacher@mts.edu",
+        action: `Marked attendance class Grade 3-A for session date: ${attDate}`
+      });
+
+      saveDB(DB);
+      alert("Attendance record successfully locked for date: " + attDate);
+      showScreen("teacher-class-detail", "backward");
+    }
+
+    function renderTeacherHomeworkScreen() {
+      DB = getDB();
+      const queueDeck = document.getElementById("teacher-homework-queue-deck");
+      queueDeck.innerHTML = "";
+
+      let listHtml = "";
+
+      DB.homework.forEach(hw => {
+        hw.submissions.forEach(sub => {
+          if (sub.status === "Pending Review") {
+            const item = document.createElement("div");
+            item.className = "card";
+            item.style.cursor = "pointer";
+            item.style.borderLeft = "4px solid var(--accent)";
+            item.onclick = () => openTeacherHomeworkReview(hw.id, sub.studentName);
+            item.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <h4 style="font-size:13px;color:var(--primary);"><strong>${sub.studentName}</strong></h4>
+                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Task: ${hw.title}</p>
+                </div>
+                <span class="badge badge-warning">Review</span>
+              </div>
+            `;
+            queueDeck.appendChild(item);
+          }
+        });
+      });
+
+      if (queueDeck.innerHTML === "") {
+        queueDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending evaluations remaining.</p>";
+      }
+    }
+
+    function openTeacherHomeworkReview(hwId, studentName) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      const sub = hw.submissions.find(s => s.studentName === studentName);
+
+      const reviewDeck = document.getElementById("teacher-homework-review-content");
+      reviewDeck.innerHTML = `
+        <div class="card">
+          <h3 style="color:var(--primary);font-size:15px;font-weight:700;">${sub.studentName}</h3>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Homework: ${hw.title}</p>
+          
+          <div style="background-color:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:12px;">
+            <p><strong>Attachment file:</strong> "${sub.attachment}"</p>
+            ${sub.textNotes ? `<p style="margin-top:4px;"><strong>Parent Notes:</strong> "${sub.textNotes}"</p>` : ''}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Assign Evaluation Grade</div>
+          <form onsubmit="event.preventDefault(); submitHomeworkEvaluation('${hw.id}', '${sub.studentName}');">
+            <div class="form-group">
+              <span class="form-label">Grade Selection</span>
+              <select id="review-grade" class="form-select">
+                <option value="Excellent (A+)">Excellent (A+)</option>
+                <option value="Very Good (A)">Very Good (A)</option>
+                <option value="Good (B)">Good (B)</option>
+                <option value="Needs Practice (C)">Needs Practice (C)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <span class="form-label">Feedback Comments</span>
+              <input type="text" id="review-comment" class="form-input" placeholder="Great work! Keep practicing letters." required>
+            </div>
+            
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <button type="submit" class="btn btn-primary" style="flex:1;">Approve / Grade</button>
+              <button type="button" class="btn btn-danger" onclick="rejectHomeworkSubmission('${hw.id}', '${sub.studentName}')" style="flex:1;">Reject</button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      showScreen("teacher-homework-review");
+    }
+
+    function submitHomeworkEvaluation(hwId, studentName) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      const sub = hw.submissions.find(s => s.studentName === studentName);
+      
+      const grade = document.getElementById("review-grade").value;
+      const comment = document.getElementById("review-comment").value.trim();
+
+      sub.status = "Graded";
+      sub.evaluation.grade = grade;
+      sub.evaluation.comment = comment;
+
+      saveDB(DB);
+      alert(" Roster evaluation locked successfully for: " + studentName);
+      showScreen("teacher-homework", "backward");
+    }
+
+    function rejectHomeworkSubmission(hwId, studentName) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      const sub = hw.submissions.find(s => s.studentName === studentName);
+      
+      sub.status = "Rejected";
+      sub.evaluation.grade = "Incomplete";
+      sub.evaluation.comment = "Please redo the letter layouts and submit again.";
+
+      saveDB(DB);
+      alert("Submission marked as rejected. Parent will receive revision requirements.");
+      showScreen("teacher-homework", "backward");
+    }
+
+    function renderTeacherMessagesScreen() {
+      DB = getDB();
+      const previewEl = document.getElementById("teacher-msg-preview");
+      if (DB.chatLogs.length > 0) {
+        const lastMsg = DB.chatLogs[DB.chatLogs.length - 1];
+        previewEl.innerHTML = `<strong>${lastMsg.sender.split(" ")[0]}:</strong> "${lastMsg.text}"`;
+      }
+    }
+
+    function renderTeacherChatBubbles() {
+      DB = getDB();
+      const bubbleDeck = document.getElementById("teacher-chat-bubbles");
+      bubbleDeck.innerHTML = "";
+
+      DB.chatLogs.forEach(chat => {
+        const sentByMe = chat.sender === "Mrs. Lakshmi Rajendran";
+        const bubble = document.createElement("div");
+        bubble.className = `chat-bubble ${sentByMe ? 'sent' : 'received'}`;
+        bubble.innerHTML = `
+          <p>${chat.text}</p>
+          <span class="chat-time">${chat.time}</span>
+        `;
+        bubbleDeck.appendChild(bubble);
+      });
+
+      setTimeout(() => {
+        bubbleDeck.scrollTop = bubbleDeck.scrollHeight;
+      }, 50);
+    }
+
+
+    // ── ADMIN SCREEN ACTIONS ──
+    function renderAdminHomeScreen() {
+      DB = getDB();
+      
+      // Update KPIs count
+      document.getElementById("admin-kpi-students").textContent = DB.students.length;
+      
+      const approvalsCount = DB.approvals.filter(a => a.status === "Pending").length;
+      document.getElementById("admin-kpi-approvals").textContent = approvalsCount;
+
+      // Seeding Dynamic pending approvals list
+      const homeApprovalsDeck = document.getElementById("admin-home-approvals-deck");
+      homeApprovalsDeck.innerHTML = "";
+
+      const activeApprovals = DB.approvals.filter(a => a.status === "Pending").slice(0, 2);
+      
+      if (activeApprovals.length === 0) {
+        homeApprovalsDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending linkage approvals.</p>";
+        return;
+      }
+
+      activeApprovals.forEach(ap => {
+        const item = document.createElement("div");
+        item.style.padding = "10px 0";
+        item.style.borderBottom = "1px solid var(--border)";
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        
+        item.innerHTML = `
+          <div>
+            <h4 style="font-size:12px;color:var(--primary);font-weight:700;">${ap.type}</h4>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;max-width:230px;">${ap.details}</p>
+          </div>
+          <button class="btn btn-accent" onclick="showScreen('admin-approvals')" style="width:auto;height:28px;font-size:10px;padding:0 8px;">Action</button>
+        `;
+        homeApprovalsDeck.appendChild(item);
+      });
+    }
+
+    let currentAdminRosterTab = 'students';
+    function togglePeopleRosterTab(tab) {
+      currentAdminRosterTab = tab;
+      
+      const sTab = document.getElementById("admin-people-tab-students");
+      const tTab = document.getElementById("admin-people-tab-teachers");
+
+      if (tab === 'students') {
+        sTab.classList.add("active");
+        tTab.classList.remove("active");
+      } else {
+        sTab.classList.remove("active");
+        tTab.classList.add("active");
+      }
+
+      renderAdminPeopleScreen();
+    }
+
+    function renderAdminPeopleScreen() {
+      DB = getDB();
+      const deck = document.getElementById("admin-people-list-deck");
+      deck.innerHTML = "";
+
+      if (currentAdminRosterTab === 'students') {
+        DB.students.forEach(stud => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.style.cursor = "pointer";
+          card.onclick = () => openAdminStudentDetail(stud.id);
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${stud.name}</h4>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Grade ${stud.grade} | ITA ID: ${stud.ita}</p>
+              </div>
+              <span class="badge ${stud.status === 'active' ? 'badge-success' : 'badge-warning'}">${stud.status}</span>
+            </div>
+          `;
+          deck.appendChild(card);
+        });
+      } else {
+        const teachers = [
+          { name: "Mrs. Lakshmi Rajendran", email: "teacher@mts.edu", class: "Grade 3-A" },
+          { name: "Mr. Arun Prabhu", email: "arun@mts.edu", class: "Grade 2-A" },
+          { name: "Mrs. Meena Kumaravel", email: "meena@mts.edu", class: "Grade 1-A" }
+        ];
+
+        teachers.forEach(teach => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${teach.name}</h4>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Email: ${teach.email} | ${teach.class}</p>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+          `;
+          deck.appendChild(card);
+        });
+      }
+    }
+
+    function openAdminStudentDetail(studentId) {
+      DB = getDB();
+      const stud = DB.students.find(s => s.id === studentId);
+
+      const detailDeck = document.getElementById("admin-student-detail-content");
+      detailDeck.innerHTML = `
+        <div class="card">
+          <div class="card-title">Student Profile Roster</div>
+          <form onsubmit="event.preventDefault(); updateAdminStudentProfile('${stud.id}');">
+            <div class="form-group">
+              <span class="form-label">Full Name</span>
+              <input type="text" id="edit-stud-name" class="form-input" value="${stud.name}" required>
+            </div>
+            <div class="form-group">
+              <span class="form-label">Tamil Script Name</span>
+              <input type="text" id="edit-stud-tamil" class="form-input" value="${stud.tamilName}" required>
+            </div>
+            <div class="form-group">
+              <span class="form-label">Grade Roster Level</span>
+              <input type="number" id="edit-stud-grade" class="form-input" value="${stud.grade}" required>
+            </div>
+            <div class="form-group">
+              <span class="form-label">ITA Registration number</span>
+              <input type="text" id="edit-stud-ita" class="form-input" value="${stud.ita}" required>
+            </div>
+            <div class="form-group">
+              <span class="form-label">System Roster Status</span>
+              <select id="edit-stud-status" class="form-select">
+                <option value="active" ${stud.status === 'active' ? 'selected' : ''}>Active</option>
+                <option value="pending" ${stud.status === 'pending' ? 'selected' : ''}>Pending Verification</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="margin-top:16px;">Save student data changes</button>
+          </form>
+        </div>
+      `;
+
+      showScreen("admin-student-detail");
+    }
+
+    function updateAdminStudentProfile(studentId) {
+      DB = getDB();
+      const stud = DB.students.find(s => s.id === studentId);
+
+      stud.name = document.getElementById("edit-stud-name").value.trim();
+      stud.tamilName = document.getElementById("edit-stud-tamil").value.trim();
+      stud.grade = document.getElementById("edit-stud-grade").value.trim();
+      stud.ita = document.getElementById("edit-stud-ita").value.trim();
+      stud.status = document.getElementById("edit-stud-status").value;
+
+      // Audit logs linkage
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "admin@mts.edu",
+        action: `Edited student roster profile information for ${stud.name}`
+      });
+
+      saveDB(DB);
+      alert("Student profile records saved successfully!");
+      showScreen("admin-people", "backward");
+    }
+
+    function renderAdminApprovalsScreen() {
+      DB = getDB();
+      const deck = document.getElementById("admin-all-approvals-deck");
+      deck.innerHTML = "";
+
+      const pending = DB.approvals.filter(a => a.status === "Pending");
+      
+      if (pending.length === 0) {
+        deck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending registration linkage requests.</p>";
+        return;
+      }
+
+      pending.forEach(ap => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div style="margin-bottom:12px;">
+            <span class="badge badge-warning" style="margin-bottom:6px;">${ap.type}</span>
+            <p style="font-size:13px;font-weight:600;color:var(--primary);">${ap.details}</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-accent" onclick="processApprovalSubmit('${ap.id}', 'Approved')" style="flex:1;height:36px;font-size:12px;">Approve</button>
+            <button class="btn btn-secondary" onclick="processApprovalSubmit('${ap.id}', 'Rejected')" style="flex:1;height:36px;font-size:12px;border-color:var(--danger);color:var(--danger);">Reject</button>
+          </div>
+        `;
+        deck.appendChild(card);
+      });
+    }
+
+    function processApprovalSubmit(approvalId, actionResult) {
+      DB = getDB();
+      const ap = DB.approvals.find(a => a.id === approvalId);
+      ap.status = actionResult;
+
+      // Perform matching linkage logic
+      if (actionResult === "Approved") {
+        if (ap.type.includes("Student Linkage")) {
+          const stud = DB.students.find(s => s.id === ap.targetId);
+          if (stud) {
+            stud.status = "active";
+            stud.ita = "ITA-2319"; // Assigned ITA number
+          }
+        }
+      }
+
+      // Add to logs
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "admin@mts.edu",
+        action: `${actionResult} linkage approval request: ${ap.details}`
+      });
+
+      saveDB(DB);
+      alert(` Roster Request: ${actionResult}!`);
+      renderAdminApprovalsScreen();
+    }
+
+    function renderAdminCommsScreen() {
+      DB = getDB();
+      const listDeck = document.getElementById("admin-announcements-list-deck");
+      listDeck.innerHTML = "";
+
+      DB.announcements.forEach(ann => {
+        const item = document.createElement("div");
+        item.className = "card";
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="badge badge-info">${ann.audience}</span>
+            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+          </div>
+          <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${ann.title}</h4>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Acks count: ${ann.acknowledgedBy.length} parent read receipts</p>
+        `;
+        listDeck.appendChild(item);
+      });
+    }
+
+    function submitAdminBroadcast() {
+      DB = getDB();
+      const title = document.getElementById("admin-broadcast-title").value.trim();
+      const audience = document.getElementById("admin-broadcast-audience").value;
+      const body = document.getElementById("admin-broadcast-body").value.trim();
+
+      const newBroadcast = {
+        id: "ann-" + (DB.announcements.length + 1),
+        title: title,
+        audience: audience,
+        date: new Date().toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' }),
+        desc: body,
+        acknowledgedBy: []
+      };
+
+      DB.announcements.unshift(newBroadcast);
+
+      // Audit logs
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "admin@mts.edu",
+        action: `Published digital announcement broadcast targeting ${audience}: ${title}`
+      });
+
+      saveDB(DB);
+
+      // Reset controls
+      document.getElementById("admin-broadcast-title").value = "";
+      document.getElementById("admin-broadcast-body").value = "";
+
+      alert("Announcement successfully broadcasted and synced across all parent devices!");
+      showScreen("admin-comms", "backward");
+    }
+
+    function renderAdminEventsScreen() {
+      DB = getDB();
+      const listDeck = document.getElementById("admin-events-list-deck");
+      listDeck.innerHTML = "";
+
+      DB.events.forEach(evt => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <h4 style="font-size:13px;color:var(--primary);font-weight:700;">${evt.title}</h4>
+              <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Date: ${evt.date} | Loc: ${evt.location}</p>
+            </div>
+            <span class="badge badge-success">Active</span>
+          </div>
+        `;
+        listDeck.appendChild(card);
+      });
+    }
+
+    function submitAdminEvent() {
+      DB = getDB();
+      const title = document.getElementById("admin-event-title").value.trim();
+      const date = document.getElementById("admin-event-date").value;
+      const location = document.getElementById("admin-event-location").value.trim();
+
+      const newEv = {
+        id: "evt-" + (DB.events.length + 1),
+        title: title,
+        date: date,
+        time: "10:00 AM",
+        location: location,
+        rsvpStatus: {}
+      };
+
+      DB.events.push(newEv);
+
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "admin@mts.edu",
+        action: `Scheduled Tamil School event: ${title} on ${date}`
+      });
+
+      saveDB(DB);
+
+      // Reset forms
+      document.getElementById("admin-event-title").value = "";
+      document.getElementById("admin-event-date").value = "";
+      document.getElementById("admin-event-location").value = "";
+
+      alert("New event scheduled and synced to June 2025 calendar dashboard!");
+      renderAdminEventsScreen();
+    }
+
+    function simulateImportFileSelection() {
+      const selectStatus = document.getElementById("admin-import-file-status");
+      const wizardAction = document.getElementById("admin-import-wizard-action");
+      const previewBox = document.getElementById("admin-import-preview-box");
+
+      selectStatus.innerHTML = "<i data-lucide='check' style='color:var(--success);width:16px;height:16px;display:inline-block;'></i> <strong>students_roster_grade3.csv loaded successfully!</strong>";
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      wizardAction.style.display = "block";
+      previewBox.style.display = "block";
+    }
+
+    function commitCSVImport() {
+      DB = getDB();
+      
+      const newStudents = [
+        { id: "MTS-011", name: "Suresh Balakrishnan", tamilName: "சுரேஷ்", grade: "3", class: "3-A", ita: "ITA-2311", status: "active", photoConsent: "Approved", medicalForm: "Submitted" },
+        { id: "MTS-012", name: "Deepa Govindasamy", tamilName: "தீபா", grade: "3", class: "3-A", ita: "ITA-2312", status: "active", photoConsent: "Approved", medicalForm: "Submitted" }
+      ];
+
+      newStudents.forEach(s => {
+        if (!DB.students.some(old => old.id === s.id)) {
+          DB.students.push(s);
+        }
+      });
+
+      DB.auditLogs.unshift({
+        id: "aud-" + (DB.auditLogs.length + 1),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        user: "admin@mts.edu",
+        action: "Imported 2 students from students_roster_grade3.csv layout"
+      });
+
+      saveDB(DB);
+
+      alert("CSV mock data parsed successfully! 2 new students registered to Grade 3-A.");
+      
+      // Reset wizard
+      document.getElementById("admin-import-file-status").textContent = "Click to pick 'students_roster_grade3.csv'";
+      document.getElementById("admin-import-wizard-action").style.display = "none";
+      document.getElementById("admin-import-preview-box").style.display = "none";
+      
+      showScreen("admin-people");
+    }
+
+    function renderAdminAuditLogs() {
+      DB = getDB();
+      const deck = document.getElementById("admin-audit-logs-deck");
+      deck.innerHTML = "";
+
+      DB.auditLogs.forEach(log => {
+        const item = document.createElement("div");
+        item.style.padding = "10px 0";
+        item.style.borderBottom = "1px solid var(--border)";
+        item.style.fontSize = "12px";
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;color:var(--text-muted);">
+            <span>${log.user}</span>
+            <span>${log.timestamp}</span>
+          </div>
+          <p style="margin-top:2px;color:var(--primary);font-weight:600;">${log.action}</p>
+        `;
+        deck.appendChild(item);
+      });
+    }
+
+    // ── INITIALIZER SYSTEM CLOCK AND DATABASE ──
+    function updateSimulatedClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 12 instead of 0
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      const strTime = hours + ':' + minutes + ' ' + ampm;
+      document.getElementById("simulated-clock").textContent = strTime;
+    }
+
+    window.addEventListener("load", () => {
+      // Refresh simulated clock timer every 30 seconds
+      updateSimulatedClock();
+      setInterval(updateSimulatedClock, 30000);
+
+      // Force database initialize
+      DB = getDB();
+      applyLanguagePreference();
+
+      // Trigger automatic Splash Screen Transition
+      setTimeout(() => {
+        showScreen("login");
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
