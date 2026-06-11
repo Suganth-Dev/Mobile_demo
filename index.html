@@ -113,6 +113,8 @@
         max-width: 100% !important;
       }
       .status-bar { display: none !important; }
+      .home-indicator-bar { display: none !important; }
+      .desktop-info-floating { display: none !important; }
     }
     /* JS fallback class for older browsers */
     body.pwa-mode {
@@ -137,6 +139,8 @@
       max-width: 100% !important;
     }
     body.pwa-mode .status-bar { display: none !important; }
+    body.pwa-mode .home-indicator-bar { display: none !important; }
+    body.pwa-mode .desktop-info-floating { display: none !important; }
     
     /* Screen Deck & Layout */
     .screen-deck { flex: 1; position: relative; overflow: hidden; background-color: var(--bg); }
@@ -1897,12 +1901,8 @@
 
       <!-- ── PHONE HOME SWIPE INDICATOR BAR ── -->
       <div class="home-indicator-bar"></div>
-    </div>
-
-    <div class="desktop-info-floating">
-      Bilingual mobile interface wrapper. Fits desktop browser sizes with simulated time indicator. Automatically scales full-screen on standard phone displays.
-    </div>
   </div>
+
 
   <!-- ──────────────────────────────────────────────────────────────────
      6. JAVASCRIPT GLOBAL STATE CONTROLLER & CRUD LAYER
