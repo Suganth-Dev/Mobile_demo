@@ -1,0 +1,15 @@
+function logoutUser() {
+      DB = getDB();
+      DB.currentUser = null;
+      saveDB(DB);
+      
+      const nav = document.getElementById("role-bottom-nav");
+      nav.classList.remove("active");
+      
+      screenHistory = [];
+      showScreen("login");
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // BOTTOM NAVIGATION TAB DECK RENDERER
+    // ───────────

@@ -1,0 +1,7 @@
+162: .bottom-nav { position: absolute; bottom: 30px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); border-radius: 24px; display: none; justify-content: space-around; padding: 12px 8px; box-shadow: var(--shadow-glass); border: 1px solid var(--border); z-index: 200; }
+163: .bottom-nav.active { display: flex; }
+252: .bottom-nav {
+257: .bottom-nav.active { display: flex; }
+1329: <nav class="bottom-nav" id="role-bottom-nav">
+1585: const nav = document.getElementById("role-bottom-nav");
+1596: const navContainer = document.getElementById("role-bottom-nav");

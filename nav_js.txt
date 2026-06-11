@@ -1,0 +1,30 @@
+      DB = getDB();
+      DB.currentUser = null;
+      saveDB(DB);
+      
+      const nav = document.getElementById("role-bottom-nav");
+      nav.classList.remove("active");
+      
+      screenHistory = [];
+      showScreen("login");
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // BOTTOM NAVIGATION TAB DECK RENDERER
+    // ──────────────────────────────────────────────────────────────────
+    function renderBottomTabNav(role) {
+      const navContainer = document.getElementById("role-bottom-nav");
+      navContainer.innerHTML = "";
+      navContainer.classList.add("active");
+
+      let html = "";
+      if (role === "parent") {
+        html = `
+          <div class="nav-item active" id="tab-parent-home" onclick="showScreen('parent-home')">
+            <i data-lucide="home"></i>
+            <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
+          </div>
+          <div class="nav-item" id="tab-parent-children" onclick="showScreen('parent-children')">
+            <i data-lucide="users"></i>
+            <span class="lang-en">Kids</span><span class="lang-ta">பிள்ளைகள்</span>
+          </div>
