@@ -88,6 +88,55 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px #334155;
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
+
+    /* ── PWA Standalone Mode: Remove phone frame, go full screen ── */
+    @media (display-mode: standalone) {
+      body {
+        background: var(--bg) !important;
+        background-image: none !important;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      .desktop-container {
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        gap: 0;
+      }
+      .desktop-title { display: none !important; }
+      .phone-mockup {
+        width: 100vw !important;
+        height: 100vh !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+      }
+      .status-bar { display: none !important; }
+    }
+    /* JS fallback class for older browsers */
+    body.pwa-mode {
+      background: var(--bg) !important;
+      background-image: none !important;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    body.pwa-mode .desktop-container {
+      width: 100vw;
+      height: 100vh;
+      padding: 0;
+      gap: 0;
+    }
+    body.pwa-mode .desktop-title { display: none !important; }
+    body.pwa-mode .phone-mockup {
+      width: 100vw !important;
+      height: 100vh !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      max-width: 100% !important;
+    }
+    body.pwa-mode .status-bar { display: none !important; }
     
     /* Screen Deck & Layout */
     .screen-deck { flex: 1; position: relative; overflow: hidden; background-color: var(--bg); }
@@ -3996,7 +4045,23 @@
 
   <!-- ── PWA Service Worker Registration ── -->
   <script>
+    // ── Detect Standalone Mode (remove phone frame) ──
+    function checkStandaloneMode() {
+      const isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://');
+      if (isStandalone) {
+        document.body.classList.add('pwa-mode');
+        console.log('[PWA] Running in standalone mode');
+      }
+    }
+    checkStandaloneMode();
+    // Also check when display-mode changes
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', checkStandaloneMode);
+
     if ('serviceWorker' in navigator) {
+
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js')
           .then(function(reg) {
