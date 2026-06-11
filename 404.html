@@ -12,23 +12,25 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Outfit', Arial, sans-serif;
       color: #fff;
     }
     .msg { text-align: center; }
     .logo { font-size: 60px; margin-bottom: 16px; }
-    p { color: rgba(255,255,255,0.6); font-size: 14px; }
+    h2 { margin: 0 0 8px; font-size: 22px; }
+    p { color: rgba(255,255,255,0.5); font-size: 13px; }
   </style>
   <script>
-    // Redirect back to the app root
-    window.location.replace('/Mobile_demo/');
+    // Redirect to the app root (works on any host)
+    var base = window.location.origin + '/';
+    window.location.replace(base);
   </script>
 </head>
 <body>
   <div class="msg">
     <div class="logo">த</div>
     <h2>MTS Connect</h2>
-    <p>Redirecting...</p>
+    <p>Loading app...</p>
   </div>
 </body>
 </html>

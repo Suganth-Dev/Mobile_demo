@@ -3998,26 +3998,22 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/Mobile_demo/sw.js', {
-          scope: '/Mobile_demo/'
-        })
-        .then(function(registration) {
-          console.log('[PWA] Service Worker registered, scope:', registration.scope);
-        })
-        .catch(function(err) {
-          console.warn('[PWA] Service Worker registration failed:', err);
-        });
+        navigator.serviceWorker.register('./sw.js')
+          .then(function(reg) {
+            console.log('[PWA] SW registered:', reg.scope);
+          })
+          .catch(function(err) {
+            console.warn('[PWA] SW registration failed:', err);
+          });
       });
     }
 
-    // Capture install prompt and auto-show it
+    // Capture install prompt and auto-show banner
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       console.log('[PWA] Install prompt ready');
-
-      // Show install banner after 3 seconds if user hasn't installed
       setTimeout(() => {
         if (deferredPrompt) {
           const banner = document.getElementById('pwa-install-banner');
@@ -4027,7 +4023,7 @@
     });
 
     window.addEventListener('appinstalled', () => {
-      console.log('[PWA] App installed successfully!');
+      console.log('[PWA] App installed!');
       deferredPrompt = null;
       const banner = document.getElementById('pwa-install-banner');
       if (banner) banner.style.display = 'none';
@@ -4045,5 +4041,6 @@
       }
     }
   </script>
+
 </body>
 </html>
