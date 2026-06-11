@@ -19,614 +19,344 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     /* ──────────────────────────────────────────────────────────────────
-       1. CSS CUSTOM VARIABLES & DESIGN TOKENS
+       1. SMART UI - MODERN GLASSMORPHISM DESIGN SYSTEM
        ────────────────────────────────────────────────────────────────── */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@300;400;500;600;700&display=swap');
+    
     :root {
-      --primary: #1A2E55;
-      --primary-light: #2C4372;
-      --accent: #00AECB;
-      --accent-light: #E0F7FA;
-      --bg: #F5F7FA;
-      --surface: #FFFFFF;
-      --success: #2ECC71;
-      --success-light: #E8F8F0;
-      --warning: #F39C12;
-      --warning-light: #FEF5E7;
-      --danger: #E74C3C;
-      --danger-light: #FDEDEC;
-      --info: #3498DB;
-      --info-light: #EBF5FB;
-      --text: #1A1A2E;
-      --text-muted: #6B7280;
-      --border: #E5E7EB;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
-      --font-english: 'Inter', sans-serif;
+      --primary: #0F172A;       /* Modern Navy */
+      --primary-light: #1E293B;
+      --accent: #0EA5E9;        /* Cyan */
+      --accent-light: rgba(14, 165, 233, 0.08);
+      --bg: #F8FAFC;            /* Very light slate */
+      --surface: rgba(255, 255, 255, 0.85); /* Glassmorphic Surface */
+      --surface-solid: #FFFFFF;
+      --success: #10B981;
+      --success-light: rgba(16, 185, 129, 0.08);
+      --warning: #F59E0B;
+      --warning-light: rgba(245, 158, 11, 0.08);
+      --danger: #EF4444;
+      --danger-light: rgba(239, 68, 68, 0.08);
+      --info: #3B82F6;
+      --info-light: rgba(59, 130, 246, 0.08);
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: rgba(14, 165, 233, 0.15);
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.07);
+      
+      --font-english: 'Outfit', sans-serif;
       --font-tamil: 'Noto Sans Tamil', sans-serif;
       --font-heading: 'Outfit', sans-serif;
       
-      /* Slide speeds */
-      --transition-speed: 0.35s;
+      --transition-speed: 0.4s;
     }
 
-    /* Reset and General Mobile Configurations */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+    
     body {
       font-family: var(--font-english);
-      background-color: #0B0E17;
+      background-color: var(--text); /* Dark background for desktop wrapper */
       color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       overflow: hidden;
+      background-image: radial-gradient(circle at 50% 0%, #1E293B 0%, #0F172A 70%);
     }
 
-    /* Bilingual Toggle Support via Body Class */
     body.lang-tamil .lang-en { display: none !important; }
     body:not(.lang-tamil) .lang-ta { display: none !important; }
     body.lang-tamil { font-family: var(--font-tamil), var(--font-english); }
 
-    /* ──────────────────────────────────────────────────────────────────
-       2. DEVICE MOCKUP FRAME RULES (DESKTOP INTERFACE)
-       ────────────────────────────────────────────────────────────────── */
-    .desktop-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 20px;
-      z-index: 10;
-    }
+    .desktop-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 20px; z-index: 10; height: 100%; }
+    
+    .desktop-title { font-family: var(--font-heading); color: #F1F5F9; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .desktop-title span { font-weight: 400; color: #94A3B8; font-size: 16px; }
 
     .phone-mockup {
-      width: 390px;
-      height: 844px;
-      background-color: #000000;
-      border: 12px solid #1F2330;
-      border-radius: 48px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Phone Bezel Button Simulation */
-    .phone-mockup::before {
-      content: '';
-      position: absolute;
-      width: 4px;
-      height: 60px;
-      background: #333644;
-      left: -14px;
-      top: 140px;
-      border-radius: 4px 0 0 4px;
-      box-shadow: 0 80px 0 #333644; /* volume keys */
-    }
-    .phone-mockup::after {
-      content: '';
-      position: absolute;
-      width: 4px;
-      height: 80px;
-      background: #333644;
-      right: -14px;
-      top: 200px;
-      border-radius: 0 4px 4px 0; /* power button */
-    }
-
-    /* Dynamic Time Header Status Simulation */
-    .status-bar {
-      height: 44px;
-      background-color: var(--surface);
-      color: var(--text);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 24px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 100;
-      position: relative;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.02);
-    }
-    .status-bar .notch {
-      width: 110px;
-      height: 30px;
-      background-color: #000000;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-left-radius: 18px;
-      border-bottom-right-radius: 18px;
-    }
-    .status-bar .left-indicators {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .status-bar .right-indicators {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Home Indicator bar at the bottom of smartphone */
-    .home-indicator-bar {
-      height: 30px;
-      background-color: var(--surface);
-      position: relative;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .home-indicator-bar::after {
-      content: '';
-      width: 140px;
-      height: 5px;
-      background-color: #9CA3AF;
-      border-radius: 999px;
-    }
-
-    /* ── Hide bezel on real mobile viewports ── */
-    @media (max-width: 500px) {
-      body {
-        background-color: var(--bg);
-      }
-      .desktop-container {
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .phone-mockup {
-        width: 100vw;
-        height: 100vh;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-      }
-      .phone-mockup::before, .phone-mockup::after {
-        display: none;
-      }
-      .status-bar {
-        display: none !important;
-      }
-      .home-indicator-bar {
-        display: none !important;
-      }
-      .app-header {
-        padding-top: env(safe-area-inset-top, 12px);
-        height: calc(56px + env(safe-area-inset-top, 12px));
-      }
-      #login .screen-content {
-        padding-top: calc(24px + env(safe-area-inset-top, 12px));
-      }
-      .desktop-title, .desktop-info-floating {
-        display: none !important;
-      }
-    }
-
-    .desktop-title {
-      color: #FFFFFF;
-      font-family: var(--font-heading);
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .desktop-title span {
-      color: var(--accent);
-    }
-    .desktop-info-floating {
-      color: #94A3B8;
-      font-size: 13px;
-      text-align: center;
-      max-width: 380px;
-      line-height: 1.4;
-    }
-
-    /* ──────────────────────────────────────────────────────────────────
-       3. VIEWPORT DECK & SLIDE TRANSITION RULES
-       ────────────────────────────────────────────────────────────────── */
-    .screen-deck {
-      flex: 1;
-      position: relative;
+      width: 390px; height: 844px;
       background-color: var(--bg);
-      overflow: hidden;
-    }
-
-    .screen {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      flex-direction: column;
-      background-color: var(--bg);
-      z-index: 10;
-    }
-
-    .screen.active {
-      display: flex;
-      z-index: 20;
-    }
-
-    /* Screen Slide Animations */
-    .slide-in-right {
-      animation: slideInRight var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .slide-out-left {
-      animation: slideOutLeft var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .slide-in-left {
-      animation: slideInLeft var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .slide-out-right {
-      animation: slideOutRight var(--transition-speed) forwards cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes slideInRight {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
-    }
-    @keyframes slideOutLeft {
-      from { transform: translateX(0); }
-      to { transform: translateX(-30%); opacity: 0.8; }
-    }
-    @keyframes slideInLeft {
-      from { transform: translateX(-30%); opacity: 0.8; }
-      to { transform: translateX(0); }
-    }
-    @keyframes slideOutRight {
-      from { transform: translateX(0); }
-      to { transform: translateX(100%); }
-    }
-
-    /* ──────────────────────────────────────────────────────────────────
-       4. UI FRAMEWORK LAYOUTS & COMPONENT CLASSES
-       ────────────────────────────────────────────────────────────────── */
-    /* Header layout */
-    .app-header {
-      height: 56px;
-      background-color: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      flex-shrink: 0;
-    }
-    .app-header h1 {
-      font-family: var(--font-heading);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .header-btn {
-      background: none;
-      border: none;
-      color: var(--primary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      transition: background-color 0.2s;
-    }
-    .header-btn:active {
-      background-color: var(--bg);
-    }
-
-    /* Main scroll content block */
-    .screen-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      position: relative;
-    }
-
-    /* Bottom tab bar navigator */
-    .bottom-nav {
-      height: 64px;
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
-      display: none;
-      justify-content: space-around;
-      align-items: center;
-      flex-shrink: 0;
-      z-index: 90;
-    }
-    .bottom-nav.active {
-      display: flex;
-    }
-    .nav-tab {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      color: var(--text-muted);
-      cursor: pointer;
-      flex: 1;
-      height: 100%;
-      font-size: 10px;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .nav-tab.active {
-      color: var(--accent);
-    }
-    .nav-tab i {
-      width: 22px;
-      height: 22px;
-      stroke-width: 2;
-    }
-
-    /* Card Panels */
-    .card {
-      background-color: var(--surface);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(0, 0, 0, 0.02);
-    }
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      border: 12px solid #1E293B;
+      border-radius: 50px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px #334155;
+      position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
     
-    /* Input Elements */
-    .form-group {
-      margin-bottom: 12px;
-    }
-    .form-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .form-input {
-      width: 100%;
-      height: 44px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 0 12px;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      background-color: var(--surface);
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-    .form-input:focus {
-      border-color: var(--accent);
-    }
-    .form-select {
-      width: 100%;
-      height: 44px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 0 12px;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      background-color: var(--surface);
-      color: var(--text);
-    }
-
-    /* Buttons system */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      height: 44px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      padding: 0 16px;
-      transition: all 0.2s;
-      width: 100%;
-    }
-    .btn-primary {
-      background-color: var(--primary);
-      color: var(--surface);
-    }
-    .btn-primary:active {
-      background-color: var(--primary-light);
-    }
-    .btn-accent {
-      background-color: var(--accent);
-      color: var(--surface);
-    }
-    .btn-accent:active {
-      background-color: #008fa7;
-    }
-    .btn-secondary {
-      background-color: var(--surface);
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-    }
-    .btn-secondary:active {
-      background-color: rgba(26, 46, 85, 0.05);
-    }
-    .btn-danger {
-      background-color: var(--danger);
-      color: var(--surface);
-    }
-    .btn-danger:active {
-      background-color: #c0392b;
-    }
-
-    /* Custom Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 8px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge-success { background-color: var(--success-light); color: var(--success); }
-    .badge-warning { background-color: var(--warning-light); color: var(--warning); }
-    .badge-danger { background-color: var(--danger-light); color: var(--danger); }
-    .badge-info { background-color: var(--info-light); color: var(--info); }
-    .badge-muted { background-color: var(--border); color: var(--text-muted); }
-
-    /* Tables list */
-    .list-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .list-table th {
-      text-align: left;
-      padding: 8px;
-      color: var(--text-muted);
-      border-bottom: 2px solid var(--border);
-      font-weight: 600;
-    }
-    .list-table td {
-      padding: 8px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    /* ──────────────────────────────────────────────────────────────────
-       5. COMPONENT SPECIFIC LAYOUT STYLES
-       ────────────────────────────────────────────────────────────────── */
-    /* Splash logo spin animation */
-    .splash-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      background: radial-gradient(circle, var(--primary-light) 0%, var(--primary) 100%);
-      color: var(--surface);
-      text-align: center;
-    }
-    .splash-logo {
-      width: 90px;
-      height: 90px;
-      background-color: var(--surface);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-tamil);
-      font-size: 52px;
-      font-weight: 700;
-      color: var(--primary);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      margin-bottom: 24px;
-      position: relative;
-      animation: logoPulse 2s infinite ease-in-out;
-    }
-    .splash-logo::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 2px dashed var(--accent);
-      border-radius: 50%;
-      animation: logoRotate 12s infinite linear;
-    }
-    @keyframes logoPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    @keyframes logoRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* Demo Login Credentials Container */
-    .demo-creds {
-      background-color: var(--bg);
-      border: 1px dashed var(--accent);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 16px;
-    }
-    .demo-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: var(--surface);
+    /* Screen Deck & Layout */
+    .screen-deck { flex: 1; position: relative; overflow: hidden; background-color: var(--bg); }
+    .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; background-color: var(--bg); transform: translateX(100%); transition: transform var(--transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1); opacity: 0; pointer-events: none; }
+    .screen.active { transform: translateX(0); opacity: 1; pointer-events: auto; }
+    
+    .screen-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px 20px 100px; }
+    .screen-content::-webkit-scrollbar { display: none; }
+    
+    /* Smart UI Components */
+    .glass-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--primary);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow-glass);
+      margin-bottom: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .glass-card:active { transform: scale(0.98); }
+    
+    .card-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .btn { border: none; border-radius: 14px; padding: 14px 20px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: all 0.2s; font-family: var(--font-heading); }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15); }
+    .btn-primary:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1); }
+    
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-label { display: block; font-size:14px;line-height:1.5; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; font-family: var(--font-heading); }
+    .form-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); background-color: var(--surface-solid); color: var(--text); font-size: 15px; font-family: var(--font-english); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
+    
+    /* Login Screen Specifics */
+    .smart-login-header {
+      text-align: center; margin-top: 20px; margin-bottom: 40px; animation: slideDown 0.6s ease-out;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .login-role-card {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
       cursor: pointer;
-      margin: 4px;
       transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateY(10px);
     }
-    .demo-chip:active {
-      background-color: var(--accent-light);
-      border-color: var(--accent);
-    }
-
-    /* Login Loading Simulator */
-    .loading-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(26, 46, 85, 0.95);
-      z-index: 500;
-      display: none;
-      flex-direction: column;
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+    .login-role-card:nth-child(1) { animation-delay: 0.1s; }
+    .login-role-card:nth-child(2) { animation-delay: 0.2s; }
+    .login-role-card:nth-child(3) { animation-delay: 0.3s; }
+    
+    .login-role-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .login-role-card:active { transform: translateY(0) scale(0.98); }
+    .role-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--bg); }
+    .role-info { text-align: left; flex: 1; }
+    .role-title { font-family: var(--font-heading); font-weight: 700; font-size: 16px; color: var(--text); }
+    .role-desc { font-size:14px;line-height:1.5;line-height:1.5; color: var(--text-muted); margin-top: 2px; }
+    
+    .login-action-btn {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--surface);
+      gap: 12px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
     }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 1s infinite linear;
+    .login-action-btn:hover { border-color: var(--accent); }
+    .login-action-btn:active { transform: scale(0.96); }
+    .login-action-btn i { color: var(--accent); width: 22px; height: 22px; }
+    .login-action-btn .btn-text-col { display: flex; flex-direction: column; align-items: flex-start; }
+    .login-action-btn .btn-text-col span { font-size: 13px; font-weight: 700; font-family: var(--font-heading); line-height: 1.2; }
+    .login-action-btn .btn-text-col small { font-size: 11px; color: var(--text-muted); font-family: var(--font-tamil); line-height: 1.2; margin-top: 2px; }
+    
+    /* App Header */
+    .app-header { padding: 20px 20px 10px; background: var(--bg); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+    .app-header h1 { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--text); }
+    
+    /* Modern Bottom Nav */
+    .bottom-nav { position: absolute; bottom: 30px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); border-radius: 24px; display: none; justify-content: space-around; padding: 12px 8px; box-shadow: var(--shadow-glass); border: 1px solid var(--border); z-index: 200; }
+    .bottom-nav.active { display: flex; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); cursor: pointer; transition: all 0.2s; position: relative; width: 60px; }
+    .nav-item i { width: 22px; height: 22px; stroke-width: 2px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .nav-item span { font-size:12px;line-height:1.5; font-weight: 600; font-family: var(--font-heading); }
+    .nav-item.active { color: var(--accent); }
+    .nav-item.active i { transform: translateY(-4px); stroke-width: 2.5px; }
+    .nav-item.active::after { content: ''; position: absolute; bottom: -8px; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+
+    /* KPI Grid Glass */
+    .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .kpi-glass { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 100%); backdrop-filter: blur(10px); border: 1px solid white; border-radius: 16px; padding: 16px; text-align: center; box-shadow: var(--shadow-sm); }
+    .kpi-num { font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .kpi-label { font-size:14px;line-height:1.5;line-height:1.5; color: var(--text-muted); font-weight: 600; }
+
+    /* Badge */
+    .badge { padding: 4px 10px; border-radius: 99px; font-size:12px;line-height:1.5; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-info { background: var(--info-light); color: var(--info); }
+    .badge-primary { background: rgba(14, 165, 233, 0.08); color: var(--accent); }
+
+    /* List Items */
+    .list-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .list-item:last-child { border-bottom: none; }
+    
+    /* Utilities */
+    .text-gradient { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    /* Hide scrollbars globally */
+    ::-webkit-scrollbar { display: none; }
+    
+    
+
+    /* --- COMBINED PREMIUM LIGHT THEME & UTILITIES --- */
+    
+    :root {
+      --app-bg: #F8FAFC; 
+      --app-bg-gradient: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, #F8FAFC 100%);
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-solid: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: rgba(14, 165, 233, 0.15);
+      --shadow-glass: 0 10px 40px rgba(15, 23, 42, 0.04);
+      --shadow-sm: 0 4px 10px rgba(15, 23, 42, 0.02);
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --accent: #0EA5E9;
+      --accent-light: rgba(14, 165, 233, 0.08);
+    }
+    
+    body { background-color: #0F172A !important; background-image: radial-gradient(circle at 50% 0%, #1E293B 0%, #0F172A 80%) !important; }
+    
+    .smartphone { background: var(--app-bg-gradient) !important; }
+    
+    .screen-deck, .screen { background: transparent !important; color: var(--text) !important; }
+    
+    /* Global Utility Classes */
+    .card:not(.bg-primary-gradient):not([style*="background"]), .glass-card:not([style*="background"]), .kpi-glass, .kpi-card {
+      background: var(--surface-solid) !important;
+    }
+    .card:not(.bg-primary-gradient):not([style*="color"]), .glass-card:not([style*="color"]) {
+      color: var(--text) !important;
+    }
+    .card, .glass-card, .kpi-glass, .kpi-card {
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.8) !important;
+      box-shadow: var(--shadow-glass) !important;
+      border-radius: 24px !important;
+      padding: 24px;
       margin-bottom: 16px;
     }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    
+    .card.bg-primary-gradient {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+      color: rgba(255, 255, 255, 0.95) !important;
+      border: none !important;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15) !important;
     }
+    .card.bg-primary-gradient h2, .card.bg-primary-gradient h3, .card.bg-primary-gradient p, .card.bg-primary-gradient span {
+      color: rgba(255, 255, 255, 0.95) !important;
+    }
+    
+    .app-header { 
+      padding: 12px 20px; 
+      background: rgba(248, 250, 252, 0.8) !important; 
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      display: grid !important; 
+      grid-template-columns: 40px 1fr 40px; 
+      align-items: center; 
+      position: sticky; top: 0; z-index: 50; 
+      border-bottom: 1px solid var(--border) !important;
+    }
+    .app-header h1 { grid-column: 2; text-align: center; font-size: 18px !important; font-weight: 700; color: var(--text) !important; margin: 0; }
+    
+    .header-btn { 
+      background: #FFFFFF !important; border: 1px solid var(--border) !important; width: 40px; height: 40px; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; color: var(--text) !important; cursor: pointer; 
+      box-shadow: var(--shadow-sm) !important; transition: all 0.2s ease;
+    }
+    .header-btn:active { transform: scale(0.95); background: rgba(14, 165, 233, 0.05) !important; }
+    
+    .app-header .header-btn[onclick*="backward"] { grid-column: 1; justify-self: start; }
+    .app-header .header-btn[onclick*="toggleLanguage"], .app-header .header-btn[onclick*="bell"] { grid-column: 3; justify-self: end; }
+    
+    .bottom-nav {
+      background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(20px) !important; border: 1px solid var(--border) !important;
+      box-shadow: 0 -4px 30px rgba(15, 23, 42, 0.04) !important; position: absolute; bottom: 30px; left: 20px; right: 20px; 
+      border-radius: 24px; display: none; justify-content: space-around; padding: 12px 8px; z-index: 200;
+    }
+    .bottom-nav.active { display: flex; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted) !important; cursor: pointer; transition: all 0.2s; position: relative; width: 60px; }
+    .nav-item.active { color: var(--accent) !important; }
+    .nav-item.active::after { content: ''; width: 6px; height: 6px; background-color: var(--accent) !important; border-radius: 50%; position: absolute; bottom: -10px; }
+    
+    .login-role-card { background: var(--surface-solid) !important; border: 1px solid var(--border) !important; color: var(--text) !important; box-shadow: var(--shadow-sm) !important; border-radius: 20px !important; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; cursor: pointer; transition: all 0.3s ease !important; }
+    .login-role-card:hover { border-color: var(--accent) !important; transform: translateY(-3px); box-shadow: var(--shadow-glass) !important; }
+    
+    .status-bar { height: 44px; color: #0F172A !important; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 14px; font-weight: 600; z-index: 100; position: relative; margin-top: 6px; }
+    .status-bar .notch { width: 140px; height: 30px; background-color: #1E293B; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 99; }
+    .status-bar .left-indicators { display: flex; align-items: center; gap: 4px; z-index: 101; margin-top: -6px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: -0.2px; font-size: 15px; }
+    .status-bar .right-indicators { display: flex; align-items: center; gap: 6px; z-index: 101; margin-top: -6px; }
+    .home-indicator-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background-color: #0F172A !important; border-radius: 100px; z-index: 100; }
+    
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248, 250, 252, 0.85) !important; backdrop-filter: blur(10px); z-index: 999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+    .spinner { width: 44px; height: 44px; border: 4px solid rgba(14, 165, 233, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    .loading-overlay p { color: var(--accent) !important; font-weight: 700; margin-top: 16px; font-family: var(--font-heading); }
+    
+    .form-input { background: #FFFFFF !important; color: var(--text) !important; border: 1px solid rgba(14, 165, 233, 0.2) !important; width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; margin-bottom: 12px; }
+    .form-input::placeholder { color: var(--text-muted) !important; }
+    
+    .btn-secondary { background: #FFFFFF !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+    .btn-accent { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+    .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+    
+    .badge-danger { background: var(--danger-light); color: var(--danger); }
+    .badge-warning { background: var(--warning-light); color: var(--warning); }
+    .badge-info { background: #DBEAFE; color: #1D4ED8; }
+    .badge-muted { background: var(--surface-solid); color: var(--text-muted); border: 1px solid var(--border); }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
+    .calendar-day { background: var(--surface-solid) !important; border: 1px solid var(--border) !important; color: var(--text) !important; aspect-ratio: 1; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; position: relative; cursor: pointer; box-shadow: var(--shadow-sm); }
+    .calendar-day.empty { background: transparent !important; border: none !important; box-shadow: none !important; }
+    .calendar-day.event::after { content: ''; width: 4px; height: 4px; background-color: var(--accent); border-radius: 50%; position: absolute; bottom: 4px; }
+    .calendar-day.holiday { background-color: var(--danger-light); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+    
+    .segment-bar { background: rgba(255, 255, 255, 0.6) !important; border: 1px solid var(--border) !important; padding: 6px !important; border-radius: 16px !important; display: flex; margin-bottom: 16px; backdrop-filter: blur(8px); }
+    .segment-btn { color: var(--text-muted) !important; flex: 1; border: none; background: none; padding: 8px; font-size: 13px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-family: var(--font-heading); }
+    .segment-btn.active { background: #FFFFFF !important; color: var(--accent) !important; box-shadow: var(--shadow-sm) !important; }
+    
+    .profile-avatar-circle { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; font-family: var(--font-heading); box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15); margin: 0 auto 16px; }
+    .account-header { text-align: center; margin-top: 20px; margin-bottom: 30px; }
+    .account-name { font-size: 20px; font-weight: 700; color: var(--text) !important; font-family: var(--font-heading); }
+    .account-email { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    
+    h1, h2, h3, h4, h5, h6 { color: var(--text) !important; line-height: 1.3; }
+    p { color: var(--text-muted) !important; line-height: 1.5; }
+    .text-gradient { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    .desktop-title, .desktop-title span { color: #FFFFFF !important; }
+    
+    .role-title { color: var(--text) !important; font-weight: 800 !important; }
+    .role-desc { color: var(--text-muted) !important; }
+    .smart-login-header h2 { color: var(--text) !important; }
+    .smart-login-header p { color: var(--text-muted) !important; }
 
+    /* --- RESTORED COMPONENT WIDGETS --- */
     /* Child Switcher Banner Pill */
     .child-switcher {
       display: flex;
       gap: 8px;
-      background-color: var(--surface);
+      background-color: var(--surface-solid);
       border-radius: 20px;
       padding: 4px;
       margin-bottom: 12px;
@@ -644,8 +374,8 @@
       transition: all 0.2s;
     }
     .child-pill.active {
-      background-color: var(--accent);
-      color: var(--surface);
+      background-color: var(--accent) !important;
+      color: #FFFFFF !important;
     }
 
     /* Donut chart simulation */
@@ -665,190 +395,203 @@
       position: relative;
     }
     .radial-circle::before {
-      content: '90%';
+      content: '90%' !important;
       position: absolute;
       width: 62px;
       height: 62px;
-      background-color: var(--surface);
+      background-color: var(--surface-solid) !important;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       font-size: 16px;
-      color: var(--primary);
+      color: var(--text) !important;
     }
 
-    /* Calendar Grid */
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-top: 12px;
+    /* --- DARK MODE TRANSITIONS & OVERRIDES --- */
+    body.dark-mode {
+      --bg: #050d1a !important;
+      --app-bg: #050d1a !important;
+      --app-bg-gradient: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, #050d1a 100%) !important;
+      --surface: rgba(11, 19, 41, 0.85) !important;
+      --surface-solid: #0b1329 !important;
+      --text: #f8fafc !important;
+      --text-muted: #94a3b8 !important;
+      --border: rgba(0, 212, 255, 0.15) !important;
+      --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+      --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+      --primary: #0ea5e9 !important;
+      --primary-light: #1e293b !important;
+      --accent: #00d4ff !important;
+      --accent-light: rgba(0, 212, 255, 0.08) !important;
     }
-    .calendar-header {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-align: center;
-      padding-bottom: 6px;
+    
+    body.dark-mode .app-header {
+      background: rgba(5, 13, 26, 0.8) !important;
+      border-bottom: 1px solid var(--border) !important;
     }
-    .calendar-day {
-      background-color: var(--surface);
-      height: 44px;
-      border-radius: 8px;
+    body.dark-mode .header-btn {
+      background: #0b1329 !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .bottom-nav {
+      background: rgba(11, 19, 41, 0.95) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .chat-bubble.received {
+      background: #0b1329 !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .chat-input-bar {
+      background: rgba(5, 13, 26, 0.95) !important;
+      border-top: 1px solid var(--border) !important;
+    }
+    body.dark-mode .chat-input-bar .form-input {
+      background: #0b1329 !important;
+      color: var(--text) !important;
+    }
+    body.dark-mode .form-input {
+      background: #0b1329 !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .btn-secondary {
+      background: #0b1329 !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .btn-secondary:hover {
+      background: #162545 !important;
+    }
+    body.dark-mode .home-indicator-bar {
+      background-color: #f8fafc !important;
+    }
+    body.dark-mode .status-bar {
+      color: #f8fafc !important;
+    }
+    body.dark-mode .loading-overlay {
+      background: rgba(5, 13, 26, 0.85) !important;
+    }
+    body.dark-mode .segment-bar {
+      background: rgba(11, 19, 41, 0.6) !important;
+      border: 1px solid var(--border) !important;
+    }
+    body.dark-mode .segment-btn.active {
+      background: #0d1b32 !important;
+      color: var(--accent) !important;
+    }
+    body.dark-mode .card.bg-primary-gradient {
+      background: linear-gradient(135deg, #0b1329 0%, #162545 100%) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+    body.dark-mode .card.bg-primary-gradient h2,
+    body.dark-mode .card.bg-primary-gradient h3,
+    body.dark-mode .card.bg-primary-gradient p,
+    body.dark-mode .card.bg-primary-gradient span {
+      color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+            
+
+    /* Premium Chat UI */
+    .chat-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px; padding-bottom: 100px; height: 100%; }
+    .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; position: relative; box-shadow: var(--shadow-sm); }
+    .chat-bubble p { margin: 0; color: inherit !important; }
+    .chat-bubble.received { background: #FFFFFF !important; color: var(--text) !important; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+    .chat-bubble.sent { background: var(--primary) !important; color: #FFFFFF !important; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15); border: none; }
+    .chat-time { font-size: 11px; margin-top: 6px; display: block; opacity: 0.7; text-align: right; }
+    .chat-bubble.sent .chat-time { color: rgba(255,255,255,0.8); }
+    
+    .chat-input-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 20px; padding-bottom: 24px; background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; gap: 12px; align-items: center; z-index: 250; box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.02); }
+    .chat-input-bar .form-input { margin-bottom: 0; background: #F8FAFC !important; border: 1px solid rgba(14, 165, 233, 0.2) !important; padding: 12px 16px; border-radius: 24px; box-shadow: none; color: var(--text) !important; }
+    .chat-input-bar .form-input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important; }
+    .chat-input-bar .header-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--accent) !important; color: white !important; border: none !important; box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3) !important; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
+    .chat-input-bar .header-btn:active { transform: scale(0.9); }
+    .chat-input-bar .header-btn i { color: white !important; }
+    
+    /* Ensure screen content fills space properly for absolute positioning of input */
+    #parent-chat .screen-content, #teacher-chat .screen-content { padding: 0 !important; height: 100%; position: relative; background: transparent !important; }
+
+    /* ── TOAST NOTIFICATION SYSTEM ── */
+    #toast-container {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
       display: flex;
       flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      width: 92%;
+      pointer-events: none;
+    }
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      pointer-events: auto;
+      width: 100%;
+      max-width: 320px;
+      animation: toastIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    .toast.toast-success { background: linear-gradient(135deg, #10b981ee 0%, #059669ee 100%); }
+    .toast.toast-error   { background: linear-gradient(135deg, #ef4444ee 0%, #dc2626ee 100%); }
+    .toast.toast-info    { background: linear-gradient(135deg, #0ea5e9ee 0%, #0284c7ee 100%); }
+    .toast.toast-warning { background: linear-gradient(135deg, #f59e0bee 0%, #d97706ee 100%); }
+    .toast .toast-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .toast .toast-msg  { flex: 1; line-height: 1.35; }
+    .toast .toast-close { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 0; display: flex; font-size: 16px; }
+    .toast .toast-close:hover { color: #fff; }
+    @keyframes toastIn  { from { opacity:0; transform:translateY(-16px) scale(0.94); } to { opacity:1; transform:translateY(0) scale(1); } }
+    @keyframes toastOut { from { opacity:1; transform:translateY(0) scale(1); }       to { opacity:0; transform:translateY(-12px) scale(0.94); } }
+    .toast.removing { animation: toastOut 0.28s cubic-bezier(0.4,0,1,1) forwards; }
+
+    /* ── CUSTOM CONFIRM DIALOG ── */
+    #toast-confirm-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      z-index: 10000;
+      display: none;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: 600;
-      position: relative;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-    }
-    .calendar-day.empty {
-      background-color: transparent;
-      box-shadow: none;
-      cursor: default;
-    }
-    .calendar-day.event::after {
-      content: '';
-      width: 4px;
-      height: 4px;
-      background-color: var(--accent);
-      border-radius: 50%;
-      position: absolute;
-      bottom: 4px;
-    }
-    .calendar-day.holiday {
-      background-color: var(--danger-light);
-      color: var(--danger);
-    }
-
-    /* Chat Elements */
-    .chat-box {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      height: calc(100vh - 194px);
-      overflow-y: auto;
-      padding-bottom: 16px;
-    }
-    .chat-bubble {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .chat-bubble.sent {
-      align-self: flex-end;
-      background-color: var(--primary);
-      color: var(--surface);
-      border-bottom-right-radius: 4px;
-    }
-    .chat-bubble.received {
-      align-self: flex-start;
-      background-color: var(--surface);
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-      box-shadow: var(--shadow);
-    }
-    .chat-time {
-      font-size: 10px;
-      margin-top: 4px;
-      display: block;
-      text-align: right;
-      opacity: 0.7;
-    }
-    .chat-input-bar {
-      display: flex;
-      gap: 8px;
-      padding: 8px 16px;
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    /* Modals Overlay */
-    .modal-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
-      z-index: 400;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-sheet {
-      width: 100%;
-      background-color: var(--surface);
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
       padding: 24px;
-      box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.1);
-      transform: translateY(100%);
-      transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .modal-sheet.open {
-      transform: translateY(0);
+    #toast-confirm-overlay.open { display: flex; }
+    #toast-confirm-box {
+      background: var(--surface-solid);
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      width: 100%;
+      max-width: 300px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      border: 1px solid var(--border);
+      animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards;
     }
-
-    /* KPI grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .kpi-card {
-      background-color: var(--surface);
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-    .kpi-num {
-      font-family: var(--font-heading);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-    .kpi-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    /* Segment tabs */
-    .segment-bar {
-      display: flex;
-      background-color: var(--border);
-      padding: 3px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-    }
-    .segment-btn {
-      flex: 1;
-      border: none;
-      background: none;
-      padding: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .segment-btn.active {
-      background-color: var(--surface);
-      color: var(--primary);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
+    #toast-confirm-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(239,68,68,0.12); display: flex; align-items:center; justify-content:center; margin: 0 auto 12px; }
+    #toast-confirm-title { font-size: 16px; font-weight: 700; color: var(--text); text-align: center; margin-bottom: 6px; font-family: var(--font-heading); }
+    #toast-confirm-msg   { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.5; margin-bottom: 20px; }
+    .confirm-btns { display: flex; gap: 10px; }
+    .confirm-btns button { flex: 1; border: none; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font-heading); transition: transform 0.15s, opacity 0.15s; }
+    .confirm-btns button:active { transform: scale(0.96); opacity: 0.85; }
+    #toast-confirm-cancel { background: var(--bg, #F8FAFC); color: var(--text-muted); border: 1px solid var(--border) !important; }
+    #toast-confirm-ok     { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
   </style>
 </head>
 <body>
@@ -862,6 +605,24 @@
     
     <!-- Smartphone Bezel Mockup -->
     <div class="phone-mockup">
+
+      <!-- ══ TOAST NOTIFICATION LAYER ══ -->
+      <div id="toast-container"></div>
+
+      <!-- ══ CUSTOM CONFIRM DIALOG ══ -->
+      <div id="toast-confirm-overlay">
+        <div id="toast-confirm-box">
+          <div id="toast-confirm-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+          </div>
+          <div id="toast-confirm-title">Are you sure?</div>
+          <div id="toast-confirm-msg">This action cannot be undone.</div>
+          <div class="confirm-btns">
+            <button id="toast-confirm-cancel" onclick="_confirmResolve(false)">Cancel</button>
+            <button id="toast-confirm-ok" onclick="_confirmResolve(true)">Delete</button>
+          </div>
+        </div>
+      </div>
       <!-- ── TOP STATUS BAR ── -->
       <div class="status-bar">
         <div class="notch"></div>
@@ -881,7 +642,7 @@
           <div class="splash-container">
             <div class="splash-logo">த</div>
             <h2 style="font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:0.5px;">MTS Connect</h2>
-            <p style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">Marietta Tamil School Digital Campus</p>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;color:rgba(255,255,255,0.7);margin-top:4px;">Marietta Tamil School Digital Campus</p>
           </div>
         </div>
 
@@ -889,48 +650,70 @@
         <div class="screen" id="login">
           <div class="loading-overlay" id="login-spinner">
             <div class="spinner"></div>
-            <p style="font-weight:600;font-size:14px;" class="lang-en">Signing you in securely...</p>
-            <p style="font-weight:600;font-size:14px;" class="lang-ta">பாதுகாப்பாக உள்நுழைகிறது...</p>
+            <p style="margin-top:16px;font-weight:700;font-family:var(--font-heading);color:var(--text);">Authenticating...</p>
           </div>
-          <div class="screen-content" style="padding: 24px;">
-            <div style="text-align:center;margin-top:40px;margin-bottom:30px;">
-              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:16px;font-size:36px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-tamil);box-shadow:var(--shadow);">த</div>
-              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:24px;color:var(--primary);margin-top:12px;">Welcome Back</h2>
-              <p style="font-size:13px;color:var(--text-muted);" class="lang-en">Sign in to Marietta Tamil School platform</p>
-              <p style="font-size:13px;color:var(--text-muted);" class="lang-ta">மரியேட்டா தமிழ் பள்ளி தளத்தில் உள்நுழையவும்</p>
+    
+          <div class="screen-content" style="padding: 24px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+            <div class="smart-login-header">
+              <div style="width: 72px; height: 72px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-radius: 20px; font-size: 40px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-tamil); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); margin-bottom: 20px; transform: rotate(-5deg);">த</div>
+              <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">Welcome to <br><span class="text-gradient">MTS Connect</span></h2>
+              <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-en">Select your role to explore the smart campus.</p>
+              <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-ta">ஸ்மார்ட் வளாகத்தை ஆராய உங்கள் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்.</p>
             </div>
             
-            <form id="login-form" onsubmit="event.preventDefault();">
-              <div class="form-group">
-                <span class="form-label lang-en">Email Address</span>
-                <span class="form-label lang-ta">மின்னஞ்சல் முகவரி</span>
-                <input type="email" id="login-email" class="form-input" placeholder="name@mts.edu">
-              </div>
-              <div class="form-group">
-                <span class="form-label lang-en">Password</span>
-                <span class="form-label lang-ta">கடவுச்சொல்</span>
-                <div style="position:relative;">
-                  <input type="password" id="login-password" class="form-input" placeholder="••••••••">
-                  <button type="button" onclick="togglePasswordInput()" style="position:absolute;right:12px;top:10px;border:none;background:none;color:var(--text-muted);cursor:pointer;">
-                    <i data-lucide="eye" id="eye-icon" style="width:20px;height:20px;"></i>
-                  </button>
+            <div class="demo-login-cards" style="margin-top: 20px;">
+              <div class="login-role-card" onclick="fillCreds('parent'); processLogin();">
+                <div class="role-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">👨‍👩‍👦</div>
+                <div class="role-info">
+                  <div class="role-title">Parent Portal</div>
+                  <div class="role-desc">View attendance, homework & news</div>
                 </div>
+                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
               </div>
-              <button type="button" class="btn btn-primary" onclick="processLogin()" style="margin-top:10px;">
-                <span class="lang-en">Sign In</span>
-                <span class="lang-ta">உள்நுழை</span>
-              </button>
-            </form>
+              
+              <div class="login-role-card" onclick="fillCreds('teacher'); processLogin();">
+                <div class="role-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">👩‍🏫</div>
+                <div class="role-info">
+                  <div class="role-title">Teacher Dashboard</div>
+                  <div class="role-desc">Manage classes & grading</div>
+                </div>
+                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
+              </div>
 
-            <div class="demo-creds">
-              <p style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;" class="lang-en">Demo Quick Login</p>
-              <p style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;" class="lang-ta">டெமோ விரைவு உள்நுழைவு</p>
-              <div class="demo-chip" onclick="fillCreds('parent')">👨‍👩‍👦 Parent</div>
-              <div class="demo-chip" onclick="fillCreds('teacher')">👩‍🏫 Teacher</div>
-              <div class="demo-chip" onclick="fillCreds('admin')">🔑 Admin</div>
+              <div class="login-role-card" onclick="fillCreds('admin'); processLogin();">
+                <div class="role-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">👑</div>
+                <div class="role-info">
+                  <div class="role-title">Admin Console</div>
+                  <div class="role-desc">School oversight & approvals</div>
+                </div>
+                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; animation-delay: 0.4s; transform: translateY(10px);">
+              <button onclick="toggleLanguage()" class="login-action-btn">
+                <i data-lucide="languages"></i>
+                <div class="btn-text-col">
+                  <span>Language</span>
+                  <small>மொழி</small>
+                </div>
+              </button>
+              <button onclick="toggleTheme()" class="login-action-btn">
+                <i data-lucide="moon" id="login-theme-icon"></i>
+                <div class="btn-text-col">
+                  <span id="login-theme-text-en">Theme</span>
+                  <small id="login-theme-text-ta">தீம்</small>
+                </div>
+              </button>
             </div>
           </div>
         </div>
+        
+        <!-- Hidden traditional form to keep JS logic intact -->
+        <form id="login-form" style="display:none;">
+            <input type="email" id="login-email">
+            <input type="password" id="login-password">
+        </form>
 
         <!-- ════ SCREEN 3: PARENT HOME SCREEN ════ -->
         <div class="screen" id="parent-home">
@@ -947,11 +730,11 @@
             </div>
 
             <!-- Todays Word Card -->
-            <div class="card" style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);color:var(--surface);">
+            <div class="card bg-primary-gradient">
               <span class="badge badge-success" style="margin-bottom:8px;">Word of the Day / இன்றைய சொல்</span>
               <h2 style="font-size:20px;font-weight:700;font-family:var(--font-tamil);">வணக்கம் (Vanakkam)</h2>
-              <p style="font-size:13px;opacity:0.9;margin-top:4px;" class="lang-en">Greeting meaning "Hello" or "Welcome" in Tamil.</p>
-              <p style="font-size:13px;opacity:0.9;margin-top:4px;" class="lang-ta">தமிழில் "ஹலோ" அல்லது "வரவேற்பு" என்று பொருள்படும் வாழ்த்துச் சொல்.</p>
+              <p style="font-size:14px;line-height:1.5;opacity:0.9;margin-top:4px;" class="lang-en">Greeting meaning "Hello" or "Welcome" in Tamil.</p>
+              <p style="font-size:14px;line-height:1.5;opacity:0.9;margin-top:4px;" class="lang-ta">தமிழில் "ஹலோ" அல்லது "வரவேற்பு" என்று பொருள்படும் வாழ்த்துச் சொல்.</p>
             </div>
 
             <!-- Student Summary Row Grid -->
@@ -977,9 +760,9 @@
               <div class="attendance-radial-panel">
                 <div class="radial-circle" id="parent-radial-chart"></div>
                 <div>
-                  <h4 style="font-size:14px;color:var(--primary);" id="parent-attendance-class">Grade 3-A</h4>
-                  <p style="font-size:12px;color:var(--text-muted);margin-top:4px;" class="lang-en">Consistently present. Goal is 95%.</p>
-                  <p style="font-size:12px;color:var(--text-muted);margin-top:4px;" class="lang-ta">தொடர்ந்து வருகை தந்துள்ளார். இலக்கு 95%.</p>
+                  <h4 style="font-size:14px;color:var(--text);" id="parent-attendance-class">Grade 3-A</h4>
+                  <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:4px;" class="lang-en">Consistently present. Goal is 95%.</p>
+                  <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:4px;" class="lang-ta">தொடர்ந்து வருகை தந்துள்ளார். இலக்கு 95%.</p>
                 </div>
               </div>
             </div>
@@ -989,7 +772,7 @@
               <div class="card-title">
                 <span class="lang-en">Latest Broadcasts</span>
                 <span class="lang-ta">சமீபத்திய அறிவிப்புகள்</span>
-                <button style="border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;" onclick="showScreen('parent-announcements')">See All</button>
+                <button style="border:none;background:none;color:var(--accent);font-size:14px;line-height:1.5;line-height:1.5;font-weight:600;" onclick="showScreen('parent-announcements')">See All</button>
               </div>
               <div id="parent-home-announcements-list">
                 <!-- Seeding dynamic announcements list -->
@@ -1003,10 +786,10 @@
                   <i data-lucide="handshake" style="width:20px;height:20px;"></i>
                 </div>
                 <div>
-                  <h4 style="font-size:13px;color:var(--primary);" class="lang-en">PT Meeting Slot Open</h4>
-                  <h4 style="font-size:13px;color:var(--primary);" class="lang-ta">பெற்றோர்-ஆசிரியர் கூட்டம்</h4>
-                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;" class="lang-en">Book slots for June 21 now</p>
-                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;" class="lang-ta">ஜூன் 21 க்கான நேரத்தை பதிவு செய்யவும்</p>
+                  <h4 style="font-size:14px;line-height:1.5;color:var(--text);" class="lang-en">PT Meeting Slot Open</h4>
+                  <h4 style="font-size:14px;line-height:1.5;color:var(--text);" class="lang-ta">பெற்றோர்-ஆசிரியர் கூட்டம்</h4>
+                  <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;" class="lang-en">Book slots for June 21 now</p>
+                  <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;" class="lang-ta">ஜூன் 21 க்கான நேரத்தை பதிவு செய்யவும்</p>
                 </div>
               </div>
             </div>
@@ -1018,11 +801,75 @@
           <div class="app-header">
             <h1 class="lang-en">My Children</h1>
             <h1 class="lang-ta">எனது குழந்தைகள்</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
+            <!-- Add Child FAB button -->
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+              <button class="btn btn-accent" style="width:auto;padding:8px 16px;font-size:13px;" onclick="openChildForm(null)">
+                <i data-lucide="plus" style="width:14px;height:14px;"></i>&nbsp; Add Child
+              </button>
+            </div>
             <div id="parent-children-cards-deck">
               <!-- Render child cards dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN: PARENT ADD / EDIT CHILD ════ -->
+        <div class="screen" id="parent-child-form">
+          <div class="app-header">
+            <h1 id="parent-child-form-title">Add Child</h1>
+            <button class="header-btn" onclick="showScreen('parent-children', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <input type="hidden" id="child-form-id">
+              <div class="form-group">
+                <label class="form-label">Full Name (English) *</label>
+                <input type="text" class="form-input" id="child-form-name" placeholder="e.g. Anika Kumar">
+              </div>
+              <div class="form-group">
+                <label class="form-label">தமிழ் பெயர் (Tamil Name)</label>
+                <input type="text" class="form-input" id="child-form-tamil" placeholder="e.g. அனிகா">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Grade *</label>
+                <select class="form-input" id="child-form-grade">
+                  <option value="1">Grade 1</option>
+                  <option value="2">Grade 2</option>
+                  <option value="3" selected>Grade 3</option>
+                  <option value="4">Grade 4</option>
+                  <option value="5">Grade 5</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Class Section</label>
+                <input type="text" class="form-input" id="child-form-class" placeholder="e.g. 3-A">
+              </div>
+              <div class="form-group">
+                <label class="form-label">ITA Registration ID</label>
+                <input type="text" class="form-input" id="child-form-ita" placeholder="e.g. ITA-2301">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Photo Consent</label>
+                <select class="form-input" id="child-form-photo">
+                  <option value="Approved">Approved</option>
+                  <option value="Pending Signature">Pending Signature</option>
+                  <option value="Not Selected">Not Selected</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Medical Form</label>
+                <select class="form-input" id="child-form-medical">
+                  <option value="Submitted">Submitted</option>
+                  <option value="Pending Attachment">Pending Attachment</option>
+                  <option value="Not Selected">Not Selected</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="saveChildRecord()" style="margin-top:8px;">
+                <i data-lucide="save" style="width:16px;height:16px;"></i> Save Child
+              </button>
             </div>
           </div>
         </div>
@@ -1032,7 +879,7 @@
           <div class="app-header">
             <h1 class="lang-en">Attendance Record</h1>
             <h1 class="lang-ta">வருகைப்பதிவு விவரங்கள்</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
@@ -1083,7 +930,7 @@
           <div class="app-header">
             <h1 class="lang-en">Homework Center</h1>
             <h1 class="lang-ta">வீட்டுப்பாட மையம்</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div id="parent-homework-list-deck">
@@ -1097,7 +944,7 @@
           <div class="app-header">
             <h1 class="lang-en">Homework Detail</h1>
             <h1 class="lang-ta">வீட்டுப்பாட விவரம்</h1>
-            <button class="header-btn" onclick="showScreen('parent-homework', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-homework', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content" id="parent-homework-detail-content">
             <!-- Dynamic Homework details loaded from JS -->
@@ -1109,7 +956,7 @@
           <div class="app-header">
             <h1 class="lang-en">Announcements</h1>
             <h1 class="lang-ta">அறிவிப்புகள்</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div id="parent-all-announcements-list">
@@ -1123,7 +970,7 @@
           <div class="app-header">
             <h1 class="lang-en">Announcement</h1>
             <h1 class="lang-ta">அறிவிப்பு விவரம்</h1>
-            <button class="header-btn" onclick="showScreen('parent-announcements', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-announcements', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content" id="parent-announcement-detail-content">
             <!-- Loaded dynamically -->
@@ -1135,12 +982,12 @@
           <div class="app-header">
             <h1 class="lang-en">School Calendar</h1>
             <h1 class="lang-ta">பள்ளி நாட்காட்டி</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
-              <h3 style="text-align:center;color:var(--primary);font-weight:700;" class="lang-en">June 2025</h3>
-              <h3 style="text-align:center;color:var(--primary);font-weight:700;" class="lang-ta">ஜூன் 2025</h3>
+              <h3 style="text-align:center;color:var(--text);font-weight:700;" class="lang-en">June 2025</h3>
+              <h3 style="text-align:center;color:var(--text);font-weight:700;" class="lang-ta">ஜூன் 2025</h3>
               <div class="calendar-grid" id="parent-calendar-dates">
                 <!-- Seeding Calendar calendar grid -->
               </div>
@@ -1164,16 +1011,16 @@
           <div class="app-header">
             <h1 class="lang-en">Messages Inbox</h1>
             <h1 class="lang-ta">செய்திப் பெட்டி</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card" onclick="openChatScreen('parent', 'teacher')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
-              <div style="width:44px;height:44px;background-color:var(--primary-light);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">LR</div>
+              <div style="width:44px;height:44px;background-color:var(--primary-light);color:#ffffff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">LR</div>
               <div style="flex:1;">
-                <h4 style="font-size:14px;color:var(--primary);">Mrs. Lakshmi Rajendran</h4>
-                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="parent-msg-preview">No new message thread</p>
+                <h4 style="font-size:14px;color:var(--text);">Mrs. Lakshmi Rajendran</h4>
+                <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;" id="parent-msg-preview">No new message thread</p>
               </div>
-              <i data-lucide="chevron-right" style="color:var(--text-muted);width:20px;height:20px;"></i>
+              <i data-lucide="chevron-right" style="color: var(--text-muted);width:20px;height:20px;"></i>
             </div>
           </div>
         </div>
@@ -1182,9 +1029,9 @@
         <div class="screen" id="parent-chat">
           <div class="app-header">
             <h1 style="font-size:15px;" id="parent-chat-title">Mrs. Lakshmi R.</h1>
-            <button class="header-btn" onclick="showScreen('parent-messages', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-messages', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
-          <div class="screen-content" style="background-color:#EFEFEF;">
+          <div class="screen-content">
             <div class="chat-box" id="parent-chat-bubbles">
               <!-- Dynamic chats load -->
             </div>
@@ -1200,13 +1047,13 @@
           <div class="app-header">
             <h1 class="lang-en">My Account</h1>
             <h1 class="lang-ta">எனது கணக்கு</h1>
-            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('parent-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card" style="text-align:center;">
               <div style="width:64px;height:64px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">PK</div>
-              <h3 id="parent-profile-name" style="color:var(--primary);font-weight:700;">Priya Kumar</h3>
-              <p style="font-size:12px;color:var(--text-muted);" id="parent-profile-email">parent@mts.edu</p>
+              <h3 id="parent-profile-name" style="color:var(--text);font-weight:700;">Priya Kumar</h3>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);" id="parent-profile-email">parent@mts.edu</p>
             </div>
 
             <div class="card">
@@ -1214,8 +1061,11 @@
                 <span class="lang-en">Bilingual Preferences</span>
                 <span class="lang-ta">மொழி முன்னுரிமைகள்</span>
               </div>
-              <button class="btn btn-secondary" onclick="toggleLanguage()">
+              <button class="btn btn-secondary" onclick="toggleLanguage()" style="margin-bottom:12px;">
                 🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+              <button class="btn btn-secondary" onclick="toggleTheme()">
+                🌙 <span class="lang-en">Dark Mode: Toggle</span><span class="lang-ta">இருண்ட பயன்முறை: மாற்று</span>
               </button>
             </div>
 
@@ -1235,9 +1085,9 @@
             <button class="header-btn" onclick="toggleLanguage()"><i data-lucide="globe"></i></button>
           </div>
           <div class="screen-content">
-            <div class="card" style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);color:var(--surface);">
+            <div class="card bg-primary-gradient">
               <h2 id="teacher-profile-welcome" style="font-size:18px;font-weight:700;">Mrs. Lakshmi Rajendran</h2>
-              <p style="font-size:12px;opacity:0.9;margin-top:2px;">Grade 3-A & Grade 4-B Teacher</p>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;opacity:0.9;margin-top:2px;">Grade 3-A & Grade 4-B Teacher</p>
             </div>
 
             <div class="kpi-grid">
@@ -1275,7 +1125,7 @@
                 <span class="lang-en">Today's Class Schedule</span>
                 <span class="lang-ta">இன்றைய வகுப்பு அட்டவணை</span>
               </div>
-              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:8px;">
+              <ul style="list-style:none;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:8px;">
                 <li style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:6px;">
                   <span><strong>Grade 3-A</strong> (10:00 AM)</span>
                   <span class="badge badge-success">Active</span>
@@ -1294,7 +1144,7 @@
           <div class="app-header">
             <h1 class="lang-en">My Classes</h1>
             <h1 class="lang-ta">எனது வகுப்புகள்</h1>
-            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div id="teacher-classes-list-deck">
@@ -1307,12 +1157,12 @@
         <div class="screen" id="teacher-class-detail">
           <div class="app-header">
             <h1 id="teacher-class-detail-title">Class Detail</h1>
-            <button class="header-btn" onclick="showScreen('teacher-classes', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-classes', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;">
               <span class="badge badge-info" id="teacher-class-roster-count">Students: 18</span>
-              <button class="btn btn-accent" onclick="openClassAttendanceMarking()" style="width:auto;height:36px;padding:0 12px;font-size:12px;">
+              <button class="btn btn-accent" onclick="openClassAttendanceMarking()" style="width:auto;height:36px;padding:0 12px;font-size:14px;line-height:1.5;line-height:1.5;">
                 <i data-lucide="calendar-check" style="width:14px;height:14px;"></i>
                 <span class="lang-en">Mark Attendance</span>
                 <span class="lang-ta">வருகைப்பதிவு செய்</span>
@@ -1329,7 +1179,7 @@
           <div class="app-header">
             <h1 class="lang-en">Attendance Roster</h1>
             <h1 class="lang-ta">வருகை பதிவு</h1>
-            <button class="header-btn" onclick="showScreen('teacher-class-detail', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-class-detail', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
@@ -1357,7 +1207,7 @@
           <div class="app-header">
             <h1 class="lang-en">Homework Roster</h1>
             <h1 class="lang-ta">வீட்டுப்பாடம்</h1>
-            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
@@ -1377,7 +1227,7 @@
           <div class="app-header">
             <h1 class="lang-en">Homework Evaluation</h1>
             <h1 class="lang-ta">வீட்டுப்பாட மதிப்பீடு</h1>
-            <button class="header-btn" onclick="showScreen('teacher-homework', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-homework', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content" id="teacher-homework-review-content">
             <!-- Loaded dynamically from JS -->
@@ -1389,16 +1239,16 @@
           <div class="app-header">
             <h1 class="lang-en">Inbox</h1>
             <h1 class="lang-ta">செய்திகள்</h1>
-            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card" onclick="openChatScreen('teacher', 'parent')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
               <div style="width:44px;height:44px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">PK</div>
               <div style="flex:1;">
-                <h4 style="font-size:14px;color:var(--primary);">Priya Kumar (Parent)</h4>
-                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="teacher-msg-preview">No new chat message thread</p>
+                <h4 style="font-size:14px;color:var(--text);">Priya Kumar (Parent)</h4>
+                <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;" id="teacher-msg-preview">No new chat message thread</p>
               </div>
-              <i data-lucide="chevron-right" style="color:var(--text-muted);width:20px;height:20px;"></i>
+              <i data-lucide="chevron-right" style="color: var(--text-muted);width:20px;height:20px;"></i>
             </div>
           </div>
         </div>
@@ -1407,9 +1257,9 @@
         <div class="screen" id="teacher-chat">
           <div class="app-header">
             <h1 style="font-size:15px;">Priya Kumar (Parent)</h1>
-            <button class="header-btn" onclick="showScreen('teacher-messages', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-messages', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
-          <div class="screen-content" style="background-color:#EFEFEF;">
+          <div class="screen-content">
             <div class="chat-box" id="teacher-chat-bubbles">
               <!-- Dynamic chats load -->
             </div>
@@ -1425,13 +1275,13 @@
           <div class="app-header">
             <h1 class="lang-en">My Account</h1>
             <h1 class="lang-ta">எனது கணக்கு</h1>
-            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card" style="text-align:center;">
-              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">LR</div>
-              <h3 style="color:var(--primary);font-weight:700;">Mrs. Lakshmi Rajendran</h3>
-              <p style="font-size:12px;color:var(--text-muted);">teacher@mts.edu</p>
+              <div style="width:64px;height:64px;background-color:var(--text);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">LR</div>
+              <h3 style="color:var(--text);font-weight:700;">Mrs. Lakshmi Rajendran</h3>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);">teacher@mts.edu</p>
             </div>
 
             <div class="card">
@@ -1439,8 +1289,11 @@
                 <span class="lang-en">Preferences</span>
                 <span class="lang-ta">விருப்பத்தேர்வுகள்</span>
               </div>
-              <button class="btn btn-secondary" onclick="toggleLanguage()">
+              <button class="btn btn-secondary" onclick="toggleLanguage()" style="margin-bottom:12px;">
                 🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+              <button class="btn btn-secondary" onclick="toggleTheme()">
+                🌙 <span class="lang-en">Dark Mode: Toggle</span><span class="lang-ta">இருண்ட பயன்முறை: மாற்று</span>
               </button>
             </div>
 
@@ -1479,7 +1332,7 @@
               <div class="card-title">
                 <span class="lang-en">Recent Approvals Queue</span>
                 <span class="lang-ta">அனுமதி கோரிக்கைகள்</span>
-                <button style="border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;" onclick="showScreen('admin-approvals')">See All</button>
+                <button style="border:none;background:none;color:var(--accent);font-size:14px;line-height:1.5;line-height:1.5;font-weight:600;" onclick="showScreen('admin-approvals')">See All</button>
               </div>
               <div id="admin-home-approvals-deck">
                 <!-- Seeding Dynamic pending approvals -->
@@ -1493,16 +1346,16 @@
                 <span class="lang-ta">செயல்பாட்டு கட்டுப்பாடுகள்</span>
               </div>
               <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
-                <button class="btn btn-secondary" onclick="showScreen('admin-compose')" style="height:38px;font-size:12px;padding:0 8px;">
+                <button class="btn btn-secondary" onclick="showScreen('admin-compose')" style="height:38px;font-size:14px;line-height:1.5;line-height:1.5;padding:0 8px;">
                   <i data-lucide="megaphone" style="width:14px;height:14px;"></i> Broadcast
                 </button>
-                <button class="btn btn-secondary" onclick="showScreen('admin-events')" style="height:38px;font-size:12px;padding:0 8px;">
+                <button class="btn btn-secondary" onclick="showScreen('admin-events')" style="height:38px;font-size:14px;line-height:1.5;line-height:1.5;padding:0 8px;">
                   <i data-lucide="calendar" style="width:14px;height:14px;"></i> Schedule Event
                 </button>
-                <button class="btn btn-secondary" onclick="showScreen('admin-import')" style="height:38px;font-size:12px;padding:0 8px;">
+                <button class="btn btn-secondary" onclick="showScreen('admin-import')" style="height:38px;font-size:14px;line-height:1.5;line-height:1.5;padding:0 8px;">
                   <i data-lucide="upload" style="width:14px;height:14px;"></i> CSV Importer
                 </button>
-                <button class="btn btn-secondary" onclick="showScreen('admin-audit')" style="height:38px;font-size:12px;padding:0 8px;">
+                <button class="btn btn-secondary" onclick="showScreen('admin-audit')" style="height:38px;font-size:14px;line-height:1.5;line-height:1.5;padding:0 8px;">
                   <i data-lucide="shield-alert" style="width:14px;height:14px;"></i> Audit Trail
                 </button>
               </div>
@@ -1515,13 +1368,16 @@
           <div class="app-header">
             <h1 class="lang-en">People Directory</h1>
             <h1 class="lang-ta">மக்கள் கோப்பகம்</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="segment-bar">
               <button class="segment-btn active" id="admin-people-tab-students" onclick="togglePeopleRosterTab('students')">Students</button>
               <button class="segment-btn" id="admin-people-tab-teachers" onclick="togglePeopleRosterTab('teachers')">Teachers</button>
+              <button class="segment-btn" id="admin-people-tab-parents" onclick="togglePeopleRosterTab('parents')">Parents</button>
             </div>
+            <!-- FAB Add Button (changes per tab) -->
+            <div id="admin-people-add-row" style="display:flex;justify-content:flex-end;margin:0 0 8px 0;"></div>
             <div id="admin-people-list-deck">
               <!-- Dynamically populated roster list -->
             </div>
@@ -1533,10 +1389,122 @@
           <div class="app-header">
             <h1 class="lang-en">Student Details</h1>
             <h1 class="lang-ta">மாணவர் விவரம்</h1>
-            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content" id="admin-student-detail-content">
             <!-- Dynamic student form editor layout loads -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN: ADMIN ADD / EDIT TEACHER ════ -->
+        <div class="screen" id="admin-teacher-form">
+          <div class="app-header">
+            <h1 id="admin-teacher-form-title">Add Teacher</h1>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <input type="hidden" id="teacher-form-id">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-input" id="teacher-form-name" placeholder="Mrs. / Mr. Full Name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" class="form-input" id="teacher-form-email" placeholder="name@mts.edu" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-input" id="teacher-form-phone" placeholder="+1 (555) 000-0000">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Assigned Class</label>
+                <input type="text" class="form-input" id="teacher-form-class" placeholder="e.g. Grade 3-A">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subject Specialisation</label>
+                <input type="text" class="form-input" id="teacher-form-subject" placeholder="Tamil Language & Literature">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-input" id="teacher-form-status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="saveTeacherRecord()" style="margin-top:8px;">
+                <i data-lucide="save" style="width:16px;height:16px;"></i> Save Teacher
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN: ADMIN VIEW TEACHER DETAIL ════ -->
+        <div class="screen" id="admin-teacher-view">
+          <div class="app-header">
+            <h1>Teacher Profile</h1>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content" id="admin-teacher-view-content">
+            <!-- Dynamic teacher view -->
+          </div>
+        </div>
+
+        <!-- ════ SCREEN: ADMIN ADD / EDIT PARENT ════ -->
+        <div class="screen" id="admin-parent-form">
+          <div class="app-header">
+            <h1 id="admin-parent-form-title">Add Parent</h1>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <input type="hidden" id="parent-form-id">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-input" id="parent-form-name" placeholder="Parent Full Name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" class="form-input" id="parent-form-email" placeholder="parent@email.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-input" id="parent-form-phone" placeholder="+1 (555) 000-0000">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Linked Student Name</label>
+                <input type="text" class="form-input" id="parent-form-student" placeholder="Child's Full Name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Relationship</label>
+                <select class="form-input" id="parent-form-relation">
+                  <option value="Mother">Mother</option>
+                  <option value="Father">Father</option>
+                  <option value="Guardian">Guardian</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-input" id="parent-form-status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="saveParentRecord()" style="margin-top:8px;">
+                <i data-lucide="save" style="width:16px;height:16px;"></i> Save Parent
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN: ADMIN VIEW PARENT DETAIL ════ -->
+        <div class="screen" id="admin-parent-view">
+          <div class="app-header">
+            <h1>Parent Profile</h1>
+            <button class="header-btn" onclick="showScreen('admin-people', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content" id="admin-parent-view-content">
+            <!-- Dynamic parent view -->
           </div>
         </div>
 
@@ -1545,7 +1513,7 @@
           <div class="app-header">
             <h1 class="lang-en">Approvals Desk</h1>
             <h1 class="lang-ta">அனுமதி மேசை</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div id="admin-all-approvals-deck">
@@ -1559,12 +1527,12 @@
           <div class="app-header">
             <h1 class="lang-en">Attendance Ratios</h1>
             <h1 class="lang-ta">வருகை விகிதங்கள்</h1>
-            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
               <div class="card-title">Attendance rates by grade class</div>
-              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+              <ul style="list-style:none;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
                 <li>
                   <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
                     <span>Grade 1-A (Enrollment: 14)</span>
@@ -1602,12 +1570,12 @@
           <div class="app-header">
             <h1 class="lang-en">Homework Progress</h1>
             <h1 class="lang-ta">வீட்டுப்பாட நிலவரங்கள்</h1>
-            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-settings', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
               <div class="card-title">Homework execution rates</div>
-              <ul style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+              <ul style="list-style:none;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:12px;margin-top:10px;">
                 <li>
                   <div style="display:flex;justify-between:space-between;margin-bottom:4px;">
                     <span>Completed Ratios</span>
@@ -1636,7 +1604,7 @@
           <div class="app-header">
             <h1 class="lang-en">Sent Broadcasts</h1>
             <h1 class="lang-ta">அனுப்பிய அறிவிப்புகள்</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <button class="btn btn-accent" onclick="showScreen('admin-compose')" style="margin-bottom:12px;">
@@ -1655,7 +1623,7 @@
           <div class="app-header">
             <h1 class="lang-en">New Announcement</h1>
             <h1 class="lang-ta">புதிய அறிவிப்பு</h1>
-            <button class="header-btn" onclick="showScreen('admin-comms', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-comms', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
@@ -1691,7 +1659,7 @@
           <div class="app-header">
             <h1 class="lang-en">Event Planner</h1>
             <h1 class="lang-ta">பள்ளி நிகழ்வுகள்</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
@@ -1727,17 +1695,17 @@
           <div class="app-header">
             <h1 class="lang-en">CSV Importer</h1>
             <h1 class="lang-ta">தரவு இறக்குமதி</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card">
               <div class="card-title">Wizard Step 1: Select Roster File</div>
-              <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Simulate uploading a classroom CSV layout file.</p>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-bottom:12px;">Simulate uploading a classroom CSV layout file.</p>
               
               <div id="admin-import-file-selector" style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background-color:var(--bg);" onclick="simulateImportFileSelection()">
                 <i data-lucide="file-spread-sheet" style="width:36px;height:36px;color:var(--accent);margin-bottom:8px;"></i>
-                <h4 style="font-size:13px;color:var(--primary);" id="admin-import-file-status">Click to pick 'students_roster_grade3.csv'</h4>
-                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;">Simulates student roster parsing automatically</p>
+                <h4 style="font-size:14px;line-height:1.5;color:var(--text);" id="admin-import-file-status">Click to pick 'students_roster_grade3.csv'</h4>
+                <p style="font-size:12px;line-height:1.5;color: var(--text-muted);margin-top:4px;">Simulates student roster parsing automatically</p>
               </div>
 
               <div id="admin-import-wizard-action" style="display:none;margin-top:16px;">
@@ -1777,13 +1745,13 @@
           <div class="app-header">
             <h1 class="lang-en">Control Panel</h1>
             <h1 class="lang-ta">கட்டுப்பாட்டு பலகை</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div class="card" style="text-align:center;">
-              <div style="width:64px;height:64px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">SV</div>
-              <h3 style="color:var(--primary);font-weight:700;">Admin Suresh V.</h3>
-              <p style="font-size:12px;color:var(--text-muted);">admin@mts.edu</p>
+              <div style="width:64px;height:64px;background-color:var(--text);color:var(--surface);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:8px;">SV</div>
+              <h3 style="color:var(--text);font-weight:700;">Admin Suresh V.</h3>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);">admin@mts.edu</p>
             </div>
 
             <div class="card">
@@ -1802,8 +1770,11 @@
                 <span class="form-label">Marietta School Address Location</span>
                 <input type="text" class="form-input" value="1225 East Cobb Dr, Marietta, GA" readonly>
               </div>
-              <button class="btn btn-secondary" onclick="toggleLanguage()" style="margin-top:6px;">
+              <button class="btn btn-secondary" onclick="toggleLanguage()" style="margin-top:6px; margin-bottom:12px;">
                 🌐 Language: <span class="lang-en">English</span><span class="lang-ta">தமிழ்</span>
+              </button>
+              <button class="btn btn-secondary" onclick="toggleTheme()">
+                🌙 <span class="lang-en">Dark Mode: Toggle</span><span class="lang-ta">இருண்ட பயன்முறை: மாற்று</span>
               </button>
             </div>
 
@@ -1820,7 +1791,7 @@
           <div class="app-header">
             <h1 class="lang-en">Audit Logs</h1>
             <h1 class="lang-ta">ஆடிட் பதிவுகள்</h1>
-            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="arrow-left"></i></button>
+            <button class="header-btn" onclick="showScreen('admin-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
             <div id="admin-audit-logs-deck">
@@ -1849,8 +1820,49 @@
      6. JAVASCRIPT GLOBAL STATE CONTROLLER & CRUD LAYER
      ────────────────────────────────────────────────────────────────── -->
   <script>
+    // ──────────────────────────────────────────────────────────────────
+    // TOAST NOTIFICATION & CONFIRM DIALOG SYSTEM
+    // ──────────────────────────────────────────────────────────────────
+    const TOAST_ICONS = {
+      success: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+      error:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`,
+      info:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+      warning: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`
+    };
+
+    function showToast(message, type = 'success', duration = 3500) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <span class="toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</span>
+        <span class="toast-msg">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">&#x2715;</button>
+      `;
+      container.appendChild(toast);
+      // Auto-dismiss
+      setTimeout(() => {
+        toast.classList.add('removing');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      }, duration);
+    }
+
+    let _confirmResolve = null;
+    function showConfirm(title, message, onConfirm) {
+      const overlay = document.getElementById('toast-confirm-overlay');
+      document.getElementById('toast-confirm-title').textContent = title;
+      document.getElementById('toast-confirm-msg').textContent = message;
+      overlay.classList.add('open');
+      _confirmResolve = (confirmed) => {
+        overlay.classList.remove('open');
+        _confirmResolve = null;
+        if (confirmed && typeof onConfirm === 'function') onConfirm();
+      };
+    }
+
     // Database Seeding Key Version
-    const MOCK_DB_VERSION = "mts_mobile_v1.0.3";
+    const MOCK_DB_VERSION = "mts_mobile_v1.0.4";
     const DB_KEY = "mts_mobile_db";
 
     // Static Seed Data structure
@@ -1865,6 +1877,16 @@
         { id: "MTS-003", name: "Diya Patel", tamilName: "தியா", grade: "4", class: "4-B", ita: "ITA-2401", status: "active", photoConsent: "Approved", medicalForm: "Pending Attachment" },
         { id: "MTS-004", name: "Siddharth Nair", tamilName: "சித்தார்த்", grade: "4", class: "4-B", ita: "pending", status: "pending", photoConsent: "Not Selected", medicalForm: "Not Selected" },
         { id: "MTS-005", name: "Kavya Rajan", tamilName: "காவ்யா", grade: "5", class: "5-A", ita: "ITA-2501", status: "active", photoConsent: "Approved", medicalForm: "Submitted" }
+      ],
+      teachers: [
+        { id: "TCH-001", name: "Mrs. Lakshmi Rajendran", email: "teacher@mts.edu", phone: "+1 (770) 555-0101", class: "Grade 3-A", subject: "Tamil Language", status: "active" },
+        { id: "TCH-002", name: "Mr. Arun Prabhu", email: "arun@mts.edu", phone: "+1 (770) 555-0102", class: "Grade 2-A", subject: "Tamil Literature", status: "active" },
+        { id: "TCH-003", name: "Mrs. Meena Kumaravel", email: "meena@mts.edu", phone: "+1 (770) 555-0103", class: "Grade 1-A", subject: "Tamil Basics", status: "active" }
+      ],
+      parents: [
+        { id: "PAR-001", name: "Priya Kumar", email: "parent@mts.edu", phone: "+1 (770) 555-0201", student: "Anika Kumar", relation: "Mother", status: "active" },
+        { id: "PAR-002", name: "Anand Sharma", email: "anand@gmail.com", phone: "+1 (770) 555-0202", student: "Rohan Kumar", relation: "Father", status: "active" },
+        { id: "PAR-003", name: "Meena Patel", email: "meena.p@gmail.com", phone: "+1 (770) 555-0203", student: "Diya Patel", relation: "Mother", status: "active" }
       ],
       classes: [
         { id: "c1", name: "Grade 1-A", teacher: "Mrs. Meena K.", studentCount: 14 },
@@ -1979,6 +2001,16 @@
 
       targetScreen.classList.add('active');
       
+      // Hide bottom nav on chat screens to prevent overlapping chat input
+      const roleNav = document.getElementById('role-bottom-nav');
+      if (roleNav) {
+        if (screenId.includes('-chat') || screenId === 'login') {
+          roleNav.style.display = 'none';
+        } else {
+          roleNav.style.display = '';
+        }
+      }
+      
       // Update Tab highlight indicators
       updateTabNavigationHighlights(screenId);
 
@@ -1997,7 +2029,7 @@
     }
 
     // ──────────────────────────────────────────────────────────────────
-    // BILINGUAL LANGUAGE CONTROLLER
+    // BILINGUAL LANGUAGE CONTROLLER & THEME SYSTEM
     // ──────────────────────────────────────────────────────────────────
     function toggleLanguage() {
       DB = getDB();
@@ -2012,6 +2044,21 @@
         document.body.classList.add("lang-tamil");
       } else {
         document.body.classList.remove("lang-tamil");
+      }
+    }
+
+    function toggleTheme() {
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      applyTheme(newTheme);
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
       }
     }
 
@@ -2106,69 +2153,69 @@
       let html = "";
       if (role === "parent") {
         html = `
-          <div class="nav-tab active" id="tab-parent-home" onclick="showScreen('parent-home')">
+          <div class="nav-item active" id="tab-parent-home" onclick="showScreen('parent-home')">
             <i data-lucide="home"></i>
             <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
           </div>
-          <div class="nav-tab" id="tab-parent-children" onclick="showScreen('parent-children')">
+          <div class="nav-item" id="tab-parent-children" onclick="showScreen('parent-children')">
             <i data-lucide="users"></i>
             <span class="lang-en">Kids</span><span class="lang-ta">பிள்ளைகள்</span>
           </div>
-          <div class="nav-tab" id="tab-parent-calendar" onclick="showScreen('parent-calendar')">
+          <div class="nav-item" id="tab-parent-calendar" onclick="showScreen('parent-calendar')">
             <i data-lucide="calendar"></i>
             <span class="lang-en">Calendar</span><span class="lang-ta">நாட்காட்டி</span>
           </div>
-          <div class="nav-tab" id="tab-parent-messages" onclick="showScreen('parent-messages')">
+          <div class="nav-item" id="tab-parent-messages" onclick="showScreen('parent-messages')">
             <i data-lucide="message-square"></i>
             <span class="lang-en">Inbox</span><span class="lang-ta">செய்தி</span>
           </div>
-          <div class="nav-tab" id="tab-parent-account" onclick="showScreen('parent-account')">
+          <div class="nav-item" id="tab-parent-account" onclick="showScreen('parent-account')">
             <i data-lucide="user"></i>
             <span class="lang-en">Profile</span><span class="lang-ta">விவரம்</span>
           </div>
         `;
       } else if (role === "teacher") {
         html = `
-          <div class="nav-tab active" id="tab-teacher-home" onclick="showScreen('teacher-home')">
+          <div class="nav-item active" id="tab-teacher-home" onclick="showScreen('teacher-home')">
             <i data-lucide="home"></i>
             <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
           </div>
-          <div class="nav-tab" id="tab-teacher-classes" onclick="showScreen('teacher-classes')">
+          <div class="nav-item" id="tab-teacher-classes" onclick="showScreen('teacher-classes')">
             <i data-lucide="book-open"></i>
             <span class="lang-en">Classes</span><span class="lang-ta">வகுப்புகள்</span>
           </div>
-          <div class="nav-tab" id="tab-teacher-homework" onclick="showScreen('teacher-homework')">
+          <div class="nav-item" id="tab-teacher-homework" onclick="showScreen('teacher-homework')">
             <i data-lucide="edit-3"></i>
             <span class="lang-en">Tasks</span><span class="lang-ta">பணிகள்</span>
           </div>
-          <div class="nav-tab" id="tab-teacher-messages" onclick="showScreen('teacher-messages')">
+          <div class="nav-item" id="tab-teacher-messages" onclick="showScreen('teacher-messages')">
             <i data-lucide="message-square"></i>
             <span class="lang-en">Messages</span><span class="lang-ta">செய்திகள்</span>
           </div>
-          <div class="nav-tab" id="tab-teacher-account" onclick="showScreen('teacher-account')">
+          <div class="nav-item" id="tab-teacher-account" onclick="showScreen('teacher-account')">
             <i data-lucide="user"></i>
             <span class="lang-en">Profile</span><span class="lang-ta">விவரம்</span>
           </div>
         `;
       } else if (role === "admin") {
         html = `
-          <div class="nav-tab active" id="tab-admin-home" onclick="showScreen('admin-home')">
+          <div class="nav-item active" id="tab-admin-home" onclick="showScreen('admin-home')">
             <i data-lucide="grid"></i>
             <span class="lang-en">Home</span><span class="lang-ta">முகப்பு</span>
           </div>
-          <div class="nav-tab" id="tab-admin-people" onclick="showScreen('admin-people')">
+          <div class="nav-item" id="tab-admin-people" onclick="showScreen('admin-people')">
             <i data-lucide="users"></i>
             <span class="lang-en">People</span><span class="lang-ta">மக்கள்</span>
           </div>
-          <div class="nav-tab" id="tab-admin-approvals" onclick="showScreen('admin-approvals')">
+          <div class="nav-item" id="tab-admin-approvals" onclick="showScreen('admin-approvals')">
             <i data-lucide="check-circle-2"></i>
             <span class="lang-en">Approvals</span><span class="lang-ta">ஒப்புதல்கள்</span>
           </div>
-          <div class="nav-tab" id="tab-admin-comms" onclick="showScreen('admin-comms')">
+          <div class="nav-item" id="tab-admin-comms" onclick="showScreen('admin-comms')">
             <i data-lucide="megaphone"></i>
             <span class="lang-en">Comms</span><span class="lang-ta">அறிவிப்பு</span>
           </div>
-          <div class="nav-tab" id="tab-admin-settings" onclick="showScreen('admin-settings')">
+          <div class="nav-item" id="tab-admin-settings" onclick="showScreen('admin-settings')">
             <i data-lucide="settings"></i>
             <span class="lang-en">More</span><span class="lang-ta">மேலும்</span>
           </div>
@@ -2180,7 +2227,7 @@
     }
 
     function updateTabNavigationHighlights(activeScreenId) {
-      const tabs = document.querySelectorAll(".nav-tab");
+      const tabs = document.querySelectorAll(".nav-item");
       tabs.forEach(tab => tab.classList.remove("active"));
       
       const tabEl = document.getElementById("tab-" + activeScreenId);
@@ -2314,11 +2361,11 @@
         item.style.cursor = "pointer";
         item.onclick = () => openAnnouncementDetail(ann.id);
         item.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-weight:600;font-size:13px;color:var(--primary);">${ann.title}</span>
-            <span style="font-size:10px;color:var(--text-muted);">${ann.date}</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <span style="font-weight:600;font-size:14px;line-height:1.5;color:var(--text);">${ann.title}</span>
+            <span style="font-size:12px;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
           </div>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
         `;
         homeAnnContainer.appendChild(item);
       });
@@ -2326,40 +2373,178 @@
 
     function renderParentChildrenScreen() {
       DB = getDB();
-      const deck = document.getElementById("parent-children-cards-deck");
-      deck.innerHTML = "";
+      const deck = document.getElementById('parent-children-cards-deck');
+      deck.innerHTML = '';
 
-      const parentKids = DB.students.filter(s => s.name === "Anika Kumar" || s.name === "Rohan Kumar");
+      const currentEmail = DB.currentUser && DB.currentUser.email ? DB.currentUser.email : '';
+
+      // STEP 1: Always include seed children (Anika + Rohan) — these are permanent demo kids
+      const seedKids = DB.students.filter(s => s.name === 'Anika Kumar' || s.name === 'Rohan Kumar');
+      const seedIds  = new Set(seedKids.map(s => s.id));
+
+      // STEP 2: Find any extra children the parent added (not already in seed list)
+      let extraKids = [];
+      if (DB.parents) {
+        const par = DB.parents.find(p => p.email === currentEmail);
+        if (par && par.linkedStudentIds && par.linkedStudentIds.length) {
+          extraKids = DB.students.filter(s => par.linkedStudentIds.includes(s.id) && !seedIds.has(s.id));
+        }
+      }
+
+      // Merge: seeds first, then user-added extras
+      const parentKids = [...seedKids, ...extraKids];
+
+      if (parentKids.length === 0) {
+        deck.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:14px;padding:20px 0;">No children linked yet. Tap \'Add Child\'.</p>';
+        return;
+      }
+
       parentKids.forEach(kid => {
-        const card = document.createElement("div");
-        card.className = "card";
+        const parts = kid.name.trim().split(' ');
+        const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+
+        const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;">
-            <div style="width:40px;height:40px;background-color:var(--primary);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">
-              ${kid.name === "Anika Kumar" ? "AK" : "RK"}
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+              <div style="width:42px;height:42px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">${initials}</div>
+              <div style="min-width:0;">
+                <h3 style="font-size:15px;color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${kid.name}${kid.tamilName ? ' (' + kid.tamilName + ')' : ''}</h3>
+                <p style="font-size:12px;color:var(--text-muted);">ITA Roster ID: ${kid.ita}</p>
+              </div>
             </div>
-            <div>
-              <h3 style="font-size:15px;color:var(--primary);font-weight:700;">${kid.name} (${kid.tamilName})</h3>
-              <p style="font-size:11px;color:var(--text-muted);">ITA Roster ID: ${kid.ita}</p>
+            <div style="display:flex;gap:8px;flex-shrink:0;">
+              <button onclick="openChildForm('${kid.id}')" style="background:rgba(16,185,129,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Edit">
+                <i data-lucide="pencil" style="width:15px;height:15px;color:var(--success);"></i>
+              </button>
+              <button onclick="deleteChildRecord('${kid.id}')" style="background:rgba(239,68,68,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Delete">
+                <i data-lucide="trash-2" style="width:15px;height:15px;color:var(--danger);"></i>
+              </button>
             </div>
           </div>
-          <div style="font-size:13px;display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;justify-content:space-between;">
-              <span class="lang-en">Grade Level</span><span class="lang-ta">வகுப்பு நிலை</span>
-              <strong>Grade ${kid.grade} (${kid.class})</strong>
+          <div style="font-size:13px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="color:var(--text-muted);"><span class="lang-en">Grade Level</span><span class="lang-ta">வகுப்பு நிலை</span></span>
+              <strong style="color:var(--text);">Grade ${kid.grade} (${kid.class})</strong>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span class="lang-en">Photo Consent</span><span class="lang-ta">புகைப்பட ஒப்புதல்</span>
+              <span style="color:var(--text-muted);"><span class="lang-en">Photo Consent</span><span class="lang-ta">புகைப்பட ஒப்புதல்</span></span>
               <span class="badge ${kid.photoConsent === 'Approved' ? 'badge-success' : 'badge-warning'}">${kid.photoConsent}</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span class="lang-en">Medical Form</span><span class="lang-ta">மருத்துவ படிவம்</span>
+              <span style="color:var(--text-muted);"><span class="lang-en">Medical Form</span><span class="lang-ta">மருத்துவ படிவம்</span></span>
               <span class="badge ${kid.medicalForm === 'Submitted' ? 'badge-success' : 'badge-warning'}">${kid.medicalForm}</span>
             </div>
           </div>
         `;
         deck.appendChild(card);
       });
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // ── CHILD CRUD (Parent's My Children section) ────────────────────────────────
+    function openChildForm(studentId) {
+      DB = getDB();
+      const titleEl = document.getElementById('parent-child-form-title');
+      if (studentId) {
+        const kid = DB.students.find(s => s.id === studentId);
+        if (!kid) return;
+        titleEl.textContent = 'Edit Child';
+        document.getElementById('child-form-id').value = kid.id;
+        document.getElementById('child-form-name').value = kid.name;
+        document.getElementById('child-form-tamil').value = kid.tamilName || '';
+        document.getElementById('child-form-grade').value = kid.grade;
+        document.getElementById('child-form-class').value = kid.class;
+        document.getElementById('child-form-ita').value = kid.ita;
+        document.getElementById('child-form-photo').value = kid.photoConsent;
+        document.getElementById('child-form-medical').value = kid.medicalForm;
+      } else {
+        titleEl.textContent = 'Add Child';
+        document.getElementById('child-form-id').value = '';
+        document.getElementById('child-form-name').value = '';
+        document.getElementById('child-form-tamil').value = '';
+        document.getElementById('child-form-grade').value = '3';
+        document.getElementById('child-form-class').value = '';
+        document.getElementById('child-form-ita').value = '';
+        document.getElementById('child-form-photo').value = 'Pending Signature';
+        document.getElementById('child-form-medical').value = 'Pending Attachment';
+      }
+      showScreen('parent-child-form');
+    }
+
+    function saveChildRecord() {
+      DB = getDB();
+      const id = document.getElementById('child-form-id').value.trim();
+      const name = document.getElementById('child-form-name').value.trim();
+      const tamilName = document.getElementById('child-form-tamil').value.trim();
+      const grade = document.getElementById('child-form-grade').value;
+      const cls = document.getElementById('child-form-class').value.trim() || grade + '-A';
+      const ita = document.getElementById('child-form-ita').value.trim() || 'Pending';
+      const photoConsent = document.getElementById('child-form-photo').value;
+      const medicalForm = document.getElementById('child-form-medical').value;
+
+      if (!name) { showToast('Child\'s full name is required.', 'error'); return; }
+
+      let isEdit = false;
+      if (id) {
+        // Edit existing student
+        const idx = DB.students.findIndex(s => s.id === id);
+        if (idx >= 0) {
+          DB.students[idx] = { ...DB.students[idx], name, tamilName, grade, class: cls, ita, photoConsent, medicalForm };
+          isEdit = true;
+        }
+      } else {
+        // Add new student and link to current parent
+        const newId = 'MTS-' + String(DB.students.length + 1).padStart(3, '0') + Date.now().toString().slice(-2);
+        DB.students.push({ id: newId, name, tamilName, grade, class: cls, ita, status: 'active', photoConsent, medicalForm });
+
+        // Link to current parent's linkedStudentIds
+        if (DB.currentUser && DB.currentUser.email && DB.parents) {
+          const parIdx = DB.parents.findIndex(p => p.email === DB.currentUser.email);
+          if (parIdx >= 0) {
+            if (!DB.parents[parIdx].linkedStudentIds) DB.parents[parIdx].linkedStudentIds = [];
+            DB.parents[parIdx].linkedStudentIds.push(newId);
+          }
+        }
+      }
+
+      DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: DB.currentUser ? DB.currentUser.email : 'parent', action: (isEdit ? 'Updated' : 'Added') + ' child: ' + name });
+      saveDB(DB);
+      const msg = isEdit ? `✏️ ${name}'s details updated successfully!` : `✨ "${name}" added to My Children!`;
+      showScreen('parent-children', 'backward');
+      setTimeout(() => showToast(msg, 'success'), 350);
+    }
+
+    function deleteChildRecord(studentId) {
+      DB = getDB();
+      const kid = DB.students.find(s => s.id === studentId);
+      // Seed student IDs (MTS-001 to MTS-005) — these are protected and never deleted from DB
+      const SEED_IDS = new Set(['MTS-001', 'MTS-002', 'MTS-003', 'MTS-004', 'MTS-005']);
+      const isSeedKid = SEED_IDS.has(studentId) || (kid && (kid.name === 'Anika Kumar' || kid.name === 'Rohan Kumar'));
+
+      showConfirm(
+        'Remove Child',
+        `Remove "${kid ? kid.name : 'this child'}" from your children list?`,
+        () => {
+          DB = getDB();
+          // Only physically delete from students if it's a user-added (non-seed) child
+          if (!isSeedKid) {
+            DB.students = DB.students.filter(s => s.id !== studentId);
+          }
+          // Always remove from parent's linkedStudentIds
+          if (DB.currentUser && DB.currentUser.email && DB.parents) {
+            const parIdx = DB.parents.findIndex(p => p.email === DB.currentUser.email);
+            if (parIdx >= 0 && DB.parents[parIdx].linkedStudentIds) {
+              DB.parents[parIdx].linkedStudentIds = DB.parents[parIdx].linkedStudentIds.filter(id => id !== studentId);
+            }
+          }
+          DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: DB.currentUser ? DB.currentUser.email : 'parent', action: 'Removed child: ' + (kid ? kid.name : studentId) });
+          saveDB(DB);
+          showToast(`🗑️ "${kid ? kid.name : 'Child'}" removed from your list.`, 'warning');
+          renderParentChildrenScreen();
+        }
+      );
     }
 
     function renderParentAttendanceScreen() {
@@ -2368,7 +2553,7 @@
       logsDeck.innerHTML = "";
 
       if (DB.absenceLogs.length === 0) {
-        logsDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>No absence requests logged yet.</p>";
+        logsDeck.innerHTML = "<p style='font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);text-align:center;'>No absence requests logged yet.</p>";
         return;
       }
 
@@ -2381,8 +2566,8 @@
         row.style.borderBottom = "1px solid var(--border)";
         row.innerHTML = `
           <div>
-            <h4 style="font-size:13px;color:var(--primary);">${log.studentName}</h4>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Date: ${log.date} - ${log.reason}</p>
+            <h4 style="font-size:14px;line-height:1.5;color:var(--text);">${log.studentName}</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Date: ${log.date} - ${log.reason}</p>
           </div>
           <span class="badge ${log.status === 'Excused' ? 'badge-success' : 'badge-warning'}">${log.status}</span>
         `;
@@ -2453,8 +2638,8 @@
         card.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
-              <h4 style="font-size:14px;color:var(--primary);">${hw.title}</h4>
-              <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Due: ${hw.dueDate}</p>
+              <h4 style="font-size:14px;color:var(--text);">${hw.title}</h4>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Due: ${hw.dueDate}</p>
             </div>
             <span class="badge ${badgeClass}">${subStatus}</span>
           </div>
@@ -2476,16 +2661,16 @@
       if (submission) {
         submissionArea = `
           <div class="card" style="background-color:var(--success-light);border:1px solid rgba(46, 204, 113, 0.2);margin-top:16px;">
-            <h4 style="color:var(--success);font-size:13px;font-weight:700;">Submission Completed</h4>
-            <p style="font-size:12px;margin-top:4px;"><strong>Attached file:</strong> ${submission.attachment}</p>
-            ${submission.textNotes ? `<p style="font-size:12px;margin-top:4px;"><strong>Your notes:</strong> "${submission.textNotes}"</p>` : ''}
-            <p style="font-size:12px;margin-top:4px;"><strong>Roster Status:</strong> <span class="badge badge-success">${submission.status}</span></p>
+            <h4 style="color:var(--success);font-size:14px;line-height:1.5;font-weight:700;">Submission Completed</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Attached file:</strong> ${submission.attachment}</p>
+            ${submission.textNotes ? `<p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Your notes:</strong> "${submission.textNotes}"</p>` : ''}
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Roster Status:</strong> <span class="badge badge-success">${submission.status}</span></p>
             
             ${submission.status === "Graded" ? `
               <div style="border-top:1.5px solid var(--border);margin-top:10px;padding-top:10px;">
-                <h4 style="color:var(--primary);font-size:12px;"><strong>Mrs. Lakshmi's Review:</strong></h4>
-                <p style="font-size:13px;font-weight:700;color:var(--accent);margin-top:2px;">Grade: ${submission.evaluation.grade}</p>
-                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">"${submission.evaluation.comment}"</p>
+                <h4 style="color:var(--text);font-size:14px;line-height:1.5;line-height:1.5;"><strong>Mrs. Lakshmi's Review:</strong></h4>
+                <p style="font-size:14px;line-height:1.5;font-weight:700;color:var(--accent);margin-top:2px;">Grade: ${submission.evaluation.grade}</p>
+                <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">"${submission.evaluation.comment}"</p>
               </div>
             ` : ''}
           </div>
@@ -2511,10 +2696,10 @@
 
       parentHomeworkDetailContent.innerHTML = `
         <div class="card">
-          <h2 style="color:var(--primary);font-size:16px;font-weight:800;">${hw.title}</h2>
-          <p style="font-size:11px;color:var(--text-muted);margin-top:4px;"><strong>Target Class Roster:</strong> Grade ${hw.grade}</p>
-          <p style="font-size:11px;color:var(--text-muted);"><strong>Deadline limit:</strong> ${hw.dueDate}</p>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;line-height:1.4;">
+          <h2 style="color:var(--text);font-size:16px;font-weight:800;">${hw.title}</h2>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:4px;"><strong>Target Class Roster:</strong> Grade ${hw.grade}</p>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);"><strong>Deadline limit:</strong> ${hw.dueDate}</p>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;line-height:1.5;line-height:1.4;">
             <p>${hw.desc}</p>
           </div>
         </div>
@@ -2563,12 +2748,12 @@
         card.style.cursor = "pointer";
         card.onclick = () => openAnnouncementDetail(ann.id);
         card.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;">
             <span class="badge badge-info">${ann.audience}</span>
-            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+            <span style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
           </div>
-          <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${ann.title}</h4>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
+          <h4 style="font-size:14px;color:var(--text);font-weight:700;">${ann.title}</h4>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
         `;
         deck.appendChild(card);
       });
@@ -2585,10 +2770,10 @@
         <div class="card">
           <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
             <span class="badge badge-info">${ann.audience}</span>
-            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+            <span style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
           </div>
-          <h2 style="color:var(--primary);font-size:18px;font-weight:800;">${ann.title}</h2>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--text);">
+          <h2 style="color:var(--text);font-size:18px;font-weight:800;">${ann.title}</h2>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;line-height:1.5;line-height:1.5;color:var(--text);">
             <p>${ann.desc}</p>
           </div>
         </div>
@@ -2670,7 +2855,7 @@
         
         let actionsHtml = "";
         if (slot.status === "Available") {
-          actionsHtml = `<button class="btn btn-accent" onclick="bookPTSlot('${slot.id}')" style="width:auto;height:32px;font-size:11px;padding:0 10px;">Book</button>`;
+          actionsHtml = `<button class="btn btn-accent" onclick="bookPTSlot('${slot.id}')" style="width:auto;height:32px;font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;padding:0 10px;">Book</button>`;
         } else if (slot.bookedBy === "Priya Kumar") {
           actionsHtml = `<span class="badge badge-success">Booked by You</span>`;
         } else {
@@ -2679,8 +2864,8 @@
 
         row.innerHTML = `
           <div>
-            <h4 style="font-size:13px;color:var(--primary);">${slot.time}</h4>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Teacher: Mrs. Lakshmi R.</p>
+            <h4 style="font-size:14px;line-height:1.5;color:var(--text);">${slot.time}</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Teacher: Mrs. Lakshmi R.</p>
           </div>
           ${actionsHtml}
         `;
@@ -2816,12 +3001,12 @@
         card.style.cursor = "pointer";
         card.onclick = () => openTeacherClassDetail(c.id);
         card.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
             <div>
-              <h3 style="font-size:15px;color:var(--primary);font-weight:700;">${c.name}</h3>
-              <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Roster count: ${c.studentCount} enrolled</p>
+              <h3 style="font-size:15px;color:var(--text);font-weight:700;">${c.name}</h3>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Roster count: ${c.studentCount} enrolled</p>
             </div>
-            <i data-lucide="chevron-right" style="color:var(--text-muted);"></i>
+            <i data-lucide="chevron-right" style="color: var(--text-muted);"></i>
           </div>
         `;
         deck.appendChild(card);
@@ -2851,8 +3036,8 @@
         item.style.alignItems = "center";
         item.innerHTML = `
           <div>
-            <h4 style="font-size:13px;color:var(--primary); font-weight:700;">${stud.name} (${stud.tamilName})</h4>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">ITA ID: ${stud.ita}</p>
+            <h4 style="font-size:14px;line-height:1.5;color:var(--text); font-weight:700;">${stud.name} (${stud.tamilName})</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">ITA ID: ${stud.ita}</p>
           </div>
           <span class="badge badge-success">Active</span>
         `;
@@ -2887,15 +3072,15 @@
         row.style.alignItems = "center";
 
         row.innerHTML = `
-          <span style="font-size:13px;font-weight:600;color:var(--primary);">${stud.name}</span>
+          <span style="font-size:14px;line-height:1.5;font-weight:600;color:var(--text);">${stud.name}</span>
           <div style="display:flex;gap:12px;">
-            <label style="font-size:12px;display:flex;align-items:center;gap:3px;">
+            <label style="font-size:14px;line-height:1.5;line-height:1.5;display:flex;align-items:center;gap:3px;">
               <input type="radio" name="att-${stud.id}" value="Present" checked> P
             </label>
-            <label style="font-size:12px;display:flex;align-items:center;gap:3px;color:var(--danger);">
+            <label style="font-size:14px;line-height:1.5;line-height:1.5;display:flex;align-items:center;gap:3px;color:var(--danger);">
               <input type="radio" name="att-${stud.id}" value="Absent"> A
             </label>
-            <label style="font-size:12px;display:flex;align-items:center;gap:3px;color:var(--warning);">
+            <label style="font-size:14px;line-height:1.5;line-height:1.5;display:flex;align-items:center;gap:3px;color:var(--warning);">
               <input type="radio" name="att-${stud.id}" value="Late"> L
             </label>
           </div>
@@ -2943,10 +3128,10 @@
             item.style.borderLeft = "4px solid var(--accent)";
             item.onclick = () => openTeacherHomeworkReview(hw.id, sub.studentName);
             item.innerHTML = `
-              <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
                 <div>
-                  <h4 style="font-size:13px;color:var(--primary);"><strong>${sub.studentName}</strong></h4>
-                  <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Task: ${hw.title}</p>
+                  <h4 style="font-size:14px;line-height:1.5;color:var(--text);"><strong>${sub.studentName}</strong></h4>
+                  <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Task: ${hw.title}</p>
                 </div>
                 <span class="badge badge-warning">Review</span>
               </div>
@@ -2957,7 +3142,7 @@
       });
 
       if (queueDeck.innerHTML === "") {
-        queueDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending evaluations remaining.</p>";
+        queueDeck.innerHTML = "<p style='font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);text-align:center;'>Zero pending evaluations remaining.</p>";
       }
     }
 
@@ -2969,10 +3154,10 @@
       const reviewDeck = document.getElementById("teacher-homework-review-content");
       reviewDeck.innerHTML = `
         <div class="card">
-          <h3 style="color:var(--primary);font-size:15px;font-weight:700;">${sub.studentName}</h3>
-          <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Homework: ${hw.title}</p>
+          <h3 style="color:var(--text);font-size:15px;font-weight:700;">${sub.studentName}</h3>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Homework: ${hw.title}</p>
           
-          <div style="background-color:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:12px;">
+          <div style="background-color:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:14px;line-height:1.5;line-height:1.5;">
             <p><strong>Attachment file:</strong> "${sub.attachment}"</p>
             ${sub.textNotes ? `<p style="margin-top:4px;"><strong>Parent Notes:</strong> "${sub.textNotes}"</p>` : ''}
           </div>
@@ -3085,7 +3270,7 @@
       const activeApprovals = DB.approvals.filter(a => a.status === "Pending").slice(0, 2);
       
       if (activeApprovals.length === 0) {
-        homeApprovalsDeck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending linkage approvals.</p>";
+        homeApprovalsDeck.innerHTML = "<p style='font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);text-align:center;'>Zero pending linkage approvals.</p>";
         return;
       }
 
@@ -3099,77 +3284,338 @@
         
         item.innerHTML = `
           <div>
-            <h4 style="font-size:12px;color:var(--primary);font-weight:700;">${ap.type}</h4>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:2px;max-width:230px;">${ap.details}</p>
+            <h4 style="font-size:14px;line-height:1.5;line-height:1.5;color:var(--text);font-weight:700;">${ap.type}</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">${ap.details}</p>
           </div>
-          <button class="btn btn-accent" onclick="showScreen('admin-approvals')" style="width:auto;height:28px;font-size:10px;padding:0 8px;">Action</button>
+          <button class="btn btn-accent" onclick="showScreen('admin-approvals')" style="width:auto;height:36px;font-size:12px;line-height:1.5;padding:0 8px;">Action</button>
         `;
         homeApprovalsDeck.appendChild(item);
       });
     }
 
     let currentAdminRosterTab = 'students';
+
     function togglePeopleRosterTab(tab) {
       currentAdminRosterTab = tab;
-      
-      const sTab = document.getElementById("admin-people-tab-students");
-      const tTab = document.getElementById("admin-people-tab-teachers");
-
-      if (tab === 'students') {
-        sTab.classList.add("active");
-        tTab.classList.remove("active");
-      } else {
-        sTab.classList.remove("active");
-        tTab.classList.add("active");
-      }
-
+      ['students','teachers','parents'].forEach(t => {
+        const el = document.getElementById('admin-people-tab-' + t);
+        if (el) el.classList.toggle('active', t === tab);
+      });
       renderAdminPeopleScreen();
     }
 
     function renderAdminPeopleScreen() {
       DB = getDB();
-      const deck = document.getElementById("admin-people-list-deck");
-      deck.innerHTML = "";
+      const deck = document.getElementById('admin-people-list-deck');
+      const addRow = document.getElementById('admin-people-add-row');
+      deck.innerHTML = '';
+
+      // Ensure teachers & parents arrays exist (forward-compat)
+      if (!DB.teachers) { DB.teachers = []; saveDB(DB); }
+      if (!DB.parents) { DB.parents = []; saveDB(DB); }
+
+      // -- FAB add button per tab --
+      if (currentAdminRosterTab === 'teachers') {
+        addRow.innerHTML = `<button class="btn btn-accent" style="width:auto;padding:8px 16px;font-size:13px;" onclick="openTeacherForm(null)"><i data-lucide="plus" style="width:14px;height:14px;"></i>&nbsp; Add Teacher</button>`;
+      } else if (currentAdminRosterTab === 'parents') {
+        addRow.innerHTML = `<button class="btn btn-accent" style="width:auto;padding:8px 16px;font-size:13px;" onclick="openParentForm(null)"><i data-lucide="plus" style="width:14px;height:14px;"></i>&nbsp; Add Parent</button>`;
+      } else {
+        addRow.innerHTML = '';
+      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
 
       if (currentAdminRosterTab === 'students') {
+        if (DB.students.length === 0) { deck.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:14px;">No students found.</p>'; return; }
         DB.students.forEach(stud => {
-          const card = document.createElement("div");
-          card.className = "card";
-          card.style.cursor = "pointer";
-          card.onclick = () => openAdminStudentDetail(stud.id);
+          const card = document.createElement('div');
+          card.className = 'card';
           card.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${stud.name}</h4>
-                <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Grade ${stud.grade} | ITA ID: ${stud.ita}</p>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div style="flex:1;min-width:0;">
+                <h4 style="font-size:14px;color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${stud.name}</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Grade ${stud.grade} &bull; ITA: ${stud.ita}</p>
+                <span class="badge ${stud.status === 'active' ? 'badge-success' : 'badge-warning'}" style="margin-top:6px;">${stud.status}</span>
               </div>
-              <span class="badge ${stud.status === 'active' ? 'badge-success' : 'badge-warning'}">${stud.status}</span>
+              <div style="display:flex;gap:8px;flex-shrink:0;align-items:center;">
+                <button onclick="openAdminStudentDetail('${stud.id}')" style="background:var(--accent-light);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="View">
+                  <i data-lucide="eye" style="width:16px;height:16px;color:var(--accent);"></i>
+                </button>
+              </div>
             </div>
           `;
           deck.appendChild(card);
         });
-      } else {
-        const teachers = [
-          { name: "Mrs. Lakshmi Rajendran", email: "teacher@mts.edu", class: "Grade 3-A" },
-          { name: "Mr. Arun Prabhu", email: "arun@mts.edu", class: "Grade 2-A" },
-          { name: "Mrs. Meena Kumaravel", email: "meena@mts.edu", class: "Grade 1-A" }
-        ];
 
-        teachers.forEach(teach => {
-          const card = document.createElement("div");
-          card.className = "card";
+      } else if (currentAdminRosterTab === 'teachers') {
+        if (DB.teachers.length === 0) { deck.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:14px;">No teachers yet. Tap Add Teacher.</p>'; return; }
+        DB.teachers.forEach(teach => {
+          const card = document.createElement('div');
+          card.className = 'card';
           card.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${teach.name}</h4>
-                <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Email: ${teach.email} | ${teach.class}</p>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div style="flex:1;min-width:0;">
+                <h4 style="font-size:14px;color:var(--text);font-weight:700;">${teach.name}</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">${teach.class} &bull; ${teach.email}</p>
+                <span class="badge ${teach.status === 'active' ? 'badge-success' : 'badge-warning'}" style="margin-top:6px;">${teach.status}</span>
               </div>
-              <span class="badge badge-success">Active</span>
+              <div style="display:flex;gap:8px;flex-shrink:0;align-items:center;">
+                <button onclick="viewTeacher('${teach.id}')" style="background:var(--accent-light);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="View">
+                  <i data-lucide="eye" style="width:16px;height:16px;color:var(--accent);"></i>
+                </button>
+                <button onclick="openTeacherForm('${teach.id}')" style="background:rgba(16,185,129,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Edit">
+                  <i data-lucide="pencil" style="width:16px;height:16px;color:var(--success);"></i>
+                </button>
+                <button onclick="deleteTeacher('${teach.id}')" style="background:rgba(239,68,68,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Delete">
+                  <i data-lucide="trash-2" style="width:16px;height:16px;color:var(--danger);"></i>
+                </button>
+              </div>
+            </div>
+          `;
+          deck.appendChild(card);
+        });
+
+      } else if (currentAdminRosterTab === 'parents') {
+        if (DB.parents.length === 0) { deck.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:14px;">No parents yet. Tap Add Parent.</p>'; return; }
+        DB.parents.forEach(par => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div style="flex:1;min-width:0;">
+                <h4 style="font-size:14px;color:var(--text);font-weight:700;">${par.name}</h4>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">${par.relation} of ${par.student}</p>
+                <span class="badge ${par.status === 'active' ? 'badge-success' : 'badge-warning'}" style="margin-top:6px;">${par.status}</span>
+              </div>
+              <div style="display:flex;gap:8px;flex-shrink:0;align-items:center;">
+                <button onclick="viewParent('${par.id}')" style="background:var(--accent-light);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="View">
+                  <i data-lucide="eye" style="width:16px;height:16px;color:var(--accent);"></i>
+                </button>
+                <button onclick="openParentForm('${par.id}')" style="background:rgba(16,185,129,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Edit">
+                  <i data-lucide="pencil" style="width:16px;height:16px;color:var(--success);"></i>
+                </button>
+                <button onclick="deleteParent('${par.id}')" style="background:rgba(239,68,68,0.1);border:none;border-radius:10px;padding:8px;cursor:pointer;display:flex;" title="Delete">
+                  <i data-lucide="trash-2" style="width:16px;height:16px;color:var(--danger);"></i>
+                </button>
+              </div>
             </div>
           `;
           deck.appendChild(card);
         });
       }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // ── TEACHER CRUD ──────────────────────────────────────────────────
+    function openTeacherForm(teacherId) {
+      DB = getDB();
+      const titleEl = document.getElementById('admin-teacher-form-title');
+      if (teacherId) {
+        const t = DB.teachers.find(x => x.id === teacherId);
+        if (!t) return;
+        titleEl.textContent = 'Edit Teacher';
+        document.getElementById('teacher-form-id').value = t.id;
+        document.getElementById('teacher-form-name').value = t.name;
+        document.getElementById('teacher-form-email').value = t.email;
+        document.getElementById('teacher-form-phone').value = t.phone || '';
+        document.getElementById('teacher-form-class').value = t.class;
+        document.getElementById('teacher-form-subject').value = t.subject || '';
+        document.getElementById('teacher-form-status').value = t.status;
+      } else {
+        titleEl.textContent = 'Add Teacher';
+        document.getElementById('teacher-form-id').value = '';
+        document.getElementById('teacher-form-name').value = '';
+        document.getElementById('teacher-form-email').value = '';
+        document.getElementById('teacher-form-phone').value = '';
+        document.getElementById('teacher-form-class').value = '';
+        document.getElementById('teacher-form-subject').value = '';
+        document.getElementById('teacher-form-status').value = 'active';
+      }
+      showScreen('admin-teacher-form');
+    }
+
+    function saveTeacherRecord() {
+      DB = getDB();
+      if (!DB.teachers) DB.teachers = [];
+      const id = document.getElementById('teacher-form-id').value.trim();
+      const name = document.getElementById('teacher-form-name').value.trim();
+      const email = document.getElementById('teacher-form-email').value.trim();
+      const phone = document.getElementById('teacher-form-phone').value.trim();
+      const cls = document.getElementById('teacher-form-class').value.trim();
+      const subject = document.getElementById('teacher-form-subject').value.trim();
+      const status = document.getElementById('teacher-form-status').value;
+      if (!name || !email) { showToast('Name and Email are required.', 'error'); return; }
+      if (id) {
+        const idx = DB.teachers.findIndex(x => x.id === id);
+        if (idx >= 0) { DB.teachers[idx] = { id, name, email, phone, class: cls, subject, status }; }
+      } else {
+        const newId = 'TCH-' + String(DB.teachers.length + 1).padStart(3,'0') + Date.now().toString().slice(-3);
+        DB.teachers.push({ id: newId, name, email, phone, class: cls, subject, status });
+      }
+      DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: 'admin@mts.edu', action: (id ? 'Updated' : 'Added') + ' teacher: ' + name });
+      saveDB(DB);
+      const msg = id ? `✏️ ${name} details updated successfully!` : `✨ Teacher "${name}" added successfully!`;
+      showScreen('admin-people', 'backward');
+      setTimeout(() => showToast(msg, 'success'), 350);
+    }
+
+    function viewTeacher(teacherId) {
+      DB = getDB();
+      const t = DB.teachers.find(x => x.id === teacherId);
+      if (!t) return;
+      const content = document.getElementById('admin-teacher-view-content');
+      content.innerHTML = `
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+            <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;flex-shrink:0;">${t.name.charAt(t.name.lastIndexOf(' ')+1)}</div>
+            <div><h3 style="font-size:16px;font-weight:700;">${t.name}</h3><p style="font-size:12px;color:var(--text-muted);">${t.class}</p></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Email</span><span style="font-size:13px;font-weight:600;">${t.email}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Phone</span><span style="font-size:13px;">${t.phone || 'N/A'}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Subject</span><span style="font-size:13px;">${t.subject || 'N/A'}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Status</span><span class="badge ${t.status==='active'?'badge-success':'badge-warning'}">${t.status}</span></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button class="btn btn-primary" style="flex:1;" onclick="openTeacherForm('${t.id}')">
+              <i data-lucide="pencil" style="width:14px;height:14px;"></i> Edit
+            </button>
+            <button class="btn btn-danger" style="flex:1;" onclick="deleteTeacher('${t.id}')">
+              <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Delete
+            </button>
+          </div>
+        </div>
+      `;
+      showScreen('admin-teacher-view');
+    }
+
+    function deleteTeacher(teacherId) {
+      DB = getDB();
+      const t = DB.teachers.find(x => x.id === teacherId);
+      showConfirm(
+        'Delete Teacher',
+        `Remove "${t ? t.name : 'this teacher'}" permanently?`,
+        () => {
+          DB = getDB();
+          DB.teachers = DB.teachers.filter(x => x.id !== teacherId);
+          DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: 'admin@mts.edu', action: 'Deleted teacher: ' + (t ? t.name : teacherId) });
+          saveDB(DB);
+          const active = document.querySelector('.screen.active');
+          if (active && active.id === 'admin-teacher-view') {
+            showScreen('admin-people', 'backward');
+            setTimeout(() => showToast(`🗑️ Teacher "${t ? t.name : ''}" deleted successfully.`, 'warning'), 350);
+          } else {
+            showToast(`🗑️ Teacher "${t ? t.name : ''}" deleted successfully.`, 'warning');
+            renderAdminPeopleScreen();
+          }
+        }
+      );
+    }
+
+    // ── PARENT CRUD ───────────────────────────────────────────────────
+    function openParentForm(parentId) {
+      DB = getDB();
+      if (!DB.parents) DB.parents = [];
+      const titleEl = document.getElementById('admin-parent-form-title');
+      if (parentId) {
+        const p = DB.parents.find(x => x.id === parentId);
+        if (!p) return;
+        titleEl.textContent = 'Edit Parent';
+        document.getElementById('parent-form-id').value = p.id;
+        document.getElementById('parent-form-name').value = p.name;
+        document.getElementById('parent-form-email').value = p.email;
+        document.getElementById('parent-form-phone').value = p.phone || '';
+        document.getElementById('parent-form-student').value = p.student || '';
+        document.getElementById('parent-form-relation').value = p.relation || 'Mother';
+        document.getElementById('parent-form-status').value = p.status;
+      } else {
+        titleEl.textContent = 'Add Parent';
+        document.getElementById('parent-form-id').value = '';
+        document.getElementById('parent-form-name').value = '';
+        document.getElementById('parent-form-email').value = '';
+        document.getElementById('parent-form-phone').value = '';
+        document.getElementById('parent-form-student').value = '';
+        document.getElementById('parent-form-relation').value = 'Mother';
+        document.getElementById('parent-form-status').value = 'active';
+      }
+      showScreen('admin-parent-form');
+    }
+
+    function saveParentRecord() {
+      DB = getDB();
+      if (!DB.parents) DB.parents = [];
+      const id = document.getElementById('parent-form-id').value.trim();
+      const name = document.getElementById('parent-form-name').value.trim();
+      const email = document.getElementById('parent-form-email').value.trim();
+      const phone = document.getElementById('parent-form-phone').value.trim();
+      const student = document.getElementById('parent-form-student').value.trim();
+      const relation = document.getElementById('parent-form-relation').value;
+      const status = document.getElementById('parent-form-status').value;
+      if (!name || !email) { showToast('Name and Email are required.', 'error'); return; }
+      if (id) {
+        const idx = DB.parents.findIndex(x => x.id === id);
+        if (idx >= 0) { DB.parents[idx] = { id, name, email, phone, student, relation, status }; }
+      } else {
+        const newId = 'PAR-' + String(DB.parents.length + 1).padStart(3,'0') + Date.now().toString().slice(-3);
+        DB.parents.push({ id: newId, name, email, phone, student, relation, status });
+      }
+      DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: 'admin@mts.edu', action: (id ? 'Updated' : 'Added') + ' parent: ' + name });
+      saveDB(DB);
+      const msg = id ? `✏️ ${name} details updated successfully!` : `✨ Parent "${name}" added successfully!`;
+      showScreen('admin-people', 'backward');
+      setTimeout(() => showToast(msg, 'success'), 350);
+    }
+
+    function viewParent(parentId) {
+      DB = getDB();
+      const p = DB.parents.find(x => x.id === parentId);
+      if (!p) return;
+      const content = document.getElementById('admin-parent-view-content');
+      content.innerHTML = `
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+            <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--success),var(--accent));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;flex-shrink:0;">${p.name.charAt(0)}</div>
+            <div><h3 style="font-size:16px;font-weight:700;">${p.name}</h3><p style="font-size:12px;color:var(--text-muted);">${p.relation} of ${p.student}</p></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Email</span><span style="font-size:13px;font-weight:600;">${p.email}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Phone</span><span style="font-size:13px;">${p.phone || 'N/A'}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Child</span><span style="font-size:13px;">${p.student || 'N/A'}</span></div>
+            <div class="list-item"><span style="color:var(--text-muted);font-size:12px;width:90px;">Status</span><span class="badge ${p.status==='active'?'badge-success':'badge-warning'}">${p.status}</span></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button class="btn btn-primary" style="flex:1;" onclick="openParentForm('${p.id}')">
+              <i data-lucide="pencil" style="width:14px;height:14px;"></i> Edit
+            </button>
+            <button class="btn btn-danger" style="flex:1;" onclick="deleteParent('${p.id}')">
+              <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Delete
+            </button>
+          </div>
+        </div>
+      `;
+      showScreen('admin-parent-view');
+    }
+
+    function deleteParent(parentId) {
+      DB = getDB();
+      const p = DB.parents.find(x => x.id === parentId);
+      showConfirm(
+        'Delete Parent',
+        `Remove "${p ? p.name : 'this parent'}" permanently?`,
+        () => {
+          DB = getDB();
+          DB.parents = DB.parents.filter(x => x.id !== parentId);
+          DB.auditLogs.unshift({ id: 'aud-' + Date.now(), timestamp: new Date().toISOString().slice(0,16).replace('T',' '), user: 'admin@mts.edu', action: 'Deleted parent: ' + (p ? p.name : parentId) });
+          saveDB(DB);
+          const active = document.querySelector('.screen.active');
+          if (active && active.id === 'admin-parent-view') {
+            showScreen('admin-people', 'backward');
+            setTimeout(() => showToast(`🗑️ Parent "${p ? p.name : ''}" deleted successfully.`, 'warning'), 350);
+          } else {
+            showToast(`🗑️ Parent "${p ? p.name : ''}" deleted successfully.`, 'warning');
+            renderAdminPeopleScreen();
+          }
+        }
+      );
     }
 
     function openAdminStudentDetail(studentId) {
@@ -3244,7 +3690,7 @@
       const pending = DB.approvals.filter(a => a.status === "Pending");
       
       if (pending.length === 0) {
-        deck.innerHTML = "<p style='font-size:12px;color:var(--text-muted);text-align:center;'>Zero pending registration linkage requests.</p>";
+        deck.innerHTML = "<p style='font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);text-align:center;'>Zero pending registration linkage requests.</p>";
         return;
       }
 
@@ -3254,11 +3700,11 @@
         card.innerHTML = `
           <div style="margin-bottom:12px;">
             <span class="badge badge-warning" style="margin-bottom:6px;">${ap.type}</span>
-            <p style="font-size:13px;font-weight:600;color:var(--primary);">${ap.details}</p>
+            <p style="font-size:14px;line-height:1.5;font-weight:600;color:var(--text);">${ap.details}</p>
           </div>
           <div style="display:flex;gap:8px;">
-            <button class="btn btn-accent" onclick="processApprovalSubmit('${ap.id}', 'Approved')" style="flex:1;height:36px;font-size:12px;">Approve</button>
-            <button class="btn btn-secondary" onclick="processApprovalSubmit('${ap.id}', 'Rejected')" style="flex:1;height:36px;font-size:12px;border-color:var(--danger);color:var(--danger);">Reject</button>
+            <button class="btn btn-accent" onclick="processApprovalSubmit('${ap.id}', 'Approved')" style="flex:1;height:36px;font-size:14px;line-height:1.5;line-height:1.5;">Approve</button>
+            <button class="btn btn-secondary" onclick="processApprovalSubmit('${ap.id}', 'Rejected')" style="flex:1;height:36px;font-size:14px;line-height:1.5;line-height:1.5;border-color:var(--danger);color:var(--danger);">Reject</button>
           </div>
         `;
         deck.appendChild(card);
@@ -3303,12 +3749,12 @@
         const item = document.createElement("div");
         item.className = "card";
         item.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;">
             <span class="badge badge-info">${ann.audience}</span>
-            <span style="font-size:11px;color:var(--text-muted);">${ann.date}</span>
+            <span style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
           </div>
-          <h4 style="font-size:14px;color:var(--primary);font-weight:700;">${ann.title}</h4>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Acks count: ${ann.acknowledgedBy.length} parent read receipts</p>
+          <h4 style="font-size:14px;color:var(--text);font-weight:700;">${ann.title}</h4>
+          <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Acks count: ${ann.acknowledgedBy.length} parent read receipts</p>
         `;
         listDeck.appendChild(item);
       });
@@ -3360,8 +3806,8 @@
         card.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
-              <h4 style="font-size:13px;color:var(--primary);font-weight:700;">${evt.title}</h4>
-              <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">Date: ${evt.date} | Loc: ${evt.location}</p>
+              <h4 style="font-size:14px;line-height:1.5;color:var(--text);font-weight:700;">${evt.title}</h4>
+              <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Date: ${evt.date} | Loc: ${evt.location}</p>
             </div>
             <span class="badge badge-success">Active</span>
           </div>
@@ -3461,11 +3907,11 @@
         item.style.borderBottom = "1px solid var(--border)";
         item.style.fontSize = "12px";
         item.innerHTML = `
-          <div style="display:flex;justify-content:space-between;color:var(--text-muted);">
+          <div style="display:flex;justify-content:space-between;color: var(--text-muted);">
             <span>${log.user}</span>
             <span>${log.timestamp}</span>
           </div>
-          <p style="margin-top:2px;color:var(--primary);font-weight:600;">${log.action}</p>
+          <p style="margin-top:2px;color:var(--text);font-weight:600;">${log.action}</p>
         `;
         deck.appendChild(item);
       });
@@ -3492,10 +3938,16 @@
       // Force database initialize
       DB = getDB();
       applyLanguagePreference();
+      applyTheme(localStorage.getItem('theme') || 'light');
 
       // Trigger automatic Splash Screen Transition
       setTimeout(() => {
-        showScreen("login");
+        if (DB && DB.currentUser && DB.currentUser.role) {
+          renderBottomTabNav(DB.currentUser.role);
+          showScreen(DB.currentUser.role + "-home");
+        } else {
+          showScreen("login");
+        }
       }, 2000);
     });
   </script>
