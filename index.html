@@ -675,6 +675,30 @@
         display: none !important;
       }
     }
+    /* Segmented Control */
+    .segment-control {
+      display: flex;
+      background: var(--bg-color);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .segment-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .segment-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 6px rgba(11, 87, 208, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -746,43 +770,84 @@
           </div>
     
           <div class="screen-content" style="padding: 24px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
-            <div class="smart-login-header">
-              <div style="width: 72px; height: 72px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-radius: 20px; font-size: 40px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-tamil); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); margin-bottom: 20px; transform: rotate(-5deg);">த</div>
-              <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">Welcome to <br><span class="text-gradient">MTS Connect</span></h2>
-              <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-en">Select your role to explore the smart campus.</p>
-              <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-ta">ஸ்மார்ட் வளாகத்தை ஆராய உங்கள் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்.</p>
-            </div>
             
-            <div class="demo-login-cards" style="margin-top: 20px;">
-              <div class="login-role-card" onclick="fillCreds('parent'); processLogin();">
-                <div class="role-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">👨‍👩‍👦</div>
-                <div class="role-info">
-                  <div class="role-title">Parent Portal</div>
-                  <div class="role-desc">View attendance, homework & news</div>
-                </div>
-                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
+            <!-- VIEW A: ROLE SELECTION -->
+            <div id="login-role-select-view" style="display: flex; flex-direction: column; width: 100%;">
+              <div class="smart-login-header">
+                <div style="width: 72px; height: 72px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-radius: 20px; font-size: 40px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-tamil); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); margin-bottom: 20px; transform: rotate(-5deg);">த</div>
+                <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">Welcome to <br><span class="text-gradient">MTS Connect</span></h2>
+                <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-en">Select your role to explore the smart campus.</p>
+                <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-ta">ஸ்மார்ட் வளாகத்தை ஆராய உங்கள் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்.</p>
               </div>
               
-              <div class="login-role-card" onclick="fillCreds('teacher'); processLogin();">
-                <div class="role-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">👩‍🏫</div>
-                <div class="role-info">
-                  <div class="role-title">Teacher Dashboard</div>
-                  <div class="role-desc">Manage classes & grading</div>
+              <div class="demo-login-cards" style="margin-top: 20px;">
+                <div class="login-role-card" onclick="selectLoginRole('parent')">
+                  <div class="role-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">👨‍👩‍👦</div>
+                  <div class="role-info">
+                    <div class="role-title">Parent Portal</div>
+                    <div class="role-desc">View attendance, homework & news</div>
+                  </div>
+                  <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
                 </div>
-                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
-              </div>
+                
+                <div class="login-role-card" onclick="selectLoginRole('teacher')">
+                  <div class="role-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">👩‍🏫</div>
+                  <div class="role-info">
+                    <div class="role-title">Teacher Dashboard</div>
+                    <div class="role-desc">Manage classes & grading</div>
+                  </div>
+                  <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
+                </div>
 
-              <div class="login-role-card" onclick="fillCreds('admin'); processLogin();">
-                <div class="role-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">👑</div>
-                <div class="role-info">
-                  <div class="role-title">Admin Console</div>
-                  <div class="role-desc">School oversight & approvals</div>
+                <div class="login-role-card" onclick="selectLoginRole('admin')">
+                  <div class="role-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">👑</div>
+                  <div class="role-info">
+                    <div class="role-title">Admin Console</div>
+                    <div class="role-desc">School oversight & approvals</div>
+                  </div>
+                  <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
                 </div>
-                <i data-lucide="chevron-right" style="color: #CBD5E1;"></i>
               </div>
             </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; animation-delay: 0.4s; transform: translateY(10px);">
+
+            <!-- VIEW B: CREDENTIALS INPUT -->
+            <div id="login-credentials-view" style="display: none; flex-direction: column; width: 100%;">
+              <div class="smart-login-header" style="margin-bottom: 24px; text-align: left;">
+                <button type="button" onclick="goBackToRoles()" style="margin-left: -4px; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; border: none; background: none; color: var(--accent); font-weight: 700; font-size: 14px; cursor: pointer; padding: 4px 0;">
+                  <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+                  <span class="lang-en">Back to Roles</span>
+                  <span class="lang-ta">திரும்புக</span>
+                </button>
+                <h2 id="login-form-title" style="font-family: var(--font-heading); font-weight: 800; font-size: 26px; color: var(--text);">Login</h2>
+                <p id="login-form-subtitle" style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Please enter your credentials below.</p>
+              </div>
+
+              <form onsubmit="event.preventDefault(); processLogin();" style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+                <div class="form-group" style="margin-bottom: 16px; text-align: left; width: 100%;">
+                  <label class="form-label" for="login-email" style="margin-bottom: 6px;">Email Address</label>
+                  <input type="email" id="login-email" class="form-input" placeholder="e.g. user@mts.edu" required style="box-sizing: border-box; width: 100%;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 8px; text-align: left; width: 100%;">
+                  <label class="form-label" for="login-password" style="margin-bottom: 6px;">Password</label>
+                  <div style="position: relative; width: 100%;">
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="box-sizing: border-box; padding-right: 48px; width: 100%;">
+                    <button type="button" onclick="togglePasswordInput()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px;">
+                      <i data-lucide="eye" id="eye-icon" style="width: 20px; height: 20px;"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 8px;">Sign In</button>
+
+                <div style="text-align: center; margin-top: 8px; width: 100%;">
+                  <a href="#" onclick="event.preventDefault(); autoFillDemoCreds();" style="color: var(--accent); font-size: 13.5px; font-weight: 600; text-decoration: none;">Auto-fill Demo Credentials</a>
+                </div>
+              </form>
+            </div>
+
+            <!-- Language/Theme Controls -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; animation-delay: 0.4s; transform: translateY(10px); width: 100%;">
               <button onclick="toggleLanguage()" class="login-action-btn">
                 <i data-lucide="languages"></i>
                 <div class="btn-text-col">
@@ -800,12 +865,6 @@
             </div>
           </div>
         </div>
-        
-        <!-- Hidden traditional form to keep JS logic intact -->
-        <form id="login-form" style="display:none;">
-            <input type="email" id="login-email">
-            <input type="password" id="login-password">
-        </form>
 
         <!-- ════ SCREEN 3: PARENT HOME SCREEN ════ -->
         <div class="screen" id="parent-home">
@@ -1302,14 +1361,147 @@
             <button class="header-btn" onclick="showScreen('teacher-home', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
           </div>
           <div class="screen-content">
+            <!-- Segmented Control Tabs -->
+            <div class="segment-control" style="margin-bottom: 16px;">
+              <div class="segment-btn active" id="mob-hw-tab-active" onclick="switchMobileHomeworkTab('active')">
+                <span class="lang-en">Published</span>
+                <span class="lang-ta">வெளியிடப்பட்டவை</span>
+              </div>
+              <div class="segment-btn" id="mob-hw-tab-queue" onclick="switchMobileHomeworkTab('queue')">
+                <span class="lang-en">Review Queue</span>
+                <span class="lang-ta">மதிப்பீடு</span>
+              </div>
+            </div>
+
+            <!-- Published View -->
+            <div id="mob-hw-view-active">
+              <button class="btn btn-primary" onclick="showScreen('teacher-add-homework')" style="margin-bottom: 16px;">
+                <i data-lucide="plus-circle"></i>
+                <span class="lang-en">Create Assignment</span>
+                <span class="lang-ta">புதிய வீட்டுப்பாடம்</span>
+              </button>
+              <div class="card" style="margin-bottom: 16px; padding-top: 4px;">
+                <div id="teacher-published-homework-deck">
+                  <!-- Published homework assignments -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Queue View -->
+            <div id="mob-hw-view-queue" style="display: none;">
+              <div class="card" style="padding-top: 4px;">
+                <div id="teacher-homework-queue-deck">
+                  <!-- Homework pending evaluation submissions queue -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 18.5: TEACHER ADD HOMEWORK SCREEN ════ -->
+        <div class="screen" id="teacher-add-homework">
+          <div class="app-header">
+            <h1 class="lang-en">New Assignment</h1>
+            <h1 class="lang-ta">புதிய வீட்டுப்பாடம்</h1>
+            <button class="header-btn" onclick="showScreen('teacher-homework', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content">
             <div class="card">
-              <div class="card-title">
-                <span class="lang-en">Active Submissions Queue</span>
-                <span class="lang-ta">மதிப்பீடு செய்ய வேண்டியவை</span>
-              </div>
-              <div id="teacher-homework-queue-deck">
-                <!-- Homework pending evaluation submissions queue -->
-              </div>
+              <form onsubmit="event.preventDefault(); handleMobileNewHomeworkSubmit();">
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-title">Title (English)</label>
+                  <input type="text" class="form-input" id="mob-hw-title" required placeholder="e.g. Write basic vowels">
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-title-ta">Title (Tamil)</label>
+                  <input type="text" class="form-input" id="mob-hw-title-ta" placeholder="எ.கா. உயிர் எழுத்துக்களை எழுதவும்">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-class">Target Class</label>
+                  <select class="form-input" id="mob-hw-class">
+                    <option>Grade 3-A</option>
+                    <option>Grade 4-B</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-due">Due Date</label>
+                  <input type="date" class="form-input" id="mob-hw-due" required value="2025-06-15">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-desc">Instructions</label>
+                  <textarea class="form-input" id="mob-hw-desc" rows="3" placeholder="Enter instructions..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-hw-file">Attachment (Optional)</label>
+                  <input type="file" class="form-input" id="mob-hw-file" accept="image/*,.pdf,.doc,.docx" style="padding:10px;">
+                  <small style="color:var(--text-muted);display:block;margin-top:4px;font-size:11px;">Select a worksheet or reference material.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="mob-hw-submit-btn" style="margin-top:20px;">
+                  <i data-lucide="send"></i>
+                  <span class="lang-en">Publish Assignment</span>
+                  <span class="lang-ta">வெளியிடு</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ SCREEN 18.6: TEACHER EDIT HOMEWORK SCREEN ════ -->
+        <div class="screen" id="teacher-edit-homework">
+          <div class="app-header">
+            <h1 class="lang-en">Edit Assignment</h1>
+            <h1 class="lang-ta">வீட்டுப்பாடத்தை திருத்து</h1>
+            <button class="header-btn" onclick="showScreen('teacher-homework', 'backward')"><i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2.5;"></i></button>
+          </div>
+          <div class="screen-content">
+            <div class="card">
+              <form onsubmit="event.preventDefault(); handleMobileEditHomeworkSubmit();">
+                <input type="hidden" id="mob-edit-hw-id">
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-title">Title (English)</label>
+                  <input type="text" class="form-input" id="mob-edit-hw-title" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-title-ta">Title (Tamil)</label>
+                  <input type="text" class="form-input" id="mob-edit-hw-title-ta">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-class">Target Class</label>
+                  <select class="form-input" id="mob-edit-hw-class">
+                    <!-- Dynamically populated -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-due">Due Date</label>
+                  <input type="date" class="form-input" id="mob-edit-hw-due" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-desc">Instructions</label>
+                  <textarea class="form-input" id="mob-edit-hw-desc" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="mob-edit-hw-file">Replace Attachment (Optional)</label>
+                  <input type="file" class="form-input" id="mob-edit-hw-file" accept="image/*,.pdf,.doc,.docx" style="padding:10px;">
+                  <small style="color:var(--text-muted);display:block;margin-top:4px;font-size:11px;" id="mob-edit-hw-current-file"></small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="mob-edit-hw-submit-btn" style="margin-top:20px;">
+                  <i data-lucide="save"></i>
+                  <span class="lang-en">Save Changes</span>
+                  <span class="lang-ta">மாற்றங்களை சேமி</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -1335,9 +1527,9 @@
           </div>
           <div class="screen-content">
             <div class="card" onclick="openChatScreen('teacher', 'parent')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
-              <div style="width:44px;height:44px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">PK</div>
+              <div id="teacher-inbox-avatar" style="width:44px;height:44px;background-color:var(--accent);color:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">PK</div>
               <div style="flex:1;">
-                <h4 style="font-size:14px;color:var(--text);">Priya Kumar (Parent)</h4>
+                <h4 id="teacher-inbox-partner-name" style="font-size:14px;color:var(--text);">Priya Kumar (Parent)</h4>
                 <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;" id="teacher-msg-preview">No new chat message thread</p>
               </div>
               <i data-lucide="chevron-right" style="color: var(--text-muted);width:20px;height:20px;"></i>
@@ -1904,10 +2096,16 @@
   </div>
 
 
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- MTS Shared Database Layer (Supabase) -->
+  <script src="../supabase-db.js"></script>
+
   <!-- ──────────────────────────────────────────────────────────────────
      6. JAVASCRIPT GLOBAL STATE CONTROLLER & CRUD LAYER
      ────────────────────────────────────────────────────────────────── -->
   <script>
+
     // ──────────────────────────────────────────────────────────────────
     // TOAST NOTIFICATION & CONFIRM DIALOG SYSTEM
     // ──────────────────────────────────────────────────────────────────
@@ -2024,37 +2222,13 @@
     let screenHistory = [];
 
     // ──────────────────────────────────────────────────────────────────
-    // DATABASE PERSISTENCE HELPER METHODS
+    // DATABASE PERSISTENCE — Replaced by supabase-db.js
+    // getDB() and saveDB() are now defined in supabase-db.js and operate
+    // on the in-memory _dbCache loaded from Supabase at startup.
     // ──────────────────────────────────────────────────────────────────
-    function getDB() {
-      const dataStr = localStorage.getItem(DB_KEY);
-      if (!dataStr) {
-        saveDB(InitialSeedData);
-        return InitialSeedData;
-      }
-      try {
-        const parsed = JSON.parse(dataStr);
-        // Force upgrade/reseed if version mismatch detected
-        if (parsed.version !== MOCK_DB_VERSION) {
-          saveDB(InitialSeedData);
-          return InitialSeedData;
-        }
-        return parsed;
-      } catch (e) {
-        saveDB(InitialSeedData);
-        return InitialSeedData;
-      }
-    }
-
-    function saveDB(data) {
-      localStorage.setItem(DB_KEY, JSON.stringify(data));
-      DB = data;
-    }
 
     function resetDBToDefault() {
-      saveDB(InitialSeedData);
-      alert("Database reset to static default seeds!");
-      location.reload();
+      alert("Please use the Supabase dashboard to reset seed data.");
     }
 
     // ──────────────────────────────────────────────────────────────────
@@ -2153,17 +2327,51 @@
     // ──────────────────────────────────────────────────────────────────
     // AUTO-FILL AND SIGN-IN DEMO LOGIC
     // ──────────────────────────────────────────────────────────────────
-    function fillCreds(role) {
+    let selectedRole = 'parent';
+
+    function selectLoginRole(role) {
+      selectedRole = role;
+      document.getElementById("login-role-select-view").style.display = "none";
+      document.getElementById("login-credentials-view").style.display = "flex";
+
+      const titleEl = document.getElementById("login-form-title");
+      const subtitleEl = document.getElementById("login-form-subtitle");
+      
       const emailInput = document.getElementById("login-email");
       const passwordInput = document.getElementById("login-password");
+      emailInput.value = "";
+      passwordInput.value = "";
       
       if (role === 'parent') {
+        titleEl.innerHTML = '<span class="lang-en">Parent Login</span><span class="lang-ta">பெற்றோர் உள்நுழைவு</span>';
+        subtitleEl.innerHTML = '<span class="lang-en">Access child attendance, grades & homework</span><span class="lang-ta">வகுப்பு வருகை மற்றும் வீட்டுப்பாடம்</span>';
+      } else if (role === 'teacher') {
+        titleEl.innerHTML = '<span class="lang-en">Teacher Login</span><span class="lang-ta">ஆசிரியர் உள்நுழைவு</span>';
+        subtitleEl.innerHTML = '<span class="lang-en">Manage classes, schedules & rosters</span><span class="lang-ta">வகுப்புகள் மற்றும் வருகைப்பதிவு</span>';
+      } else if (role === 'admin') {
+        titleEl.innerHTML = '<span class="lang-en">Admin Login</span><span class="lang-ta">நிர்வாகி உள்நுழைவு</span>';
+        subtitleEl.innerHTML = '<span class="lang-en">Marietta school administrative console</span><span class="lang-ta">பள்ளி நிர்வாகக் கட்டுப்பாட்டுத் தளம்</span>';
+      }
+      
+      applyLanguagePreference(); // Apply lang translation to new text
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function goBackToRoles() {
+      document.getElementById("login-role-select-view").style.display = "flex";
+      document.getElementById("login-credentials-view").style.display = "none";
+    }
+
+    function autoFillDemoCreds() {
+      const emailInput = document.getElementById("login-email");
+      const passwordInput = document.getElementById("login-password");
+      if (selectedRole === 'parent') {
         emailInput.value = "parent@mts.edu";
         passwordInput.value = "parent123";
-      } else if (role === 'teacher') {
+      } else if (selectedRole === 'teacher') {
         emailInput.value = "teacher@mts.edu";
         passwordInput.value = "teacher123";
-      } else if (role === 'admin') {
+      } else if (selectedRole === 'admin') {
         emailInput.value = "admin@mts.edu";
         passwordInput.value = "admin123";
       }
@@ -2182,40 +2390,60 @@
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    function processLogin() {
+    async function processLogin() {
       const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const password = document.getElementById("login-password").value;
       const spinner = document.getElementById("login-spinner");
 
-      if (!email) {
-        alert("Please enter your email credentials first.");
+      if (!email || !password) {
+        alert("Please enter both email and password.");
         return;
       }
 
       spinner.style.display = "flex";
 
-      setTimeout(() => {
-        spinner.style.display = "none";
-        DB = getDB();
+      let user = null;
+      let role = '';
 
-        if (email.includes("parent")) {
-          DB.currentUser = { email: "parent@mts.edu", name: "Priya Kumar", role: "parent" };
-          saveDB(DB);
-          renderBottomTabNav("parent");
-          showScreen("parent-home");
-        } else if (email.includes("teacher")) {
-          DB.currentUser = { email: "teacher@mts.edu", name: "Mrs. Lakshmi Rajendran", role: "teacher" };
-          saveDB(DB);
-          renderBottomTabNav("teacher");
-          showScreen("teacher-home");
-        } else if (email.includes("admin")) {
-          DB.currentUser = { email: "admin@mts.edu", name: "Admin Suresh V.", role: "admin" };
-          saveDB(DB);
-          renderBottomTabNav("admin");
-          showScreen("admin-home");
+      // Verify credentials across roles in Supabase
+      user = await sbVerifyCredentials(email, password, 'admin');
+      if (user) {
+        role = 'admin';
+      } else {
+        user = await sbVerifyCredentials(email, password, 'teacher');
+        if (user) {
+          role = 'teacher';
         } else {
-          alert("Invalid Login Credentials. Use parent@mts.edu, teacher@mts.edu, or admin@mts.edu.");
+          user = await sbVerifyCredentials(email, password, 'parent');
+          if (user) {
+            role = 'parent';
+          }
         }
-      }, 600);
+      }
+
+      spinner.style.display = "none";
+
+      if (user) {
+        DB = getDB();
+        DB.currentUser = { 
+          email: user.email, 
+          name: user.name, 
+          role: role,
+          grades: user.grades || null,
+          class: user.class || null
+        };
+        
+        // Dynamically set active child on parent login
+        if (role === 'parent' && user.children && user.children.length > 0) {
+          DB.activeChild = user.children[0];
+        }
+        
+        saveDB(DB);
+        renderBottomTabNav(role);
+        showScreen(role + "-home");
+      } else {
+        alert("Invalid email or password credentials. Please try again.");
+      }
     }
 
     function logoutUser() {
@@ -2226,6 +2454,7 @@
       const nav = document.getElementById("role-bottom-nav");
       nav.classList.remove("active");
       
+      goBackToRoles(); // Reset view to selection cards
       screenHistory = [];
       showScreen("login");
     }
@@ -2361,6 +2590,9 @@
         case 'teacher-classes':
           renderTeacherClassesScreen();
           break;
+        case 'teacher-add-homework':
+          renderTeacherAddHomeworkScreen();
+          break;
         case 'teacher-homework':
           renderTeacherHomeworkScreen();
           break;
@@ -2411,9 +2643,36 @@
 
     function renderParentHomeScreen() {
       DB = getDB();
-      const currentChild = DB.activeChild;
-      const student = DB.students.find(s => s.name === currentChild) || DB.students[0];
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
+      const parentKids = DB.students.filter(s => s.guardian === currentParentName);
+
+      // Render child selector pills dynamically
+      const childToggle = document.getElementById("parent-child-toggle");
+      if (childToggle && parentKids.length > 0) {
+        childToggle.innerHTML = '';
+        parentKids.forEach((st, index) => {
+          const isActive = DB.activeChild === st.name || (index === 0 && !parentKids.some(s => s.name === DB.activeChild));
+          if (isActive && DB.activeChild !== st.name) {
+            DB.activeChild = st.name;
+            saveDB(DB);
+          }
+          childToggle.innerHTML += `
+            <div class="child-pill ${isActive ? 'active' : ''}" onclick="switchChild('${st.name}')">${st.name.split(' ')[0]}</div>
+          `;
+        });
+      }
+
+      const currentChild = DB.activeChild || (parentKids[0] ? parentKids[0].name : 'Anika Kumar');
+      const student = DB.students.find(s => s.name === currentChild) || parentKids[0] || DB.students[0];
       
+      // Dynamic profile name setting in header
+      const pName = document.getElementById("parent-profile-name");
+      if (pName && DB.currentUser) {
+        pName.textContent = DB.currentUser.name;
+        const pEmail = document.getElementById("parent-profile-email");
+        if (pEmail) pEmail.textContent = DB.currentUser.email;
+      }
+
       // Seed parent metrics dynamically
       const attKPI = student.name === "Anika Kumar" ? "90%" : "95%";
       const hwKPI = student.name === "Anika Kumar" ? "1 / 2" : "2 / 2";
@@ -2421,12 +2680,14 @@
       document.getElementById("parent-kpi-hw").textContent = hwKPI;
 
       // Class title assignment
-      document.getElementById("parent-attendance-class").textContent = student.class + " - " + student.ita;
+      document.getElementById("parent-attendance-class").textContent = (student.class || student.section || '3-A') + " - " + (student.ita || student.itaId || 'ITA-2301');
 
       // Update Attendance radial conic-gradient status
       const chart = document.getElementById("parent-radial-chart");
       const percentage = student.name === "Anika Kumar" ? 90 : 95;
-      chart.style.background = `conic-gradient(var(--accent) 0% ${percentage}%, var(--border) ${percentage}% 100%)`;
+      if (chart) {
+        chart.style.background = `conic-gradient(var(--accent) 0% ${percentage}%, var(--border) ${percentage}% 100%)`;
+      }
       
       // Inline styles to update radial inner label
       const styleTagId = "radial-text-dynamic-style";
@@ -2440,47 +2701,34 @@
 
       // Home latest broadcasts list
       const homeAnnContainer = document.getElementById("parent-home-announcements-list");
-      homeAnnContainer.innerHTML = "";
-      
-      DB.announcements.slice(0, 2).forEach(ann => {
-        const item = document.createElement("div");
-        item.style.padding = "10px 0";
-        item.style.borderBottom = "1px solid var(--border)";
-        item.style.cursor = "pointer";
-        item.onclick = () => openAnnouncementDetail(ann.id);
-        item.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-            <span style="font-weight:600;font-size:14px;line-height:1.5;color:var(--text);">${ann.title}</span>
-            <span style="font-size:12px;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
-          </div>
-          <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc}</p>
-        `;
-        homeAnnContainer.appendChild(item);
-      });
+      if (homeAnnContainer) {
+        homeAnnContainer.innerHTML = "";
+        DB.announcements.slice(0, 2).forEach(ann => {
+          const item = document.createElement("div");
+          item.style.padding = "10px 0";
+          item.style.borderBottom = "1px solid var(--border)";
+          item.style.cursor = "pointer";
+          item.onclick = () => openAnnouncementDetail(ann.id);
+          item.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+              <span style="font-weight:600;font-size:14px;line-height:1.5;color:var(--text);">${ann.title}</span>
+              <span style="font-size:12px;line-height:1.5;color: var(--text-muted);">${ann.date}</span>
+            </div>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ann.desc || ann.body}</p>
+          `;
+          homeAnnContainer.appendChild(item);
+        });
+      }
     }
 
     function renderParentChildrenScreen() {
       DB = getDB();
       const deck = document.getElementById('parent-children-cards-deck');
+      if (!deck) return;
       deck.innerHTML = '';
 
-      const currentEmail = DB.currentUser && DB.currentUser.email ? DB.currentUser.email : '';
-
-      // STEP 1: Always include seed children (Anika + Rohan) — these are permanent demo kids
-      const seedKids = DB.students.filter(s => s.name === 'Anika Kumar' || s.name === 'Rohan Kumar');
-      const seedIds  = new Set(seedKids.map(s => s.id));
-
-      // STEP 2: Find any extra children the parent added (not already in seed list)
-      let extraKids = [];
-      if (DB.parents) {
-        const par = DB.parents.find(p => p.email === currentEmail);
-        if (par && par.linkedStudentIds && par.linkedStudentIds.length) {
-          extraKids = DB.students.filter(s => par.linkedStudentIds.includes(s.id) && !seedIds.has(s.id));
-        }
-      }
-
-      // Merge: seeds first, then user-added extras
-      const parentKids = [...seedKids, ...extraKids];
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
+      const parentKids = DB.students.filter(s => s.guardian === currentParentName);
 
       if (parentKids.length === 0) {
         deck.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:14px;padding:20px 0;">No children linked yet. Tap \'Add Child\'.</p>';
@@ -2708,15 +2956,24 @@
       deck.innerHTML = "";
 
       const studentName = DB.activeChild;
+      const student = DB.students.find(s => s.name === studentName);
+      const studentClassSection = student ? (student.section || student.class) : ''; // e.g. "3-A"
 
-      DB.homework.forEach(hw => {
+      const filteredHomework = DB.homework.filter(hw => {
+        if (!studentClassSection) return true;
+        const hwGrade = hw.grade || '';
+        const hwClassCode = hw.classCode || '';
+        return hwGrade.includes(studentClassSection) || hwClassCode.includes(studentClassSection);
+      });
+
+      filteredHomework.forEach(hw => {
         const submission = hw.submissions.find(s => s.studentName === studentName);
         let subStatus = "Not Submitted";
         let badgeClass = "badge-danger";
 
         if (submission) {
           subStatus = submission.status;
-          badgeClass = submission.status === "Graded" ? "badge-success" : "badge-info";
+          badgeClass = submission.status === "Approved" ? "badge-success" : (submission.status === "Needs Rework" ? "badge-danger" : "badge-info");
         }
 
         const card = document.createElement("div");
@@ -2747,18 +3004,27 @@
 
       let submissionArea = "";
       if (submission) {
+        const badgeClass = submission.status === "Approved" ? "badge-success" : (submission.status === "Needs Rework" ? "badge-danger" : "badge-warning");
+        const statusLabel = submission.status === "Approved" ? "Submission Approved" : (submission.status === "Needs Rework" ? "Revision Required" : "Submission Completed");
+        const statusColor = submission.status === "Approved" ? "var(--success)" : (submission.status === "Needs Rework" ? "var(--danger, #dc3545)" : "var(--primary)");
+        const reviewGrade = (submission.evaluation && submission.evaluation.grade) || submission.gradeGiven || submission.status || '';
+        const reviewComment = (submission.evaluation && submission.evaluation.comment) || submission.comment || '';
+
         submissionArea = `
-          <div class="card" style="background-color:var(--success-light);border:1px solid rgba(46, 204, 113, 0.2);margin-top:16px;">
-            <h4 style="color:var(--success);font-size:14px;line-height:1.5;font-weight:700;">Submission Completed</h4>
-            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Attached file:</strong> ${submission.attachment}</p>
+          <div class="card" style="background-color:${submission.status === 'Approved' ? 'var(--success-light)' : (submission.status === 'Needs Rework' ? 'rgba(220, 53, 69, 0.08)' : 'var(--bg-light)')};border:1px solid ${submission.status === 'Approved' ? 'rgba(46, 204, 113, 0.2)' : (submission.status === 'Needs Rework' ? 'rgba(220, 53, 69, 0.2)' : 'var(--border)')};margin-top:16px;">
+            <h4 style="color:${statusColor};font-size:14px;line-height:1.5;font-weight:700;">${statusLabel}</h4>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;">
+              <strong>Attached file:</strong> ${submission.attachment}
+              ${submission.fileUrl ? `<br><a href="${submission.fileUrl}" target="_blank" style="color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i data-lucide="external-link" style="width:14px;height:14px;"></i> View File</a>` : ''}
+            </p>
             ${submission.textNotes ? `<p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Your notes:</strong> "${submission.textNotes}"</p>` : ''}
-            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Roster Status:</strong> <span class="badge badge-success">${submission.status}</span></p>
+            <p style="font-size:14px;line-height:1.5;line-height:1.5;margin-top:4px;"><strong>Roster Status:</strong> <span class="badge ${badgeClass}">${submission.status}</span></p>
             
-            ${submission.status === "Graded" ? `
+            ${(submission.status === "Approved" || submission.status === "Needs Rework" || submission.status === "Graded") ? `
               <div style="border-top:1.5px solid var(--border);margin-top:10px;padding-top:10px;">
                 <h4 style="color:var(--text);font-size:14px;line-height:1.5;line-height:1.5;"><strong>Mrs. Lakshmi's Review:</strong></h4>
-                <p style="font-size:14px;line-height:1.5;font-weight:700;color:var(--accent);margin-top:2px;">Grade: ${submission.evaluation.grade}</p>
-                <p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">"${submission.evaluation.comment}"</p>
+                <p style="font-size:14px;line-height:1.5;font-weight:700;color:var(--accent);margin-top:2px;">Grade: ${reviewGrade}</p>
+                ${reviewComment ? `<p style="font-size:14px;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">"${reviewComment}"</p>` : ''}
               </div>
             ` : ''}
           </div>
@@ -2767,10 +3033,10 @@
         submissionArea = `
           <div class="card" style="margin-top:16px;">
             <div class="card-title">Upload Homework Submission</div>
-            <form onsubmit="event.preventDefault(); submitParentHomework('${hw.id}');">
+            <form onsubmit="event.preventDefault(); submitParentHomework('${hw.id}', this);">
               <div class="form-group">
-                <span class="form-label">Attached Document (Simulated name)</span>
-                <input type="text" id="hw-sub-file" class="form-input" placeholder="e.g. recitation_audio_anika.mp3" required>
+                <span class="form-label">Attached File (Image or PDF)</span>
+                <input type="file" id="hw-sub-file" class="form-input" required>
               </div>
               <div class="form-group">
                 <span class="form-label">Submission notes (Optional)</span>
@@ -2782,11 +3048,16 @@
         `;
       }
 
+      const referenceFileHtml = hw.fileUrl
+        ? `<p style="font-size:14px;line-height:1.5;color: var(--text-muted);margin-top:4px;"><strong>Reference File:</strong> <a href="${hw.fileUrl}" target="_blank" style="color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:4px;"><i data-lucide="external-link" style="width:14px;height:14px;"></i> View Attachment</a></p>`
+        : '';
+
       parentHomeworkDetailContent.innerHTML = `
         <div class="card">
           <h2 style="color:var(--text);font-size:16px;font-weight:800;">${hw.title}</h2>
           <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:4px;"><strong>Target Class Roster:</strong> Grade ${hw.grade}</p>
           <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);"><strong>Deadline limit:</strong> ${hw.dueDate}</p>
+          ${referenceFileHtml}
           <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;line-height:1.5;line-height:1.4;">
             <p>${hw.desc}</p>
           </div>
@@ -2794,35 +3065,105 @@
         ${submissionArea}
       `;
 
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: parentHomeworkDetailContent });
       showScreen("parent-homework-detail");
     }
 
-    function submitParentHomework(hwId) {
-      DB = getDB();
-      const hw = DB.homework.find(h => h.id === hwId);
-      const studentName = DB.activeChild;
-      const file = document.getElementById("hw-sub-file").value.trim();
+    async function submitParentHomework(hwId, formEl) {
+      const fileInput = document.getElementById("hw-sub-file");
       const notes = document.getElementById("hw-sub-notes").value.trim();
 
-      if (!file) {
-        alert("Please write a simulated attachment filename.");
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("Please choose a file to upload.");
         return;
       }
 
-      const newSubmission = {
-        studentName: studentName,
-        date: new Date().toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' }),
-        attachment: file,
-        textNotes: notes,
-        status: "Pending Review",
-        evaluation: { grade: "", comment: "" }
-      };
+      const file = fileInput.files[0];
+      const filename = file.name;
+      const fileType = filename.endsWith('.jpg') || filename.endsWith('.png') || filename.endsWith('.jpeg') ? 'image' : filename.endsWith('.mp3') ? 'audio' : 'document';
 
-      hw.submissions.push(newSubmission);
-      saveDB(DB);
+      const submitBtn = formEl.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Uploading...";
 
-      alert("Homework file submitted successfully to teacher roster!");
-      openHomeworkDetail(hwId);
+      try {
+        // Upload file to Supabase Storage bucket 'homework_files'
+        const fileUrl = await sbUploadFile(file, 'submissions');
+
+        DB = getDB();
+        const hw = DB.homework.find(h => h.id === hwId);
+        const studentName = DB.activeChild;
+
+        const newSubmission = {
+          studentName: studentName,
+          date: new Date().toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' }),
+          attachment: filename,
+          textNotes: notes,
+          status: "Pending Review",
+          fileType: fileType,
+          fileUrl: fileUrl,
+          evaluation: { grade: "", comment: "" }
+        };
+
+        if (!hw.submissions) hw.submissions = [];
+        hw.submissions.push(newSubmission);
+
+        // Update local cache
+        saveDB(DB);
+
+        // Add to Supabase database table
+        const savedSub = await sbAddSubmission({
+          homework_id: hwId,
+          student: studentName,
+          assignment: hw.title,
+          date: newSubmission.date,
+          file: filename,
+          fileType: fileType,
+          textNotes: notes,
+          fileUrl: fileUrl
+        });
+
+        if (savedSub && savedSub.id) {
+          newSubmission.id = savedSub.id;
+        }
+
+        // Keep flat DB.submissions list in-sync immediately
+        if (!DB.submissions) DB.submissions = [];
+        const flatSubIndex = DB.submissions.findIndex(s => (s.student === studentName || s.studentName === studentName) && s.assignment === hw.title);
+        const flatSubObj = {
+          id: savedSub?.id || (100 + DB.submissions.length + 1),
+          student: studentName,
+          studentName: studentName,
+          assignment: hw.title,
+          date: newSubmission.date,
+          file: filename,
+          attachment: filename,
+          fileType: fileType,
+          textNotes: notes,
+          status: "Pending Review",
+          comment: "",
+          gradeGiven: "",
+          fileUrl: fileUrl,
+          evaluation: { grade: "", comment: "" }
+        };
+        if (flatSubIndex > -1) {
+          DB.submissions[flatSubIndex] = flatSubObj;
+        } else {
+          DB.submissions.push(flatSubObj);
+        }
+
+        saveDB(DB);
+
+        alert("Homework file uploaded and submitted successfully!");
+        openHomeworkDetail(hwId);
+      } catch (err) {
+        console.error("[MTS] Failed to submit parent homework:", err);
+        alert("Upload and submission failed. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
     }
 
     function renderParentAnnouncementsScreen() {
@@ -2852,7 +3193,8 @@
       const ann = DB.announcements.find(a => a.id === annId);
       const parentAnnDetailContent = document.getElementById("parent-announcement-detail-content");
       
-      const isAcknowledged = ann.acknowledgedBy.includes("Priya Kumar");
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
+      const isAcknowledged = ann.acknowledgedBy.includes(currentParentName);
 
       parentAnnDetailContent.innerHTML = `
         <div class="card">
@@ -2879,14 +3221,17 @@
         </div>
       `;
 
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: parentAnnDetailContent });
       showScreen("parent-announcement-detail");
     }
 
     function acknowledgeBroadcast(annId) {
       DB = getDB();
       const ann = DB.announcements.find(a => a.id === annId);
-      if (!ann.acknowledgedBy.includes("Priya Kumar")) {
-        ann.acknowledgedBy.push("Priya Kumar");
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
+      if (!ann.acknowledgedBy.includes(currentParentName)) {
+        ann.acknowledgedBy.push(currentParentName);
+        sbUpdateAnnouncementAck(annId, ann.acknowledgedBy);
       }
       saveDB(DB);
       alert("Acknowledge registered successfully!");
@@ -2941,10 +3286,11 @@
         row.style.padding = "10px 0";
         row.style.borderBottom = "1px solid var(--border)";
         
+        const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
         let actionsHtml = "";
         if (slot.status === "Available") {
           actionsHtml = `<button class="btn btn-accent" onclick="bookPTSlot('${slot.id}')" style="width:auto;height:32px;font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;padding:0 10px;">Book</button>`;
-        } else if (slot.bookedBy === "Priya Kumar") {
+        } else if (slot.bookedBy === currentParentName) {
           actionsHtml = `<span class="badge badge-success">Booked by You</span>`;
         } else {
           actionsHtml = `<span class="badge badge-muted">Unavailable</span>`;
@@ -2964,16 +3310,24 @@
     function bookPTSlot(slotId) {
       DB = getDB();
       const slot = DB.ptSlots.find(s => s.id === slotId);
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
+      const currentParentEmail = DB.currentUser ? DB.currentUser.email : 'parent@mts.edu';
       slot.status = "Booked";
-      slot.bookedBy = "Priya Kumar";
+      slot.bookedBy = currentParentName;
 
       // Register system audit log
-      DB.auditLogs.unshift({
+      const auditEntry = {
         id: "aud-" + (DB.auditLogs.length + 1),
         timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        user: "parent@mts.edu",
+        user: currentParentEmail,
         action: `Booked Parent-Teacher meeting slot at ${slot.time}`
-      });
+      };
+      DB.auditLogs.unshift(auditEntry);
+      sbAddAuditLog(auditEntry);
+
+      // Save in Supabase
+      sbUpdatePtSlot(slotId, "Booked", currentParentName);
+      sbBookPtSlot(slot.time, currentParentEmail);
 
       saveDB(DB);
       alert("Parent-Teacher meeting slot confirmed for " + slot.time + "!");
@@ -2990,9 +3344,13 @@
     }
 
     function openChatScreen(role, partner) {
+      DB = getDB();
       if (role === "parent") {
         showScreen("parent-chat");
       } else {
+        const chatPartner = DB.parents[0] || { name: "Priya Kumar" };
+        const headerTitle = document.querySelector("#teacher-chat .app-header h1");
+        if (headerTitle) headerTitle.textContent = `${chatPartner.name} (Parent)`;
         showScreen("teacher-chat");
       }
     }
@@ -3002,8 +3360,9 @@
       const bubbleDeck = document.getElementById("parent-chat-bubbles");
       bubbleDeck.innerHTML = "";
 
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
       DB.chatLogs.forEach(chat => {
-        const sentByMe = chat.sender === "Priya Kumar";
+        const sentByMe = chat.sender === currentParentName;
         const bubble = document.createElement("div");
         bubble.className = `chat-bubble ${sentByMe ? 'sent' : 'received'}`;
         bubble.innerHTML = `
@@ -3028,17 +3387,22 @@
       if (!textVal) return;
 
       const dateStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - Today";
+      const currentParentName = DB.currentUser ? DB.currentUser.name : 'Priya Kumar';
 
       const newMsg = {
-        sender: senderRole === "parent" ? "Priya Kumar" : "Mrs. Lakshmi Rajendran",
+        sender: senderRole === "parent" ? currentParentName : "Mrs. Lakshmi Rajendran",
         role: senderRole,
-        receiver: senderRole === "parent" ? "Mrs. Lakshmi Rajendran" : "Priya Kumar",
+        receiver: senderRole === "parent" ? "Mrs. Lakshmi Rajendran" : currentParentName,
         text: textVal,
         time: dateStr
       };
 
       DB.chatLogs.push(newMsg);
       saveDB(DB);
+      
+      // Save to Supabase
+      sbAddChatLog(newMsg);
+      
       inputEl.value = "";
 
       if (senderRole === "parent") {
@@ -3047,14 +3411,19 @@
         // Dynamic simulated teacher auto-reply after 1 second
         setTimeout(() => {
           DB = getDB();
-          DB.chatLogs.push({
+          const replyMsg = {
             sender: "Mrs. Lakshmi Rajendran",
             role: "teacher",
-            receiver: "Priya Kumar",
+            receiver: currentParentName,
             text: "Hello Priya, I have received your message. I'll evaluate the submissions and update your profile shortly.",
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " - Auto"
-          });
+          };
+          DB.chatLogs.push(replyMsg);
           saveDB(DB);
+          
+          // Save to Supabase
+          sbAddChatLog(replyMsg);
+          
           renderParentChatBubbles();
         }, 1200);
 
@@ -3200,26 +3569,288 @@
       showScreen("teacher-class-detail", "backward");
     }
 
+    async function handleMobileNewHomeworkSubmit() {
+      const title = document.getElementById('mob-hw-title').value;
+      const titleTa = document.getElementById('mob-hw-title-ta').value;
+      const classCode = document.getElementById('mob-hw-class').value;
+      const due = document.getElementById('mob-hw-due').value;
+      const desc = document.getElementById('mob-hw-desc').value;
+      const fileInput = document.getElementById('mob-hw-file');
+      const submitBtn = document.getElementById('mob-hw-submit-btn');
+
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Uploading...';
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      let fileUrl = null;
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        try {
+          fileUrl = await sbUploadFile(fileInput.files[0], 'homework');
+        } catch (e) {
+          console.error('[MTS] Upload failed:', e);
+          showToast('Attachment upload failed. Continuing without file.', 'warning');
+        }
+      }
+
+      const newHw = {
+        id: 'hw-' + Date.now().toString().slice(-6),
+        title: title, 
+        titleTa: titleTa || title,
+        classCode: classCode, 
+        due: due,
+        stats: { submitted: 0, approved: 0, pending: 0, overdue: 0 },
+        status: 'Active', 
+        desc: desc,
+        fileUrl: fileUrl
+      };
+
+      try {
+        const rawData = await sbAddHomework(newHw);
+        DB = getDB();
+        
+        // Match mapping logic used in web app
+        const mappedHw = {
+          ...newHw,
+          dueDate: newHw.due,
+          description: newHw.desc,
+          grade: newHw.classCode ? newHw.classCode.replace('Grade ', '') : '',
+          submissions: []
+        };
+        if (rawData && rawData.id) mappedHw.id = rawData.id;
+        
+        if (!DB.homework) DB.homework = [];
+        DB.homework.unshift(mappedHw);
+        saveDB(DB);
+
+        // Reset form
+        document.getElementById('mob-hw-title').value = '';
+        document.getElementById('mob-hw-title-ta').value = '';
+        document.getElementById('mob-hw-desc').value = '';
+        if (fileInput) fileInput.value = '';
+
+        showToast(`Assignment "${title}" published successfully.`, 'success');
+        renderTeacherHomeworkScreen();
+        showScreen('teacher-homework', 'backward');
+      } catch (err) {
+        console.error('[MTS] Failed to save homework:', err);
+        showToast('Failed to save assignment in database.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    }
+
+    function openMobileEditHomework(hwId) {
+      DB = getDB();
+      const hw = DB.homework.find(h => h.id === hwId);
+      if (!hw) return;
+
+      document.getElementById('mob-edit-hw-id').value = hw.id;
+      document.getElementById('mob-edit-hw-title').value = hw.title;
+      document.getElementById('mob-edit-hw-title-ta').value = hw.titleTa || '';
+      
+      const classDropdown = document.getElementById('mob-edit-hw-class');
+      if (classDropdown) {
+        classDropdown.innerHTML = '';
+        let optionsToRender = [];
+        if (DB.currentUser && DB.currentUser.grades) {
+          optionsToRender = DB.currentUser.grades.split('&').map(g => g.trim());
+        } else {
+          optionsToRender = ['Grade 3-A', 'Grade 4-B'];
+          if (hw.classCode && !optionsToRender.includes(hw.classCode)) optionsToRender.push(hw.classCode);
+        }
+        optionsToRender.forEach(g => {
+          const opt = document.createElement("option");
+          opt.value = g;
+          opt.textContent = g;
+          if (g === hw.classCode || g === hw.grade) opt.selected = true;
+          classDropdown.appendChild(opt);
+        });
+      }
+
+      document.getElementById('mob-edit-hw-due').value = hw.due || hw.dueDate || '';
+      document.getElementById('mob-edit-hw-desc').value = hw.desc || hw.description || '';
+      document.getElementById('mob-edit-hw-current-file').innerHTML = hw.fileUrl ? `<a href="${hw.fileUrl}" target="_blank" style="color:var(--accent); font-weight: 500; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="external-link" style="width: 14px; height: 14px;"></i>View attached file</a> (Leave empty to keep)` : 'No file currently attached.';
+      document.getElementById('mob-edit-hw-file').value = ''; // Reset file input
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      showScreen('teacher-edit-homework');
+    }
+
+    async function handleMobileEditHomeworkSubmit() {
+      const hwId = document.getElementById('mob-edit-hw-id').value;
+      const title = document.getElementById('mob-edit-hw-title').value;
+      const titleTa = document.getElementById('mob-edit-hw-title-ta').value;
+      const classCode = document.getElementById('mob-edit-hw-class').value;
+      const due = document.getElementById('mob-edit-hw-due').value;
+      const desc = document.getElementById('mob-edit-hw-desc').value;
+      const fileInput = document.getElementById('mob-edit-hw-file');
+      const submitBtn = document.getElementById('mob-edit-hw-submit-btn');
+
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Updating...';
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      try {
+        const updates = { title, titleTa, classCode, due, desc };
+        
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+          showToast('Uploading new attachment...', 'info');
+          updates.fileUrl = await sbUploadFile(fileInput.files[0], 'homework');
+        }
+
+        await sbUpdateHomework(hwId, updates);
+        
+        DB = getDB();
+        const hwIndex = DB.homework.findIndex(h => h.id === hwId);
+        if (hwIndex > -1) {
+          DB.homework[hwIndex] = { ...DB.homework[hwIndex], ...updates };
+          saveDB(DB);
+        }
+
+        showToast(`Assignment updated successfully.`, 'success');
+        renderTeacherHomeworkScreen();
+        showScreen('teacher-homework', 'backward');
+      } catch (err) {
+        console.error('[MTS] Update error:', err);
+        showToast('Failed to update assignment.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    }
+
+    async function confirmMobileDeleteHomework(hwId) {
+      const modalHtml = `
+        <div class="modal-overlay" id="mobile-delete-confirm-modal" style="display:flex; z-index:9999;">
+          <div class="modal">
+            <div class="modal-header">
+              <h3>Delete Assignment?</h3>
+              <button class="modal-close" onclick="document.getElementById('mobile-delete-confirm-modal').remove()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this assignment? All associated student submissions will also be deleted. This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" onclick="document.getElementById('mobile-delete-confirm-modal').remove()">Cancel</button>
+              <button class="btn btn-primary" style="background:var(--critical-red);" onclick="executeMobileDeleteHomework('${hwId}')">Yes, Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    window.executeMobileDeleteHomework = async function(hwId) {
+      document.getElementById('mobile-delete-confirm-modal').remove();
+      try {
+        showToast('Deleting assignment...', 'info');
+        await sbDeleteHomework(hwId);
+        
+        DB = getDB();
+        DB.homework = DB.homework.filter(h => h.id !== hwId);
+        saveDB(DB);
+        
+        renderTeacherHomeworkScreen();
+        showToast('Assignment deleted successfully.', 'warning');
+      } catch (err) {
+        console.error('[MTS] Delete error:', err);
+        showToast('Failed to delete assignment.', 'error');
+      }
+    };
+
+    function renderTeacherAddHomeworkScreen() {
+      DB = getDB();
+      const classDropdown = document.getElementById("mob-hw-class");
+      if (classDropdown && DB.activeUser && DB.activeUser.grades) {
+        classDropdown.innerHTML = '';
+        const grades = DB.activeUser.grades.split('&').map(g => g.trim());
+        grades.forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g;
+          opt.textContent = g;
+          classDropdown.appendChild(opt);
+        });
+      } else if (classDropdown && DB.activeUser && DB.activeUser.class) {
+        classDropdown.innerHTML = '';
+        const opt = document.createElement('option');
+        opt.value = DB.activeUser.class;
+        opt.textContent = DB.activeUser.class;
+        classDropdown.appendChild(opt);
+      }
+    }
+
+    window.switchMobileHomeworkTab = function(tabName) {
+      document.getElementById('mob-hw-tab-active').className = `segment-btn ${tabName === 'active' ? 'active' : ''}`;
+      document.getElementById('mob-hw-tab-queue').className = `segment-btn ${tabName === 'queue' ? 'active' : ''}`;
+      
+      document.getElementById('mob-hw-view-active').style.display = tabName === 'active' ? 'block' : 'none';
+      document.getElementById('mob-hw-view-queue').style.display = tabName === 'queue' ? 'block' : 'none';
+    };
+
     function renderTeacherHomeworkScreen() {
       DB = getDB();
       const queueDeck = document.getElementById("teacher-homework-queue-deck");
-      queueDeck.innerHTML = "";
+      const publishedDeck = document.getElementById("teacher-published-homework-deck");
+      if (queueDeck) queueDeck.innerHTML = "";
+      if (publishedDeck) publishedDeck.innerHTML = "";
 
-      let listHtml = "";
+      let queueHtml = "";
+      let publishedHtml = "";
 
+      // 1. Render Published Homework
       DB.homework.forEach(hw => {
+        // Find if it belongs to this teacher based on class code (if applicable)
+        let isMyClass = false;
+        if (DB.currentUser) {
+          if (DB.currentUser.class === hw.classCode) isMyClass = true;
+          if (DB.currentUser.grades) {
+             if (DB.currentUser.grades.includes(hw.classCode)) isMyClass = true;
+             if (hw.classCode && DB.currentUser.grades.includes(hw.classCode.replace('Grade ', ''))) isMyClass = true;
+          }
+        }
+
+        if (isMyClass) {
+          const pubItem = document.createElement("div");
+          pubItem.className = "card";
+          pubItem.style.marginBottom = "10px";
+          pubItem.style.borderLeft = "4px solid var(--primary)";
+          pubItem.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <h4 style="font-size:14px;color:var(--text);margin-bottom:4px;"><strong>${hw.title}</strong></h4>
+                <p style="font-size:12px;color:var(--text-muted);">Due: ${hw.due || hw.dueDate} • Class: ${hw.classCode}</p>
+                <div style="margin-top:8px;">
+                  <span class="badge ${hw.status === 'Active' ? 'badge-success' : 'badge-warning'}" style="font-size:10px; margin-right:8px;">${hw.status}</span>
+                </div>
+              </div>
+              <div style="display:flex; gap: 10px;">
+                <button class="btn btn-secondary btn-sm" style="padding:4px 8px;" onclick="openMobileEditHomework('${hw.id}')"><i data-lucide="edit-3" style="width:16px;height:16px;"></i></button>
+                <button class="btn btn-secondary btn-sm" style="padding:4px 8px; color:var(--critical-red);" onclick="confirmMobileDeleteHomework('${hw.id}')"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+              </div>
+            </div>
+          `;
+          if (publishedDeck) publishedDeck.appendChild(pubItem);
+        }
+
+        // 2. Render Submissions Queue
+        if (!hw.submissions) return;
         hw.submissions.forEach(sub => {
           if (sub.status === "Pending Review") {
             const item = document.createElement("div");
             item.className = "card";
             item.style.cursor = "pointer";
+            item.style.marginBottom = "10px";
             item.style.borderLeft = "4px solid var(--accent)";
             item.onclick = () => openTeacherHomeworkReview(hw.id, sub.studentName);
             item.innerHTML = `
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
                 <div>
                   <h4 style="font-size:14px;line-height:1.5;color:var(--text);"><strong>${sub.studentName}</strong></h4>
-                  <p style="font-size:14px;line-height:1.5;line-height:1.5;line-height:1.5;color: var(--text-muted);margin-top:2px;">Task: ${hw.title}</p>
+                  <p style="font-size:14px;line-height:1.5;color: var(--text-muted);margin-top:2px;">Task: ${hw.title}</p>
                 </div>
                 <span class="badge badge-warning">Review</span>
               </div>
@@ -3240,6 +3871,11 @@
       const sub = hw.submissions.find(s => s.studentName === studentName);
 
       const reviewDeck = document.getElementById("teacher-homework-review-content");
+      
+      const fileLinkHtml = sub.fileUrl 
+        ? `<p style="margin-top:4px;"><a href="${sub.fileUrl}" target="_blank" style="color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:4px;"><i data-lucide="external-link" style="width:14px;height:14px;"></i> Open Attachment File</a></p>`
+        : '';
+
       reviewDeck.innerHTML = `
         <div class="card">
           <h3 style="color:var(--text);font-size:15px;font-weight:700;">${sub.studentName}</h3>
@@ -3247,6 +3883,7 @@
           
           <div style="background-color:var(--bg);padding:10px;border-radius:8px;margin-top:10px;font-size:14px;line-height:1.5;line-height:1.5;">
             <p><strong>Attachment file:</strong> "${sub.attachment}"</p>
+            ${fileLinkHtml}
             ${sub.textNotes ? `<p style="margin-top:4px;"><strong>Parent Notes:</strong> "${sub.textNotes}"</p>` : ''}
           </div>
         </div>
@@ -3276,10 +3913,11 @@
         </div>
       `;
 
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: reviewDeck });
       showScreen("teacher-homework-review");
     }
 
-    function submitHomeworkEvaluation(hwId, studentName) {
+    async function submitHomeworkEvaluation(hwId, studentName) {
       DB = getDB();
       const hw = DB.homework.find(h => h.id === hwId);
       const sub = hw.submissions.find(s => s.studentName === studentName);
@@ -3287,33 +3925,79 @@
       const grade = document.getElementById("review-grade").value;
       const comment = document.getElementById("review-comment").value.trim();
 
-      sub.status = "Graded";
+      sub.status = "Approved";
       sub.evaluation.grade = grade;
       sub.evaluation.comment = comment;
 
+      // Also sync to flat submissions list
+      if (DB.submissions) {
+        const flatSub = DB.submissions.find(s => (s.student === studentName || s.studentName === studentName) && s.assignment === hw.title);
+        if (flatSub) {
+          flatSub.status = "Approved";
+          flatSub.comment = comment;
+          flatSub.gradeGiven = grade;
+          flatSub.evaluation.grade = grade;
+          flatSub.evaluation.comment = comment;
+        }
+      }
+
       saveDB(DB);
-      alert(" Roster evaluation locked successfully for: " + studentName);
+
+      // Save to Supabase
+      if (sub.id) {
+        await sbUpdateSubmission(sub.id, "Approved", comment, grade);
+      }
+
+      alert("Roster evaluation locked successfully for: " + studentName);
       showScreen("teacher-homework", "backward");
     }
 
-    function rejectHomeworkSubmission(hwId, studentName) {
+    async function rejectHomeworkSubmission(hwId, studentName) {
       DB = getDB();
       const hw = DB.homework.find(h => h.id === hwId);
       const sub = hw.submissions.find(s => s.studentName === studentName);
       
-      sub.status = "Rejected";
-      sub.evaluation.grade = "Incomplete";
-      sub.evaluation.comment = "Please redo the letter layouts and submit again.";
+      sub.status = "Needs Rework";
+      sub.evaluation.grade = "Needs Rework";
+      sub.evaluation.comment = "Please redo the work and submit again.";
+
+      // Also sync to flat submissions list
+      if (DB.submissions) {
+        const flatSub = DB.submissions.find(s => (s.student === studentName || s.studentName === studentName) && s.assignment === hw.title);
+        if (flatSub) {
+          flatSub.status = "Needs Rework";
+          flatSub.comment = sub.evaluation.comment;
+          flatSub.gradeGiven = "Needs Rework";
+          flatSub.evaluation.grade = "Needs Rework";
+          flatSub.evaluation.comment = sub.evaluation.comment;
+        }
+      }
 
       saveDB(DB);
-      alert("Submission marked as rejected. Parent will receive revision requirements.");
+
+      // Save to Supabase
+      if (sub.id) {
+        await sbUpdateSubmission(sub.id, "Needs Rework", sub.evaluation.comment, "Needs Rework");
+      }
+
+      alert("Submission marked for rework. Parent will receive revision requirements.");
       showScreen("teacher-homework", "backward");
     }
 
     function renderTeacherMessagesScreen() {
       DB = getDB();
+      
+      const chatPartner = DB.parents[0] || { name: "Priya Kumar", initials: "PK" };
+      const partnerName = chatPartner.name;
+      const partnerInitials = chatPartner.initials || partnerName.split(' ').map(n=>n[0]).join('');
+
+      const partnerNameEl = document.getElementById("teacher-inbox-partner-name");
+      if (partnerNameEl) partnerNameEl.textContent = `${partnerName} (Parent)`;
+      const partnerAvatarEl = document.getElementById("teacher-inbox-avatar");
+      if (partnerAvatarEl) partnerAvatarEl.textContent = partnerInitials;
+
       const previewEl = document.getElementById("teacher-msg-preview");
-      if (DB.chatLogs.length > 0) {
+      if (previewEl && DB.chatLogs.length > 0) {
         const lastMsg = DB.chatLogs[DB.chatLogs.length - 1];
         previewEl.innerHTML = `<strong>${lastMsg.sender.split(" ")[0]}:</strong> "${lastMsg.text}"`;
       }
@@ -3324,8 +4008,9 @@
       const bubbleDeck = document.getElementById("teacher-chat-bubbles");
       bubbleDeck.innerHTML = "";
 
+      const currentTeacherName = DB.currentUser ? DB.currentUser.name : 'Mrs. Lakshmi Rajendran';
       DB.chatLogs.forEach(chat => {
-        const sentByMe = chat.sender === "Mrs. Lakshmi Rajendran";
+        const sentByMe = chat.sender === currentTeacherName;
         const bubble = document.createElement("div");
         bubble.className = `chat-bubble ${sentByMe ? 'sent' : 'received'}`;
         bubble.innerHTML = `
@@ -4018,13 +4703,44 @@
       document.getElementById("simulated-clock").textContent = strTime;
     }
 
-    window.addEventListener("load", () => {
+    window.addEventListener("load", async () => {
       // Refresh simulated clock timer every 30 seconds
       updateSimulatedClock();
       setInterval(updateSimulatedClock, 30000);
 
-      // Force database initialize
-      DB = getDB();
+      // Background polling sync (every 5 seconds) to handle missing Realtime
+      setInterval(async () => {
+        if (!DB || !DB.currentUser) return;
+        const currentScreen = document.querySelector('.screen.active');
+        const screenId = currentScreen ? currentScreen.id : '';
+        
+        await loadAllFromSupabase();
+        DB = getDB();
+        
+        // Only re-render if we are actually looking at the lists, so we don't interrupt interactions
+        if (DB.currentUser.role === 'teacher' && screenId === 'teacher-homework') {
+          if (typeof renderTeacherHomeworkScreen === 'function') renderTeacherHomeworkScreen();
+        } else if (DB.currentUser.role === 'parent' && screenId === 'parent-homework') {
+          if (typeof renderParentHomeworkScreen === 'function') renderParentHomeworkScreen();
+        }
+      }, 5000);
+
+      // Load all data from Supabase (replaces localStorage getDB)
+      await loadAllFromSupabase();
+      DB = getDB();  // now returns Supabase in-memory cache
+
+      // Subscribe to realtime changes (Without Reload Flow)
+      if (typeof sbSubscribeToHomeworkChanges === 'function') {
+        sbSubscribeToHomeworkChanges(() => {
+          console.log('[MTS] Realtime update triggered in Mobile App');
+          if (DB && DB.currentUser && DB.currentUser.role === 'teacher') {
+            if (typeof renderTeacherHomeworkScreen === 'function') renderTeacherHomeworkScreen();
+          } else if (DB && DB.currentUser && DB.currentUser.role === 'parent') {
+            if (typeof renderParentHomeworkScreen === 'function') renderParentHomeworkScreen();
+          }
+        });
+      }
+
       applyLanguagePreference();
       applyTheme(localStorage.getItem('theme') || 'light');
 
