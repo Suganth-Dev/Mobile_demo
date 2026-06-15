@@ -69,9 +69,12 @@ async function loadAllFromSupabase() {
     const homeworkMapped = (homeworkRes.data   || []).map(mapHomework);
     const submissionsMapped = (submissionsRes.data|| []).map(mapSubmission);
 
-    // Link submissions dynamically to matching homework title context
+    // Link submissions to homework — prefer homework_id match, fallback to title match
     homeworkMapped.forEach(hw => {
-      hw.submissions = submissionsMapped.filter(s => s.assignment === hw.title);
+      hw.submissions = submissionsMapped.filter(s =>
+        (s.homeworkId && s.homeworkId === hw.id) ||
+        (s.assignment && s.assignment.trim().toLowerCase() === (hw.title || '').trim().toLowerCase())
+      );
     });
 
     _dbCache = {
@@ -97,19 +100,19 @@ async function loadAllFromSupabase() {
       bookedPtSlot:   ptBookingRes.data ? ptBookingRes.data.slot : null,
 
       // --- STATE FLAGS ---
-      currentUser:    null,
-      currentLanguage:'en',
-      activeChild:    'Anika Kumar',
+      currentUser:    (_dbCache && _dbCache.currentUser !== undefined) ? _dbCache.currentUser : null,
+      currentLanguage:(_dbCache && _dbCache.currentLanguage !== undefined) ? _dbCache.currentLanguage : 'en',
+      activeChild:    (_dbCache && _dbCache.activeChild !== undefined) ? _dbCache.activeChild : 'Anika Kumar',
       version:        'mts_mobile_v1.0.4',
 
       // --- PREFERENCES ---
-      notificationMatrix: {
+      notificationMatrix: (_dbCache && _dbCache.notificationMatrix) ? _dbCache.notificationMatrix : {
         announcements: { push: true,  email: true,  inapp: true, wa: false },
         homework:      { push: true,  email: false, inapp: true, wa: false },
         attendance:    { push: true,  email: true,  inapp: true, wa: true  },
         messages:      { push: true,  email: false, inapp: true, wa: false }
       },
-      parentChecklist: { tuition: true, medical: false, photo: true },
+      parentChecklist: (_dbCache && _dbCache.parentChecklist) ? _dbCache.parentChecklist : { tuition: true, medical: false, photo: true },
     };
 
     _dbLoaded = true;
@@ -228,6 +231,7 @@ function mapHomework(r) {
 function mapSubmission(r) {
   return {
     id:           r.id,
+    homeworkId:   r.homework_id || null,
     student:      r.student_name,
     studentName:  r.student_name,
     assignment:   r.assignment_title,
