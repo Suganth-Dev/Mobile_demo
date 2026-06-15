@@ -3907,16 +3907,10 @@
 
         // Handle custom BACK button intercepts:
         // If we are navigating backward from user clicking a page back button,
-        // trigger native history pop instead of pushing new states.
+        // transition directly to target screen and replace history state to avoid stack bloating.
         if (direction === 'backward' && pushHistory === true) {
-          if (isHistorySupported) {
-            history.back();
-            return;
-          } else {
-            // Fallback: don't call history.back(), just execute the navigation to target screen directly
-            showScreen(screenId, 'backward', false);
-            return;
-          }
+          showScreen(screenId, 'backward', isHistorySupported ? 'replace' : false);
+          return;
         }
 
         if (activeScreen) {
@@ -3976,18 +3970,14 @@
       }
 
       function goBack() {
-        if (isHistorySupported) {
-          history.back();
+        if (screenHistory.length > 0) {
+          const prevScreen = screenHistory.pop();
+          showScreen(prevScreen, 'backward', isHistorySupported ? 'replace' : false);
         } else {
-          if (screenHistory.length > 0) {
-            const prevScreen = screenHistory.pop();
-            showScreen(prevScreen, 'backward', false);
+          if (DB && DB.currentUser && DB.currentUser.role) {
+            showScreen(DB.currentUser.role + "-home", 'backward', isHistorySupported ? 'replace' : false);
           } else {
-            if (DB && DB.currentUser && DB.currentUser.role) {
-              showScreen(DB.currentUser.role + "-home", 'backward', false);
-            } else {
-              showScreen("login", 'backward', false);
-            }
+            showScreen("login", 'backward', isHistorySupported ? 'replace' : false);
           }
         }
       }
