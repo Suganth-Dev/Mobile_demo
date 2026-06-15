@@ -3823,6 +3823,14 @@
 
       let DB = {};
       let screenHistory = [];
+      let isHistorySupported = true;
+      try {
+        const testState = { test: true };
+        history.replaceState(testState, '', window.location.hash || '#');
+      } catch (e) {
+        isHistorySupported = false;
+        console.warn("HTML5 History API (pushState/replaceState) not fully supported or blocked in this environment (e.g., file:// protocol). Falling back to custom screenHistory routing.", e);
+      }
 
       // ──────────────────────────────────────────────────────────────────
       // DATABASE PERSISTENCE — Replaced by supabase-db.js
@@ -3857,7 +3865,7 @@
       }
 
       function handleFloatingBackClick() {
-        history.back();
+        goBack();
       }
 
       // Popstate event handler for browser/hardware back navigation
@@ -3901,8 +3909,14 @@
         // If we are navigating backward from user clicking a page back button,
         // trigger native history pop instead of pushing new states.
         if (direction === 'backward' && pushHistory === true) {
-          history.back();
-          return;
+          if (isHistorySupported) {
+            history.back();
+            return;
+          } else {
+            // Fallback: don't call history.back(), just execute the navigation to target screen directly
+            showScreen(screenId, 'backward', false);
+            return;
+          }
         }
 
         if (activeScreen) {
@@ -3926,10 +3940,16 @@
         targetScreen.classList.add('active');
 
         // Update history state
-        if (pushHistory === true) {
-          history.pushState({ screenId: screenId }, '', '#' + screenId);
-        } else if (pushHistory === 'replace') {
-          history.replaceState({ screenId: screenId }, '', '#' + screenId);
+        if (isHistorySupported) {
+          try {
+            if (pushHistory === true) {
+              history.pushState({ screenId: screenId }, '', '#' + screenId);
+            } else if (pushHistory === 'replace') {
+              history.replaceState({ screenId: screenId }, '', '#' + screenId);
+            }
+          } catch (e) {
+            console.error("pushState/replaceState failed:", e);
+          }
         }
 
         // Update floating back button visibility
@@ -3956,7 +3976,20 @@
       }
 
       function goBack() {
-        history.back();
+        if (isHistorySupported) {
+          history.back();
+        } else {
+          if (screenHistory.length > 0) {
+            const prevScreen = screenHistory.pop();
+            showScreen(prevScreen, 'backward', false);
+          } else {
+            if (DB && DB.currentUser && DB.currentUser.role) {
+              showScreen(DB.currentUser.role + "-home", 'backward', false);
+            } else {
+              showScreen("login", 'backward', false);
+            }
+          }
+        }
       }
 
       // ──────────────────────────────────────────────────────────────────
@@ -6682,7 +6715,13 @@
 
       window.addEventListener("load", async () => {
         // Set the initial history state for the splash screen
-        history.replaceState({ screenId: 'splash' }, '', '#splash');
+        if (isHistorySupported) {
+          try {
+            history.replaceState({ screenId: 'splash' }, '', '#splash');
+          } catch (e) {
+            console.error("replaceState failed on load:", e);
+          }
+        }
 
         // Refresh simulated clock timer every 30 seconds
         updateSimulatedClock();
