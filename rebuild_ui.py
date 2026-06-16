@@ -2234,11 +2234,11 @@ def rebuild():
             <div id="login-role-select-view" style="display: flex; flex-direction: column; width: 100%;">
               <div class="smart-login-header">
                 <div class="logo-light"
-                  style="width: 80px; height: 80px; background: var(--surface-solid); border: 1.5px solid var(--border); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glass); margin-bottom: 20px; padding: 6px; box-sizing: border-box;">
+                  style="width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                   <img src="logo-blue.png?v=13" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div class="logo-dark"
-                  style="width: 80px; height: 80px; background: var(--surface-solid); border: 1.5px solid var(--border); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glass); margin-bottom: 20px; padding: 6px; box-sizing: border-box;">
+                  style="width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                   <img src="logo-silver.png?v=13" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">

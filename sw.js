@@ -3,7 +3,7 @@
    Works on ANY host (Render, GitHub Pages, local)
    ===================================================== */
 
-const CACHE_NAME = 'mts-connect-v15';
+const CACHE_NAME = 'mts-connect-v16';
 
 // ── Install: Skip waiting immediately ─────────────────
 self.addEventListener('install', (event) => {
