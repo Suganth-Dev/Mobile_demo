@@ -199,7 +199,10 @@ def rebuild():
         new_login = """<div class="screen" id="login">
           <div class="screen-content" style="padding: 24px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
             <div class="smart-login-header">
-              <div style="width: 72px; height: 72px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-radius: 20px; font-size: 40px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-tamil); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); margin-bottom: 20px; transform: rotate(-5deg);">த</div>
+              <div style="width: 80px; height: 80px; background: var(--surface-solid); border: 1.5px solid var(--border); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glass); margin-bottom: 20px; transform: rotate(-5deg); padding: 8px; box-sizing: border-box;">
+                <img class="logo-light" src="logo-blue.png?v=7" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <img class="logo-dark" src="logo-silver.png?v=7" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
               <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">Welcome to <br><span class="text-gradient">MTS Connect</span></h2>
               <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-en">Select your role to explore the smart campus.</p>
               <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-ta">ஸ்மார்ட் வளாகத்தை ஆராய உங்கள் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்.</p>

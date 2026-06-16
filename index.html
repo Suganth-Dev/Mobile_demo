@@ -520,7 +520,7 @@
       color: var(--text);
     }
 
-    .app-header > * {
+    .app-header>* {
       grid-row: 1;
     }
 
@@ -757,22 +757,27 @@
       background: rgba(59, 130, 246, 0.06) !important;
       border: 1px solid rgba(59, 130, 246, 0.15) !important;
     }
+
     body:not(.dark-mode) .kpi-card.kpi-amber {
       background: rgba(245, 158, 11, 0.06) !important;
       border: 1px solid rgba(245, 158, 11, 0.15) !important;
     }
+
     body:not(.dark-mode) .kpi-card.kpi-green {
       background: rgba(16, 185, 129, 0.06) !important;
       border: 1px solid rgba(16, 185, 129, 0.15) !important;
     }
+
     body:not(.dark-mode) .kpi-card.kpi-cyan {
       background: rgba(14, 165, 233, 0.06) !important;
       border: 1px solid rgba(14, 165, 233, 0.15) !important;
     }
+
     body:not(.dark-mode) .kpi-card.kpi-purple {
       background: rgba(139, 92, 246, 0.06) !important;
       border: 1px solid rgba(139, 92, 246, 0.15) !important;
     }
+
     body:not(.dark-mode) .card.card-quick-actions {
       background: rgba(14, 165, 233, 0.05) !important;
       border: 1px solid rgba(14, 165, 233, 0.15) !important;
@@ -780,19 +785,22 @@
 
     /* ── Light Mode: Alternating Pastel Card Accents (all screens) ── */
     /* Cards cycle through 4 soft hues: sky, sage, peach, lavender */
-    body:not(.dark-mode) .screen-content > .card:nth-child(4n+1):not(.bg-primary-gradient):not([style*="background"]) {
+    body:not(.dark-mode) .screen-content>.card:nth-child(4n+1):not(.bg-primary-gradient):not([style*="background"]) {
       background: rgba(14, 165, 233, 0.05) !important;
       border: 1px solid rgba(14, 165, 233, 0.12) !important;
     }
-    body:not(.dark-mode) .screen-content > .card:nth-child(4n+2):not(.bg-primary-gradient):not([style*="background"]) {
+
+    body:not(.dark-mode) .screen-content>.card:nth-child(4n+2):not(.bg-primary-gradient):not([style*="background"]) {
       background: rgba(16, 185, 129, 0.05) !important;
       border: 1px solid rgba(16, 185, 129, 0.12) !important;
     }
-    body:not(.dark-mode) .screen-content > .card:nth-child(4n+3):not(.bg-primary-gradient):not([style*="background"]) {
+
+    body:not(.dark-mode) .screen-content>.card:nth-child(4n+3):not(.bg-primary-gradient):not([style*="background"]) {
       background: rgba(139, 92, 246, 0.05) !important;
       border: 1px solid rgba(139, 92, 246, 0.12) !important;
     }
-    body:not(.dark-mode) .screen-content > .card:nth-child(4n):not(.bg-primary-gradient):not([style*="background"]) {
+
+    body:not(.dark-mode) .screen-content>.card:nth-child(4n):not(.bg-primary-gradient):not([style*="background"]) {
       background: rgba(245, 158, 11, 0.05) !important;
       border: 1px solid rgba(245, 158, 11, 0.12) !important;
     }
@@ -826,14 +834,17 @@
       background: rgba(14, 165, 233, 0.07) !important;
       border: 1px solid rgba(14, 165, 233, 0.18) !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n+2) {
       background: rgba(16, 185, 129, 0.07) !important;
       border: 1px solid rgba(16, 185, 129, 0.18) !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n+3) {
       background: rgba(139, 92, 246, 0.07) !important;
       border: 1px solid rgba(139, 92, 246, 0.18) !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n) {
       background: rgba(245, 158, 11, 0.07) !important;
       border: 1px solid rgba(245, 158, 11, 0.18) !important;
@@ -843,12 +854,15 @@
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n+1) .kpi-num {
       color: #0284c7 !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n+2) .kpi-num {
       color: #059669 !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n+3) .kpi-num {
       color: #7c3aed !important;
     }
+
     body:not(.dark-mode) .kpi-grid .kpi-card:nth-child(4n) .kpi-num {
       color: #d97706 !important;
     }
@@ -2168,6 +2182,42 @@
       background: rgba(11, 19, 41, 0.55) !important;
       border-color: rgba(0, 212, 255, 0.4) !important;
     }
+
+    /* Theme-specific logo visibility */
+    body.dark-mode .logo-light {
+      display: none !important;
+    }
+    body:not(.dark-mode) .logo-dark {
+      display: none !important;
+    }
+
+    /* Splash Screen Premium Styling */
+    #splash {
+      background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%) !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .splash-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      animation: fadeIn 1.2s ease-out;
+    }
+    .splash-logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 8px 24px rgba(0, 212, 255, 0.2));
+      animation: pulseLogo 2s infinite ease-in-out;
+    }
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 8px 24px rgba(0, 212, 255, 0.2)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 12px 32px rgba(0, 212, 255, 0.45)); }
+    }
   </style>
 </head>
 
@@ -2220,9 +2270,8 @@
 
         <!-- ── PWA Install Banner ── -->
         <div id="pwa-install-banner">
-          <div
-            style="width:44px;height:44px;background:linear-gradient(135deg,#1A2E55,#0EA5E9);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;color:#fff;">
-            த</div>
+          <img class="logo-light" src="logo-blue.png?v=7" alt="MTS Logo" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;border-radius:12px;background:var(--surface-solid);border:1px solid var(--border);padding:2px;box-sizing:border-box;">
+          <img class="logo-dark" src="logo-silver.png?v=7" alt="MTS Logo" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;border-radius:12px;background:var(--surface-solid);border:1px solid var(--border);padding:2px;box-sizing:border-box;">
           <div style="flex:1;">
             <div class="pwa-banner-title" style="font-weight:700;font-size:14px;font-family:'Outfit',sans-serif;">
               Install MTS Connect</div>
@@ -2239,7 +2288,8 @@
         <!-- ════ SCREEN 1: SPLASH SCREEN ════ -->
         <div class="screen active" id="splash">
           <div class="splash-container">
-            <div class="splash-logo">த</div>
+            <img class="splash-logo logo-light" src="logo-blue.png?v=7" alt="MTS Logo">
+            <img class="splash-logo logo-dark" src="logo-silver.png?v=7" alt="MTS Logo">
             <h2 style="font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:0.5px;">MTS Connect
             </h2>
             <p style="font-size:14px;line-height:1.5;line-height:1.5;color:rgba(255,255,255,0.7);margin-top:4px;">
@@ -2262,8 +2312,10 @@
             <div id="login-role-select-view" style="display: flex; flex-direction: column; width: 100%;">
               <div class="smart-login-header">
                 <div
-                  style="width: 72px; height: 72px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-radius: 20px; font-size: 40px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-tamil); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); margin-bottom: 20px; transform: rotate(-5deg);">
-                  த</div>
+                  style="width: 80px; height: 80px; background: var(--surface-solid); border: 1.5px solid var(--border); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glass); margin-bottom: 20px; transform: rotate(-5deg); padding: 8px; box-sizing: border-box;">
+                  <img class="logo-light" src="logo-blue.png?v=7" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img class="logo-dark" src="logo-silver.png?v=7" alt="MTS Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
                 <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: 28px; color: var(--text);">
                   Welcome to <br><span class="text-gradient">MTS Connect</span></h2>
                 <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;" class="lang-en">Select your role
@@ -2774,7 +2826,8 @@
           <div class="screen-content">
             <div class="card bg-primary-gradient">
               <h2 id="teacher-profile-welcome" style="font-size:18px;font-weight:700;">Teacher</h2>
-              <p id="teacher-profile-subtitle" style="font-size:14px;line-height:1.5;opacity:0.9;margin-top:2px;">Loading...</p>
+              <p id="teacher-profile-subtitle" style="font-size:14px;line-height:1.5;opacity:0.9;margin-top:2px;">
+                Loading...</p>
             </div>
 
             <div class="kpi-grid">
@@ -2812,7 +2865,8 @@
                 <span class="lang-en">Today's Class Schedule</span>
                 <span class="lang-ta">இன்றைய வகுப்பு அட்டவணை</span>
               </div>
-              <ul id="teacher-home-schedule-list" style="list-style:none;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:8px;">
+              <ul id="teacher-home-schedule-list"
+                style="list-style:none;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:8px;">
                 <!-- Populated dynamically -->
               </ul>
             </div>
@@ -4800,7 +4854,7 @@
             subStatus = submission.status || "Pending Review";
             badgeClass = submission.status === "Approved" ? "badge-success"
               : (submission.status === "Needs Rework" ? "badge-danger"
-              : (submission.status === "Graded" ? "badge-success" : "badge-info"));
+                : (submission.status === "Graded" ? "badge-success" : "badge-info"));
           }
 
           const card = document.createElement("div");
@@ -6412,7 +6466,7 @@
           const isPending = ap.status === "Pending";
           const card = document.createElement("div");
           card.className = "card";
-          
+
           let statusHtml = '';
           if (isPending) {
             statusHtml = `
@@ -6465,7 +6519,7 @@
       async function executeApprovalSubmit(approvalId, actionResult) {
         const modal = document.getElementById('mobile-approve-confirm-modal');
         if (modal) modal.remove();
-        
+
         DB = getDB();
         const ap = DB.approvals.find(a => a.id === approvalId);
         ap.status = actionResult;
@@ -6474,11 +6528,11 @@
         if (actionResult === "Approved") {
           // Check Teacher Registration
           if (ap.type && (ap.type.includes("Teacher") || (ap.category && ap.category.includes("Teacher")))) {
-             const teacher = DB.teachers.find(t => t.name === ap.user || t.email === ap.user);
-             if (teacher) {
-               teacher.role = 'Teacher';
-               if (typeof sbUpdateTeacher === 'function') await sbUpdateTeacher(teacher.email, { role: 'Teacher' });
-             }
+            const teacher = DB.teachers.find(t => t.name === ap.user || t.email === ap.user);
+            if (teacher) {
+              teacher.role = 'Teacher';
+              if (typeof sbUpdateTeacher === 'function') await sbUpdateTeacher(teacher.email, { role: 'Teacher' });
+            }
           }
           // Check Student Linkage
           else if (ap.type && ap.type.includes("Student Linkage")) {
@@ -6504,11 +6558,11 @@
         else if (DB.auditLog) DB.auditLog.unshift(auditEntry);
 
         saveDB(DB);
-        
+
         if (typeof sbUpdateApproval === 'function') {
-           await sbUpdateApproval(ap.id, actionResult);
+          await sbUpdateApproval(ap.id, actionResult);
         }
-        
+
         showToast(`Roster Request: ${actionResult}!`, actionResult === 'Approved' ? 'success' : 'warning');
         renderAdminApprovalsScreen();
       }
@@ -6782,16 +6836,23 @@
       // Also check when display-mode changes
       window.matchMedia('(display-mode: standalone)').addEventListener('change', checkStandaloneMode);
 
+      // Unregister active service workers and clear cache to avoid local caching issues in development
       if ('serviceWorker' in navigator) {
-
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('./sw.js')
-            .then(function (reg) {
-              console.log('[PWA] SW registered:', reg.scope);
-            })
-            .catch(function (err) {
-              console.warn('[PWA] SW registration failed:', err);
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (let registration of registrations) {
+            registration.unregister().then(() => {
+              console.log('[SW] Unregistered active service worker successfully');
             });
+          }
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          keys.forEach(function(key) {
+            caches.delete(key).then(() => {
+              console.log('[Cache] Deleted cache: ' + key);
+            });
+          });
         });
       }
 
